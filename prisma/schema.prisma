@@ -13,11 +13,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role {
-  id    Int     @id @default(autoincrement())
-  name  String  @db.VarChar(50)
-
-  users User[]
+enum Role {
+  SCHOOL
+  TEACHER
+  STUDENT
 }
 
 model User {
@@ -27,54 +26,52 @@ model User {
   address   String?  @db.VarChar(255)
   email     String   @db.VarChar(255)
   password  String   @db.VarChar(255)
-  roleId    Int
+  role      Role
   classId   Int?
 
-  role      Role     @relation(fields: [roleId], references: [id])
   class     Class?   @relation(fields: [classId], references: [id])
   signs     Sign[]
   lessons   Lesson[]
 
-  @@index([roleId])
   @@index([classId])
 }
 
 model Class {
-  id    Int      @id @default(autoincrement())
-  name  String   @db.VarChar(100)
-  users User[]
+  id          Int            @id @default(autoincrement())
+  name        String         @db.VarChar(100)
+  users       User[]
   classSchools ClassSchool[]
 }
 
 model ClassSchool {
-  id      Int     @id @default(autoincrement())
-  classId Int
-  schoolId Int
+  id        Int      @id @default(autoincrement())
+  classId   Int
+  schoolId  Int
 
-  class   Class   @relation(fields: [classId], references: [id])
-  school  School  @relation(fields: [schoolId], references: [id])
+  class     Class    @relation(fields: [classId], references: [id])
+  school    School   @relation(fields: [schoolId], references: [id])
 
   @@index([classId])
   @@index([schoolId])
 }
 
 model School {
-  id      Int      @id @default(autoincrement())
-  name    String   @db.VarChar(100)
-  address String?  @db.VarChar(255)
-  zipcode Int
-  city    String   @db.VarChar(255)
-  typeId  Int
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(100)
+  address     String?      @db.VarChar(255)
+  zipcode     Int
+  city        String       @db.VarChar(255)
+  typeId      Int
 
-  type         Type          @relation(fields: [typeId], references: [id])
+  type        Type         @relation(fields: [typeId], references: [id])
   classSchools ClassSchool[]
 
   @@index([typeId])
 }
 
 model Type {
-  id    Int      @id @default(autoincrement())
-  name  String   @db.VarChar(100)
+  id      Int      @id @default(autoincrement())
+  name    String   @db.VarChar(100)
   schools School[]
 }
 
@@ -93,13 +90,13 @@ model Sign {
 }
 
 model Document {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(100)
-  url       String   @db.VarChar(100)
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(100)
+  url        String     @db.VarChar(100)
   categoryId Int
 
-  category  Category @relation(fields: [categoryId], references: [id])
-  signs     Sign[]
+  category   Category   @relation(fields: [categoryId], references: [id])
+  signs      Sign[]
 
   @@index([categoryId])
 }
