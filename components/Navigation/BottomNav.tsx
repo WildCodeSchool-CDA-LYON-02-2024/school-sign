@@ -1,6 +1,6 @@
 "use client";
 
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
+import { Menubar, MenubarMenu } from "@/components/ui/menubar";
 import Link from "next/link";
 import { NavProps } from "@/components/Navigation/navTypes";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 export default function BottomNav({ links }: NavProps) {
   return (
-    <Menubar className="justify-center items-center h-auto border-none shadow-none">
+    <Menubar className="fixed bottom-0 w-full justify-center items-center h-auto border-none shadow-none dark:bg-black">
       {links.map((link, index) => (
         <MenubarMenu key={index}>
           <Link
@@ -19,10 +19,8 @@ export default function BottomNav({ links }: NavProps) {
                 "flex flex-col items-center dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white h-full py-1 m-1",
             )}
           >
-            {/*<MenubarTrigger className="flex-col cursor-pointer m-1">*/}
             <link.icon className="h-4 w-4" />
             <small>{link.name}</small>
-            {/*</MenubarTrigger>*/}
           </Link>
         </MenubarMenu>
       ))}
