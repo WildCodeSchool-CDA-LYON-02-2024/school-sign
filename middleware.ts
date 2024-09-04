@@ -19,5 +19,5 @@ console.log(token);
 }
 
 export const config = {
-  matcher: ["/school"],
+  matcher: ["/school-dashboard"],
 };
