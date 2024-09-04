@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { loginSchema } from "@/lib/schemas/registerSchema";
+import { loginSchema } from "@/lib/schemas/loginSchema";
 
 // ui
 import {
@@ -47,7 +47,7 @@ export default function Login() {
 
     if (res.ok) {
       alert("Connexion réussie");
-      router.push("/jesuisconnecte");
+      router.push("/schooldashboard");
     } else {
       alert("Email ou mot de passe invalide");
     }
