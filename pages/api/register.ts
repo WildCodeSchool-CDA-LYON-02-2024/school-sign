@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { registerSchema } from "@/lib/schemas/registerSchema";
+import { registerSchema } from "@/lib/schemas/registerSchema"; // Assurez-vous que le schéma est adapté aux utilisateurs
 
 const prisma = new PrismaClient();
 
@@ -11,10 +11,11 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
+      // Validation des données d'entrée avec le schéma
       const data = registerSchema.parse(req.body);
 
-      // Check if the email is already in use
-      const existingUser = await prisma.school.findFirst({
+      // Vérification si l'email est déjà utilisé
+      const existingUser = await prisma.user.findFirst({
         where: { email: data.email },
       });
 
@@ -22,24 +23,24 @@ export default async function handler(
         return res.status(400).json({ error: "Email already in use" });
       }
 
+      // Hashage du mot de passe
       const hashedPassword = await bcrypt.hash(data.password, 10);
 
-      // Create the school
-      const school = await prisma.school.create({
+      // Création de l'utilisateur
+      const user = await prisma.user.create({
         data: {
-          name: data.name,
-          address: data.address,
-          zipcode: data.zipcode,
-          city: data.city,
+          firstname: data.firstname,
+          lastname: data.lastname,
           email: data.email,
           password: hashedPassword,
         },
       });
 
-      res.status(201).json({ school });
+      // Réponse réussie
+      res.status(201).json({ user });
     } catch (error: any) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        // Handle specific Prisma errors
+        // Gestion des erreurs spécifiques à Prisma
         return res.status(400).json({ error: "Database error" });
       }
       res.status(400).json({ error: error.message });
@@ -47,6 +48,7 @@ export default async function handler(
       await prisma.$disconnect();
     }
   } else {
+    // Méthode non autorisée
     res.status(405).json({ error: "Method not allowed" });
   }
 }
