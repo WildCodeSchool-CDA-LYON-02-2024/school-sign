@@ -1,3 +1,5 @@
+"use client";
+
 import {
   BackpackIcon,
   FileTextIcon,
@@ -6,8 +8,18 @@ import {
 } from "@radix-ui/react-icons";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function TabBar() {
+export default function NavBar() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const nav = [
     {
       name: "Home",
