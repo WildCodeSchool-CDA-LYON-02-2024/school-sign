@@ -45,7 +45,7 @@ export default function Page() {
   ];
   return (
     <>
-      <nav className="relative">
+      <nav>
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
       </nav>
     </>

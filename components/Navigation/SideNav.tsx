@@ -17,7 +17,7 @@ export default function SideNav({ links }: NavProps) {
             href={`/${link.name.toLowerCase()}`}
             className={cn(
               buttonVariants({ variant: link.variant, size: "sm" }),
-              link.variant === "default" &&
+              link.variant &&
                 "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white w-32",
             )}
           >
