@@ -14,7 +14,7 @@ export default async function handler(
       const data = registerSchema.parse(req.body);
 
       // Check if the email is already in use
-      const existingUser = await prisma.user.findFirst({
+      const existingUser = await prisma.school.findFirst({
         where: { email: data.email },
       });
 
@@ -24,15 +24,6 @@ export default async function handler(
 
       const hashedPassword = await bcrypt.hash(data.password, 10);
 
-      // Create the user
-      const user = await prisma.user.create({
-        data: {
-          email: data.email,
-          password: hashedPassword,
-          role: "STUDENT",
-        },
-      });
-
       // Create the school
       const school = await prisma.school.create({
         data: {
@@ -40,10 +31,12 @@ export default async function handler(
           address: data.address,
           zipcode: data.zipcode,
           city: data.city,
+          email: data.email,
+          password: hashedPassword,
         },
       });
 
-      res.status(201).json({ user, school });
+      res.status(201).json({ school });
     } catch (error: any) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         // Handle specific Prisma errors

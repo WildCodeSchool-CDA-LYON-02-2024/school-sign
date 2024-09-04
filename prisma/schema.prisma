@@ -14,114 +14,180 @@ datasource db {
 }
 
 enum Role {
-  SCHOOL
   TEACHER
   STUDENT
 }
 
-model User {
+model School {
+  id                 Int                @id @default(autoincrement())
+  name               String   
+  address            String  
+  zipcode            String  
+  city               String  
+  email              String   @unique
+  password           String
+
+  teachers           Teacher[]
+  students           Student[]
+  classes            Class[]
+  learningCategories LearningCategory[]
+}
+
+model Teacher {
   id        Int      @id @default(autoincrement())
-  firstname String?  @db.VarChar(100)
-  lastname  String?  @db.VarChar(100)
-  address   String?  @db.VarChar(255)
-  email     String   @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  role      Role
-  classId   Int?
+  firstname String
+  lastname  String
+  email     String   @unique
+  password  String
+  role      Role     @default(TEACHER)
 
+  schoolId  Int
+  school    School   @relation(fields: [schoolId], references: [id])
+  
+  classes   Class[]
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+
+  schoolId  Int
+  school    School   @relation(fields: [schoolId], references: [id])
+
+  classId   Int
   class     Class?   @relation(fields: [classId], references: [id])
-  signs     Sign[]
-  lessons   Lesson[]
+}
 
-  @@index([classId])
+model LearningCategory {
+  id        Int      @id @default(autoincrement())
+  name      String
+
+  schoolId  Int
+  school    School   @relation(fields: [schoolId], references: [id])
 }
 
 model Class {
-  id          Int            @id @default(autoincrement())
-  name        String         @db.VarChar(100)
-  users       User[]
-  classSchools ClassSchool[]
-}
-
-model ClassSchool {
   id        Int      @id @default(autoincrement())
-  classId   Int
-  schoolId  Int
+  name      String
 
-  class     Class    @relation(fields: [classId], references: [id])
+  schoolId  Int
   school    School   @relation(fields: [schoolId], references: [id])
 
-  @@index([classId])
-  @@index([schoolId])
+  teacherId Int?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  students  Student[]
 }
 
-model School {
-  id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(100)
-  address     String?      @db.VarChar(255)
-  zipcode     String       @db.VarChar(5)
-  city        String       @db.VarChar(255)
-  typeId      Int?
 
-  type        Type?         @relation(fields: [typeId], references: [id])
-  classSchools ClassSchool[]
 
-  @@index([typeId])
-}
 
-model Type {
-  id      Int      @id @default(autoincrement())
-  name    String   @db.VarChar(100)
-  schools School[]
-}
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   firs
+//   lasb.VarChar(255)
+//   email     String   @db.VarChar(255)
+//   password  String   @db.VarChar(255)
+//   role      Role
+//   classId   Int?
 
-model Sign {
-  id         Int      @id @default(autoincrement())
-  hashedSign String   @db.VarChar(255)
-  date       DateTime
-  userId     Int
-  docId      Int
+//   class     Class?   @relation(fields: [classId], references: [id])
+//   signs     Sign[]
+//   lessons   Lesson[]
 
-  user       User     @relation(fields: [userId], references: [id])
-  document   Document @relation(fields: [docId], references: [id])
+//   @@index([classId])
+// }
 
-  @@index([userId])
-  @@index([docId])
-}
+// model Class {
+//   id          Int            @id @default(autoincrement())
+//   name        String         @db.VarChar(100)
+//   users       User[]
+//   classSchools ClassSchool[]
+// }
 
-model Document {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(100)
-  url        String     @db.VarChar(100)
-  categoryId Int
+// model ClassSchool {
+//   id        Int      @id @default(autoincrement())
+//   classId   Int
+//   schoolId  Int
 
-  category   Category   @relation(fields: [categoryId], references: [id])
-  signs      Sign[]
+//   class     Class    @relation(fields: [classId], references: [id])
+//   school    School   @relation(fields: [schoolId], references: [id])
 
-  @@index([categoryId])
-}
+//   @@index([classId])
+//   @@index([schoolId])
+// }
 
-model Category {
-  id        Int        @id @default(autoincrement())
-  name      String     @db.VarChar(100)
-  documents Document[]
-}
+// model School {
+//   id          Int          @id @default(autoincrement())
+//   name        String       @db.VarChar(100)
+//   address     String?      @db.VarChar(255)
+//   zipcode     String       @db.VarChar(5)
+//   city        String       @db.VarChar(255)
+//   typeId      Int?
 
-model Lesson {
-  id        Int      @id @default(autoincrement())
-  date      DateTime
-  userId    Int
-  subjectId Int
+//   type        Type?         @relation(fields: [typeId], references: [id])
+//   classSchools ClassSchool[]
 
-  user      User     @relation(fields: [userId], references: [id])
-  subject   Subject  @relation(fields: [subjectId], references: [id])
+//   @@index([typeId])
+// }
 
-  @@index([userId])
-  @@index([subjectId])
-}
+// model Type {
+//   id      Int      @id @default(autoincrement())
+//   name    String   @db.VarChar(100)
+//   schools School[]
+// }
 
-model Subject {
-  id       Int      @id @default(autoincrement())
-  name     String   @db.VarChar(100)
-  lessons  Lesson[]
-}
+// model Sign {
+//   id         Int      @id @default(autoincrement())
+//   hashedSign String   @db.VarChar(255)
+//   date       DateTime
+//   userId     Int
+//   docId      Int
+
+//   user       User     @relation(fields: [userId], references: [id])
+//   document   Document @relation(fields: [docId], references: [id])
+
+//   @@index([userId])
+//   @@index([docId])
+// }
+
+// model Document {
+//   id         Int        @id @default(autoincrement())
+//   name       String     @db.VarChar(100)
+//   url        String     @db.VarChar(100)
+//   categoryId Int
+
+//   category   Category   @relation(fields: [categoryId], references: [id])
+//   signs      Sign[]
+
+//   @@index([categoryId])
+// }
+
+// model Category {
+//   id        Int        @id @default(autoincrement())
+//   name      String     @db.VarChar(100)
+//   documents Document[]
+// }
+
+// model Lesson {
+//   id        Int      @id @default(autoincrement())
+//   date      DateTime
+//   userId    Int
+//   subjectId Int
+
+//   user      User     @relation(fields: [userId], references: [id])
+//   subject   Subject  @relation(fields: [subjectId], references: [id])
+
+//   @@index([userId])
+//   @@index([subjectId])
+// }
+
+// model Subject {
+//   id       Int      @id @default(autoincrement())
+//   name     String   @db.VarChar(100)
+//   lessons  Lesson[]
+// }

@@ -14,9 +14,6 @@ export const registerSchema = z
     city: z.string().max(100, {
       message: "La ville doit comporter au maximum 100 caractères.",
     }),
-    typeId: z.number().nonnegative({
-      message: "Le type d'identifiant doit être un nombre non négatif.",
-    }),
     email: z.string().email({ message: "L'email doit être valide." }).max(255, {
       message: "L'email doit comporter au maximum 255 caractères.",
     }),
