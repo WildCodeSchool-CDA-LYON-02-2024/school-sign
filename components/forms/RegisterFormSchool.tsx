@@ -1,9 +1,6 @@
 "use client";
 
-// React imports
 import { useState } from "react";
-
-// UI component imports
 import {
   Card,
   CardContent,
@@ -15,37 +12,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-// Zod validation import
 import { z } from "zod";
 import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [zipcode, setZipcode] = useState(""); // Use a string for zipcode
+  const [zipcode, setZipcode] = useState("");
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof z.infer<typeof registerSchemaSchool>, string>>
+  >({});
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
 
-    // Zod validation
     const result = registerSchemaSchool.safeParse({
       name,
       address,
       zipcode,
       city,
       email,
-      password
+      password,
     });
 
     if (!result.success) {
-      const errorMessage = result.error.errors
-        .map((err: z.ZodIssue) => err.message)
-        .join(", ");
-      alert(errorMessage);
+      const newErrors: typeof errors = {};
+      result.error.issues.forEach((issue) => {
+        newErrors[issue.path[0] as keyof typeof errors] = issue.message;
+      });
+      setErrors(newErrors);
       return;
     }
 
@@ -70,7 +69,6 @@ export default function RegisterForm() {
       alert(`Error: ${errorMessage}`);
     }
   };
-
   return (
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10 justify-center items-center">
@@ -92,6 +90,10 @@ export default function RegisterForm() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              )}
+
               <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
@@ -101,15 +103,23 @@ export default function RegisterForm() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
+              {errors.address && (
+                <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+              )}
+
               <Label htmlFor="zipcode">Zipcode</Label>
               <Input
                 id="zipcode"
                 name="zipcode"
-                type="text" // Use type="text" for zipcode
+                type="text"
                 placeholder="69009"
                 value={zipcode}
                 onChange={(e) => setZipcode(e.target.value)}
               />
+              {errors.zipcode && (
+                <p className="text-red-500 text-sm mt-1">{errors.zipcode}</p>
+              )}
+
               <Label htmlFor="city">City</Label>
               <Input
                 id="city"
@@ -119,16 +129,24 @@ export default function RegisterForm() {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
-                            <Label htmlFor="email">email</Label>
+              {errors.city && (
+                <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+              )}
+
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
-                type="email" // Use type="text" for email
+                type="email"
                 placeholder="VictorSchoelcher@test.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Label htmlFor="password">password</Label>
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
+
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
@@ -136,6 +154,9 @@ export default function RegisterForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
             <CardFooter className="flex justify-end mt-5">
               <Button type="submit">Submit</Button>
