@@ -10,10 +10,10 @@ const config = {
   ],
   prefix: "",
   theme: {
-    colors: {
-      purple: "#7208b7",
-      seasame: "#FAF9F6",
-    },
+    // colors: {
+    //   // purple: "#7208b7",
+    //   // seasame: "#FAF9F6",
+    // },
     container: {
       center: true,
       padding: "2rem",
