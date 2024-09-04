@@ -26,7 +26,7 @@ model User {
   id        Int      @id @default(autoincrement())
   firstname String?   @db.VarChar(255)
   lastname  String?   @db.VarChar(255)
-  email     String   @db.VarChar(255)
+  email     String   @db.VarChar(255) @unique
   password  String   @db.VarChar(255)
   school     School   @relation(fields: [schoolId], references: [id])
   schoolId   Int
