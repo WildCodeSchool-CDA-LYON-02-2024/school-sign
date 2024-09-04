@@ -21,8 +21,8 @@ enum Role {
 
 model User {
   id        Int      @id @default(autoincrement())
-  firstname String   @db.VarChar(100)
-  lastname  String   @db.VarChar(100)
+  firstname String?  @db.VarChar(100)
+  lastname  String?  @db.VarChar(100)
   address   String?  @db.VarChar(255)
   email     String   @db.VarChar(255)
   password  String   @db.VarChar(255)
@@ -59,11 +59,11 @@ model School {
   id          Int          @id @default(autoincrement())
   name        String       @db.VarChar(100)
   address     String?      @db.VarChar(255)
-  zipcode     Int
+  zipcode     String       @db.VarChar(5)
   city        String       @db.VarChar(255)
-  typeId      Int
+  typeId      Int?
 
-  type        Type         @relation(fields: [typeId], references: [id])
+  type        Type?         @relation(fields: [typeId], references: [id])
   classSchools ClassSchool[]
 
   @@index([typeId])
