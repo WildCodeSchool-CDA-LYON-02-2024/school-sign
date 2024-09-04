@@ -2,6 +2,7 @@
 
 // React imports
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // UI component imports
 import {
@@ -25,6 +26,8 @@ export default function RegisterForm() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState(""); // Use a string for zipcode
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,6 +63,7 @@ export default function RegisterForm() {
       const data = await response.json();
       console.log(data);
       alert("Registration successful!");
+      router.push("/login");
     } else {
       // More specific error handling based on response codes/messages
       const errorMessage = await response.text();
