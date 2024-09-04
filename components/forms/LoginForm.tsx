@@ -47,7 +47,7 @@ export default function Login() {
 
     if (res.ok) {
       alert("Connexion réussie");
-      router.push("/SchoolDashboard");
+      router.push("/schooldashboard");
     } else {
       alert("Email ou mot de passe invalide");
     }
