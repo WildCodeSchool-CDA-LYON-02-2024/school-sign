@@ -2,7 +2,12 @@ import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-export async function createToken(payload: JWTPayload): Promise<string> {
+interface CustomJWTPayload extends JWTPayload {
+  userId: number;
+  schoolId: number;
+}
+
+export async function createToken(payload: CustomJWTPayload): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -10,7 +15,7 @@ export async function createToken(payload: JWTPayload): Promise<string> {
     .sign(secret);
 }
 
-export async function verifyToken(token: string): Promise<JWTPayload> {
+export async function verifyToken(token: string): Promise<CustomJWTPayload> {
   const { payload } = await jwtVerify(token, secret);
-  return payload;
+  return payload as CustomJWTPayload;
 }
