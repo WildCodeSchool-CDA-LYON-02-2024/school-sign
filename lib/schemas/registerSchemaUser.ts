@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const registerSchema = z
+export const registerSchemaUser = z
   .object({
     firstname: z.string().max(100, {
       message: "Le prénom doit comporter au maximum 100 caractères.",
