@@ -18,11 +18,13 @@ export default async function handler(
 
       // Create the school (optional, depending on your use case)
       let school;
-      if (data.schoolId) { // User provided an existing school ID
+      if (data.schoolId) {
+        // User provided an existing school ID
         school = await prisma.school.findUnique({
           where: { id: data.schoolId },
         });
-      } else { // Create a new school if no ID provided
+      } else {
+        // Create a new school if no ID provided
         school = await prisma.school.create({
           data: {
             name: data.name,
