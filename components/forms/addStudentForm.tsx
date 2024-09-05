@@ -2,16 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
-
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { useClassContext } from "@/components/context/ClassContext";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,24 +15,15 @@ export default function AddStudentForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { classId } = useClassContext();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const result = registerSchemaUser.safeParse({
-      firstname,
-      lastname,
-      email,
-      password,
-    });
-
-    if (!result.success) {
-      setError(
-        "Invalid input: " + result.error.errors.map((e) => e.message).join(", ")
-      );
+    if (!classId) {
+      setError("Class ID is missing");
       return;
     }
-    setError(null);
 
     try {
       const res = await fetch("/api/student", {
@@ -48,7 +31,13 @@ export default function AddStudentForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(result.data),
+        body: JSON.stringify({
+          firstname,
+          lastname,
+          email,
+          password,
+          classId,
+        }),
         credentials: "include",
       });
 
@@ -69,11 +58,7 @@ export default function AddStudentForm() {
 
   return (
     <div className="flex items-center justify-center">
-      <Card className="w-96 mt-10 justify-center items-center">
-        <CardHeader>
-          <CardTitle>Nouvel élève</CardTitle>
-          <CardDescription>Ajoutez un nouvel élève</CardDescription>
-        </CardHeader>
+      <Card className="w-96 mt-10">
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col space-y-2">
@@ -82,7 +67,7 @@ export default function AddStudentForm() {
                 id="firstname"
                 name="firstname"
                 type="text"
-                placeholder="firstname"
+                placeholder="Firstname"
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
                 required
@@ -92,7 +77,7 @@ export default function AddStudentForm() {
                 id="lastname"
                 name="lastname"
                 type="text"
-                placeholder="lastname"
+                placeholder="Lastname"
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
                 required
@@ -102,7 +87,7 @@ export default function AddStudentForm() {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="VictorSchoelcher@test.com"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -112,14 +97,14 @@ export default function AddStudentForm() {
                 id="password"
                 name="password"
                 type="password"
-                placeholder="********"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
             {error && <p className="text-red-500 mt-2">{error}</p>}
-            <CardFooter className="flex justify-end">
+            <CardFooter>
               <Button type="submit">Submit</Button>
             </CardFooter>
           </form>

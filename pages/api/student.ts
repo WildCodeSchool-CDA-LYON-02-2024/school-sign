@@ -1,56 +1,54 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient,Role } from "@prisma/client";
-
-import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser"; 
-import { verifyToken } from "@/lib/jwt"; 
+import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
+import { verifyToken } from "@/lib/jwt"; 
 
 const prisma = new PrismaClient();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     try {
-      // Extract the token from cookies
+      // Valider les données d'entrée
+      const data = registerSchemaUser.parse(req.body);
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+
+      // Obtenir l'ID de l'école à partir du token (ou d'une autre source)
       const tokenCookie = req.cookies.session;
       if (!tokenCookie) {
         return res.status(401).json({ error: "Authorization token required" });
       }
 
-      // Verify the token and extract the payload
       const payload = await verifyToken(tokenCookie);
       const schoolId = payload.schoolId;
       if (!schoolId) {
         return res.status(400).json({ error: "School ID missing from token" });
       }
 
-      // Validate input data using the schema
-      const data = registerSchemaUser.parse(req.body);
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      // Vérifier que l'ID de la classe est valide
+      const classSection = await prisma.classsection.findUnique({
+        where: { id: data.classId },
+      });
 
-      // Create the user with the associated school (using schoolId from token)
+      if (!classSection) {
+        return res.status(400).json({ error: "Invalid class ID" });
+      }
+
+      // Créer l'utilisateur et l'affecter à une école et à une classe
       const user = await prisma.user.create({
         data: {
           firstname: data.firstname,
           lastname: data.lastname,
           email: data.email,
           password: hashedPassword,
-          school: { connect: { id: schoolId } },
+          class: { connect: { id: data.classId } },
+          school: { connect: { id: schoolId } }, 
           role: Role.STUDENT,
-        }
+        },
       });
 
-      // Respond with the created user
       res.status(201).json({ user });
-
-    } catch (error: any) {
-      // Handle validation and other exceptions
-      if (error.name === "ZodError") {
-        return res.status(400).json({ error: error.errors });
-      }
-
+    } catch (error) {
       console.error("API Error:", error);
       res.status(500).json({ error: "Internal Server Error" });
     } finally {

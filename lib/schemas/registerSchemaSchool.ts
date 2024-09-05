@@ -40,6 +40,6 @@ export const registerSchemaSchool = z.object({
           "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial."
       }
     ),
-  schoolId: z.number().optional(), // Champ optionnel pour sélectionner un établissement existant
-  role: z.string().optional(),
+  schoolId: z.number().optional(),
+  rrole: z.enum(['STUDENT', 'TEACHER', 'SCHOOL']).optional(),
 });

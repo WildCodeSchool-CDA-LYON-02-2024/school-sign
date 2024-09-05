@@ -48,9 +48,8 @@ export default function RegisterForm() {
       return;
     }
 
-    const data = result.data; // Use the validated data
+    const data = result.data;
 
-    // API call with validated data
     const response = await fetch("/api/registerSchool", {
       method: "POST",
       headers: {
@@ -64,7 +63,6 @@ export default function RegisterForm() {
       console.log(data);
       alert("Registration successful!");
     } else {
-      // More specific error handling based on response codes/messages
       const errorMessage = await response.text();
       alert(`Error: ${errorMessage}`);
     }

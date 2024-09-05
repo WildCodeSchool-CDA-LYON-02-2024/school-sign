@@ -27,7 +27,6 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Validate form data using Zod
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       const errorMessage = result.error.errors
