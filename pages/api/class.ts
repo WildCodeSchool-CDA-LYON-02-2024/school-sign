@@ -29,7 +29,7 @@ export default async function handler(
       const data = classSchema.parse(req.body);
 
       // Créer la classe avec l'école associée (en utilisant schoolId du token)
-      const createdClass = await prisma.class.create({
+      const createdClass = await prisma.classsection.create({
         data: {
           name: data.name,
           school: { connect: { id: schoolId } }, // Utilisation de schoolId du token
