@@ -198,7 +198,7 @@ export default function Calendar() {
 
         {/* Add Event Dialog */}
         <Dialog open={showModal} onOpenChange={setShowModal}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Add Event</DialogTitle>
             </DialogHeader>
