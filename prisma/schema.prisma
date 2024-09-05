@@ -43,7 +43,7 @@ model User {
   class     Classsection? @relation(fields: [classId], references: [id])
   classId   Int?
 
-  role      Role
+  role      Role?
 }
 
 model Classsection {

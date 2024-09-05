@@ -41,4 +41,5 @@ export const registerSchemaSchool = z.object({
       }
     ),
   schoolId: z.number().optional(), // Champ optionnel pour sélectionner un établissement existant
+  role: z.string().optional(),
 });

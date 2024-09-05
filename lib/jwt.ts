@@ -5,6 +5,7 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 interface CustomJWTPayload extends JWTPayload {
   userId: number;
   schoolId: number;
+  role: null | string;
 }
 
 export async function createToken(payload: CustomJWTPayload): Promise<string> {

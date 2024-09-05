@@ -20,7 +20,7 @@ export default async function handler(
       // Vérifier le token et extraire le payload
       const payload = await verifyToken(tokenCookie);
       const schoolId = payload.schoolId;
-
+      console.log(`role = ${payload.role}`);
       if (!schoolId) {
         return res.status(400).json({ error: "School ID missing from token" });
       }
