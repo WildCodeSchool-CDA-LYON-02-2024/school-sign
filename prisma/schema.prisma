@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  SCHOOL
+  STUDENT
+  TEACHER
+}
+
 model School {
   id      Int     @id @default(autoincrement())
   name    String
@@ -34,8 +40,10 @@ model User {
   school    School  @relation(fields: [schoolId], references: [id])
   schoolId  Int
 
-  class     Classsection?   @relation(fields: [classId], references: [id])
+  class     Classsection? @relation(fields: [classId], references: [id])
   classId   Int?
+
+  role      Role
 }
 
 model Classsection {
@@ -47,6 +55,7 @@ model Classsection {
   
   users   User[]
 }
+
 
 // model ClassSchool {
 //   id        Int      @id @default(autoincrement())
