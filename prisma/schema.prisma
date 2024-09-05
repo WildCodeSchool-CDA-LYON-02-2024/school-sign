@@ -14,30 +14,39 @@ datasource db {
 }
 
 model School {
-  id                 Int                @id @default(autoincrement())
-  name               String   
-  address            String  
-  zipcode            String  
-  city               String  
-  users             User[]
+  id      Int     @id @default(autoincrement())
+  name    String
+  address String
+  zipcode String
+  city    String
+  
+  users   User[]
+  classes Class[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  firstname String?   @db.VarChar(255)
-  lastname  String?   @db.VarChar(255)
-  email     String   @db.VarChar(255) @unique
-  password  String   @db.VarChar(255)
-  school     School   @relation(fields: [schoolId], references: [id])
-  schoolId   Int
+  id        Int     @id @default(autoincrement())
+  firstname String? @db.VarChar(255)
+  lastname  String? @db.VarChar(255)
+  email     String  @db.VarChar(255) @unique
+  password  String  @db.VarChar(255)
+  
+  school    School  @relation(fields: [schoolId], references: [id])
+  schoolId  Int
+
+  class     Class?   @relation(fields: [classId], references: [id])
+  classId   Int?
 }
 
-// model Class {
-//id          Int            @id @default(autoincrement())
-//   name        String         @db.VarChar(100)
-//   users       User[]
-//   classSchools ClassSchool[]
-// }
+model Class {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(100)
+  
+  school  School  @relation(fields: [schoolId], references: [id])
+  schoolId Int
+  
+  users   User[]
+}
 
 // model ClassSchool {
 //   id        Int      @id @default(autoincrement())
