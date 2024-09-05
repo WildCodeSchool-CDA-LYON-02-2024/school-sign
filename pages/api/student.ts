@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient,Role } from "@prisma/client";
+
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser"; 
 import { verifyToken } from "@/lib/jwt"; 
 import bcrypt from "bcrypt";
@@ -37,7 +38,7 @@ export default async function handler(
           email: data.email,
           password: hashedPassword,
           school: { connect: { id: schoolId } },
-          role: 'STUDENT'
+          role: Role.STUDENT,
         }
       });
 

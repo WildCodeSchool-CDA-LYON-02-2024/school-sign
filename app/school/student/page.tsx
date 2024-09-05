@@ -9,7 +9,7 @@ export default function Home() {
     <div>
       <div className="flex items-center justify-center h-screen flex-col gap-4 p-4 md:p-36">
         <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school/class/addStudent">Add a new student</Link>
+          <Link href="/school/student/addStudent">Add a new student</Link>
         </Button>
       </div>
     </div>

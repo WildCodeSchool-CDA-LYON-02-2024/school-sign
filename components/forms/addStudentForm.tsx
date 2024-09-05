@@ -1,11 +1,9 @@
 "use client";
 
-// React
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { classSchema } from "@/lib/schemas/classSchema";
+import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
 
-// UI components
 import {
   Card,
   CardHeader,
@@ -23,14 +21,18 @@ export default function AddStudentForm() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null); // For error handling
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Validate input data using Zod
-    const result = classSchema.safeParse({ name });
+    const result = registerSchemaUser.safeParse({
+      firstname,
+      lastname,
+      email,
+      password,
+    });
 
     if (!result.success) {
       setError(
@@ -38,20 +40,16 @@ export default function AddStudentForm() {
       );
       return;
     }
-
-    // Reset error if validation passes
     setError(null);
 
     try {
-      // Send the data to the API
       const res = await fetch("/api/student", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // No need to manually set the Authorization header if using cookies
         },
         body: JSON.stringify(result.data),
-        credentials: "include", // Ensure cookies are sent with the request
+        credentials: "include",
       });
 
       if (res.ok) {
@@ -59,10 +57,12 @@ export default function AddStudentForm() {
         router.push("/school/student");
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "An error occurred while adding the class");
+        setError(
+          errorData.error || "An error occurred while adding the student"
+        );
       }
     } catch (err) {
-      console.error("Request Error:", err); // Log error for debugging
+      console.error("Request Error:", err);
       setError("An unexpected error occurred. Please try again later.");
     }
   };
@@ -97,7 +97,6 @@ export default function AddStudentForm() {
                 onChange={(e) => setLastname(e.target.value)}
                 required
               />
-              <Label htmlFor="name">Name</Label>
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -106,17 +105,20 @@ export default function AddStudentForm() {
                 placeholder="VictorSchoelcher@test.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
+                placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
-            {/* Displaying errors */}
+            {error && <p className="text-red-500 mt-2">{error}</p>}
             <CardFooter className="flex justify-end">
               <Button type="submit">Submit</Button>
             </CardFooter>
