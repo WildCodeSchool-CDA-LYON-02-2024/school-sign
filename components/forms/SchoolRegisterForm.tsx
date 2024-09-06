@@ -84,7 +84,7 @@ export default function SchoolRegisterForm() {
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
           <CardDescription>
-            Please fill in the form to create an account.
+            Please fill out the form below to create an account.
           </CardDescription>
         </CardHeader>
         <CardContent>
