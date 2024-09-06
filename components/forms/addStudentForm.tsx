@@ -50,7 +50,7 @@ export default function AddStudentForm() {
 
       if (res.ok) {
         alert("Student added successfully");
-        router.push("/school-dashboard/student");
+        router.back();
       } else {
         const errorData = await res.json();
         setError(
