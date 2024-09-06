@@ -3,6 +3,9 @@
 // react
 import { useState } from "react";
 
+// next
+import { useRouter } from "next/navigation";
+
 // ui
 import {
   Card,
@@ -30,6 +33,8 @@ export default function SchoolRegisterForm() {
   const [errors, setErrors] = useState<
     Partial<Record<keyof z.infer<typeof registerSchemaSchool>, string>>
   >({});
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,6 +72,7 @@ export default function SchoolRegisterForm() {
       const data = await response.json();
       console.log(data);
       alert("Registration successful!");
+      router.push("/school-login");
     } else {
       const errorMessage = await response.text();
       alert(`Error: ${errorMessage}`);

@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { loginSchema } from "@/lib/schemas/loginSchema";
 
+// next
+import Link from "next/link";
+
 // ui
 import {
   Card,
@@ -83,6 +86,12 @@ export default function SchoolLogin() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <p>
+                Don&apos;t have an account?{" "}
+                <Button variant="link" asChild>
+                  <Link href="/school-register">Register</Link>
+                </Button>
+              </p>
             </div>
             <CardFooter className="flex justify-end">
               <Button type="submit">Submit</Button>

@@ -46,7 +46,7 @@ export default function AddClassForm() {
 
       if (res.ok) {
         alert("Class added successfully");
-        router.push("/school-dashboard/class");
+        router.back();
       } else {
         const errorData = await res.json();
         setError(errorData.error || "An error occurred while adding the class");
