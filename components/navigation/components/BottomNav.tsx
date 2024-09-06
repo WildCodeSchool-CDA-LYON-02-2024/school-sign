@@ -1,9 +1,14 @@
 "use client";
 
-import { Menubar, MenubarMenu } from "@/components/ui/menubar";
+// next
 import Link from "next/link";
-import { NavProps } from "@/components/Navigation/navTypes";
+
+// component
+import { NavProps } from "@/components/navigation/components/navTypes";
+
+// ui
 import { cn } from "@/lib/utils";
+import { Menubar, MenubarMenu } from "@/components/ui/menubar";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function BottomNav({ links }: NavProps) {

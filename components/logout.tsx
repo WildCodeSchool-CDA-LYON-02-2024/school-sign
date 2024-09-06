@@ -15,7 +15,7 @@ export default function Logout() {
     });
 
     if (res.ok) {
-      router.push("/login");
+      router.push("/school-login");
     } else {
       alert("Erreur lors de la déconnexion");
     }

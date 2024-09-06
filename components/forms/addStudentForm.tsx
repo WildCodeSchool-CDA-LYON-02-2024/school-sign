@@ -1,8 +1,15 @@
 "use client";
 
+// react
 import { useState } from "react";
+
+// next
 import { useRouter } from "next/navigation";
+
+// context
 import { useClassContext } from "@/components/context/ClassContext";
+
+// ui
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -43,7 +50,7 @@ export default function AddStudentForm() {
 
       if (res.ok) {
         alert("Student added successfully");
-        router.push("/school/student");
+        router.push("/school-dashboard/student");
       } else {
         const errorData = await res.json();
         setError(

@@ -1,17 +1,22 @@
 "use client";
 
+// react
 import { useEffect, useState } from "react";
-import SideNav from "@/components/Navigation/SideNav";
-import BottomNav from "@/components/Navigation/BottomNav";
+
+// components
+import SideNav from "@/components/navigation/components/SideNav";
+import BottomNav from "@/components/navigation/components/BottomNav";
+import { NavLink } from "@/components/navigation/components/navTypes";
+
+// ui
 import {
   BackpackIcon,
   FileTextIcon,
   GearIcon,
   HomeIcon,
 } from "@radix-ui/react-icons";
-import { NavLink } from "@/components/Navigation/navTypes";
 
-export default function Page() {
+export default function NavigationBar() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

@@ -1,8 +1,15 @@
 "use client";
 
+// react
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+
+//next
 import Link from "next/link";
+
+// ui
+import { Card, CardContent } from "@/components/ui/card";
+
+// context
 import { useClassContext } from "@/components/context/ClassContext";
 
 interface ClassSection {
@@ -58,7 +65,7 @@ export default function GetAllClass() {
               <Card className="w-96 mt-10 justify-center items-center">
                 <CardContent className="flex flex-col justify-center items-center">
                   <button onClick={() => handleClassClick(cls.id)}>
-                    <Link href="/school/student/addStudent">
+                    <Link href="/school-dashboard/student/addStudent">
                       {cls.name}
                     </Link>
                   </button>

@@ -1,6 +1,9 @@
 "use client";
 
+// react
 import { useState } from "react";
+
+// ui
 import {
   Card,
   CardContent,
@@ -12,10 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+// zod
 import { z } from "zod";
 import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
 
-export default function RegisterForm() {
+export default function SchoolRegisterForm() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [zipcode, setZipcode] = useState("");
