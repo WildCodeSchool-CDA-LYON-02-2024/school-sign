@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function Login() {
+export default function SchoolLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -27,7 +27,6 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Validate form data using Zod
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       const errorMessage = result.error.errors
@@ -47,7 +46,7 @@ export default function Login() {
 
     if (res.ok) {
       alert("Connexion réussie");
-      router.push("/school");
+      router.push("/school-dashboard");
     } else {
       alert("Email ou mot de passe invalide");
     }

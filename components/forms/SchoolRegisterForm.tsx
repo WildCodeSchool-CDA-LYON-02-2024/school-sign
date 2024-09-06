@@ -1,6 +1,9 @@
 "use client";
 
+// react
 import { useState } from "react";
+
+// ui
 import {
   Card,
   CardContent,
@@ -12,10 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+// zod
 import { z } from "zod";
 import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
 
-export default function RegisterForm() {
+export default function SchoolRegisterForm() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [zipcode, setZipcode] = useState("");
@@ -48,9 +53,8 @@ export default function RegisterForm() {
       return;
     }
 
-    const data = result.data; // Use the validated data
+    const data = result.data;
 
-    // API call with validated data
     const response = await fetch("/api/registerSchool", {
       method: "POST",
       headers: {
@@ -64,7 +68,6 @@ export default function RegisterForm() {
       console.log(data);
       alert("Registration successful!");
     } else {
-      // More specific error handling based on response codes/messages
       const errorMessage = await response.text();
       alert(`Error: ${errorMessage}`);
     }

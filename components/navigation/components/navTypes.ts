@@ -1,5 +1,8 @@
-import { IconProps } from "@radix-ui/react-icons/dist/types";
+// react
 import { JSX } from "react";
+
+// ui
+import { IconProps } from "@radix-ui/react-icons/dist/types";
 
 export interface NavLink {
   name: string;

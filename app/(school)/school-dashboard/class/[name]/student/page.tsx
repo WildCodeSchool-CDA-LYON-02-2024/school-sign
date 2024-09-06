@@ -2,16 +2,17 @@
 
 // next
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import GetAllClass from "@/components/getClass";
 
-export default function Home() {
+// ui
+import { Button } from "@/components/ui/button";
+
+export default function StudentList({ params }: { params: { name: string } }) {
   return (
+    // TODO GET tous les élèves
     <div>
-      <GetAllClass/>
       <div className="flex items-center justify-center h-screen flex-col gap-4 p-4 md:p-36">
         <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school/class/addClass">Add a new class</Link>
+          <Link href={`/school-dashboard/class/${params.name}/student/addStudent`}>Add a new student</Link>
         </Button>
       </div>
     </div>
