@@ -64,11 +64,13 @@ export default function GetAllClass() {
             <li key={cls.id}>
               <Card className="w-96 mt-10 justify-center items-center">
                 <CardContent className="flex flex-col justify-center items-center">
-                  <button onClick={() => handleClassClick(cls.id)}>
-                    <Link href="/school-dashboard/student/addStudent">
+                  <Link
+                    href={`/school-dashboard/class/${cls.name}/student/`}
+                  >
+                    <button onClick={() => handleClassClick(cls.id)}>
                       {cls.name}
-                    </Link>
-                  </button>
+                    </button>
+                  </Link>
                 </CardContent>
               </Card>
             </li>
