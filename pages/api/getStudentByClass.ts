@@ -18,7 +18,7 @@ export default async function handler(
 
       // Verify the token and extract the payload
       const payload = await verifyToken(tokenCookie);
-      const { schoolId, className, role } = payload;
+      const { schoolId, classId, role } = payload;
 
       // Check that the user has a schoolId
       if (!schoolId) {
@@ -34,7 +34,7 @@ export default async function handler(
       const users = await prisma.user.findMany({
         where: {
           schoolId: schoolId, // Filter by school ID
-          className: className,   // Filter by classname
+          classId: classId,   // Filter by class ID
         },
       });
 

@@ -4,7 +4,6 @@ import { verifyToken } from "@/lib/jwt";
 export default async function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get("session");
   const token = tokenCookie?.value;
-console.log(token);
 
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));

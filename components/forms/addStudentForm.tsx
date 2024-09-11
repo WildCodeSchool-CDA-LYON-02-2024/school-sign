@@ -1,10 +1,13 @@
 "use client";
 
 // react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // next
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+
+// context
+import { useClassContext } from "@/components/context/ClassContext";
 
 // ui
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -19,30 +22,23 @@ export default function AddStudentForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const params = useParams();
-  const className = params ? params.name : null;
-  console.log(className);
+  const { classId } = useClassContext();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!className) {
-      setError("Class ID is missing");
-      return;
-    }
 
     try {
       const res = await fetch("/api/student", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           firstname,
           lastname,
           email,
           password,
-          className,
+          classId,
         }),
         credentials: "include",
       });
@@ -52,9 +48,7 @@ export default function AddStudentForm() {
         router.back();
       } else {
         const errorData = await res.json();
-        setError(
-          errorData.error || "An error occurred while adding the student"
-        );
+        setError(errorData.error || "An error occurred while adding the student");
       }
     } catch (err) {
       console.error("Request Error:", err);
