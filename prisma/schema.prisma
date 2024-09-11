@@ -56,6 +56,13 @@ model Classsection {
   users   User[]
 }
 
+model Document {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 // model ClassSchool {
 //   id        Int      @id @default(autoincrement())
@@ -103,17 +110,6 @@ model Classsection {
 //   @@index([docId])
 // }
 
-// model Document {
-//   id         Int        @id @default(autoincrement())
-//   name       String     @db.VarChar(100)
-//   url        String     @db.VarChar(100)
-//   categoryId Int
-
-//   category   Category   @relation(fields: [categoryId], references: [id])
-//   signs      Sign[]
-
-//   @@index([categoryId])
-// }
 
 // model Category {
 //   id        Int        @id @default(autoincrement())
