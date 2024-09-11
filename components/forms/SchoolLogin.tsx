@@ -48,10 +48,10 @@ export default function SchoolLogin() {
     });
 
     if (res.ok) {
-      alert("Connexion réussie");
+      alert("Successful login");
       router.push("/school-dashboard");
     } else {
-      alert("Email ou mot de passe invalide");
+      alert("Email or password invalid");
     }
   };
 
@@ -59,8 +59,8 @@ export default function SchoolLogin() {
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10 justify-center items-center">
         <CardHeader>
-          <CardTitle>Connexion</CardTitle>
-          <CardDescription>Connectez-vous à votre compte</CardDescription>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Enter your login details</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -87,9 +87,9 @@ export default function SchoolLogin() {
                 required
               />
               <p>
-                Don&apos;t have an account?{" "}
+                New here?
                 <Button variant="link" asChild>
-                  <Link href="/school-register">Register</Link>
+                  <Link href="/school-register">Click here to register</Link>
                 </Button>
               </p>
             </div>
