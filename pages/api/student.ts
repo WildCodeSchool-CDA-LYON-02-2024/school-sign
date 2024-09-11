@@ -25,9 +25,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "School ID missing from token" });
       }
 
-      // Vérifier que l'ID de la classe est valide
+      // Vérifier que le nom de la classe est valide
       const classSection = await prisma.classsection.findUnique({
-        where: { id: data.classId },
+        where: { name: data.className },
       });
 
       if (!classSection) {
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           lastname: data.lastname,
           email: data.email,
           password: hashedPassword,
-          class: { connect: { id: data.classId } },
+          class: { connect: { name: data.className } },
           school: { connect: { id: schoolId } }, 
           role: Role.STUDENT,
         },
