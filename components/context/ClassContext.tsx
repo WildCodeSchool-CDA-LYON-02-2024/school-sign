@@ -1,6 +1,5 @@
 "use client";
 
-// react
 import { createContext, useState, useContext, ReactNode } from 'react';
 
 interface ClassContextType {

@@ -1,7 +1,7 @@
 "use client";
 
 // react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // next
 import { useRouter } from "next/navigation";
@@ -27,16 +27,11 @@ export default function AddStudentForm() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!classId) {
-      setError("Class ID is missing");
-      return;
-    }
-
     try {
       const res = await fetch("/api/student", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           firstname,
@@ -53,9 +48,7 @@ export default function AddStudentForm() {
         router.back();
       } else {
         const errorData = await res.json();
-        setError(
-          errorData.error || "An error occurred while adding the student"
-        );
+        setError(errorData.error || "An error occurred while adding the student");
       }
     } catch (err) {
       console.error("Request Error:", err);

@@ -19,5 +19,5 @@ export const registerSchemaUser = z.object({
       message: "Le mot de passe doit comporter au maximum 255 caractères.",
     }),
   classId: z.coerce.number().optional(),
-  role: z.enum(['STUDENT', 'TEACHER', 'SCHOOL']).optional(),
+  role: z.enum(["STUDENT", "TEACHER", "SCHOOL"]).optional(),
 });
