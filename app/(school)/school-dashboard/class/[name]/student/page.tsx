@@ -19,7 +19,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `/api/getStudentByClass?classname=${params.name}`,
+          `/api/student?classname=${params.name}`,
           {
             method: "GET",
             headers: {

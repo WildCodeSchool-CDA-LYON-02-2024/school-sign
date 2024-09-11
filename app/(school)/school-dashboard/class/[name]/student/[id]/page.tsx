@@ -18,7 +18,7 @@ export default function StudentDetails({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/getUserById?id=${params.id}`, {
+        const res = await fetch(`/api/student?id=${params.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
