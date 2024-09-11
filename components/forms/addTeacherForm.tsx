@@ -6,49 +6,46 @@ import { useState } from "react";
 // next
 import { useRouter } from "next/navigation";
 
-// context
-import { useClassContext } from "@/components/context/ClassContext";
-
 // ui
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function AddStudentForm() {
+export default function AddTeacherForm() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { classId } = useClassContext();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      const res = await fetch("/api/student", {
+      const res = await fetch("/api/addTeacher", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           firstname,
           lastname,
           email,
           password,
-          classId,
         }),
         credentials: "include",
       });
 
       if (res.ok) {
-        alert("Student added successfully");
+        alert("Teacher added successfully");
         router.back();
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "An error occurred while adding the student");
+        setError(
+          errorData.error || "An error occurred while adding the teacher"
+        );
       }
     } catch (err) {
       console.error("Request Error:", err);

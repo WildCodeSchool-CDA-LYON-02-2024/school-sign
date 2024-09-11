@@ -14,6 +14,9 @@ export default function SchoolDashboard() {
         <Button className="bg-purple text-seasame" variant="outline">
           <Link href="/school-dashboard/class">Class</Link>
         </Button>
+        <Button className="bg-purple text-seasame mt-10" variant="outline">
+          <Link href="/school-dashboard/teacher">Teacher</Link>
+        </Button>
         <Logout />
       </div>
     </>
