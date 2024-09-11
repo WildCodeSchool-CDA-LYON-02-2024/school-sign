@@ -24,7 +24,7 @@ export default async function handler(
 
       const payload = await verifyToken(tokenCookie);
       
-      const { schoolId,  } = payload;
+      const { schoolId } = payload;
       if (!payload) {
         return res.status(401).json({ error: "Invalid or expired token" });
       }
