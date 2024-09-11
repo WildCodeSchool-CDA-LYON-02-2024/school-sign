@@ -20,7 +20,7 @@ import Link from "next/link";
 
 export default function NavigationBar() {
   const [isMobile, setIsMobile] = useState(false);
-  const { Role } = useUserContext();
+  const { user } = useUserContext();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);

@@ -17,7 +17,7 @@ export default function Home() {
       <div className="flex items-center justify-center h-screen flex-col gap-4 p-4 md:p-36">
         <LogoIcon size={100} />
         <Button className="bg-purple text-seasame w-40" variant="outline">
-          <Link href="/school-login" className=ex">
+          <Link href="/school-login" className="flex">
             <SchoolIcon className="w-5 mr-2" />
             School
           </Link>

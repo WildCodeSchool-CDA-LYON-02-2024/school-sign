@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { ClassProvider } from "@/components/context/ClassContext";
+import NavigationBar from "@/components/navigation/NavigationBar";
+import { UserProvider } from "@/components/context/UserContext";
 
 const roboto = Roboto({
   subsets: ["latin"],
