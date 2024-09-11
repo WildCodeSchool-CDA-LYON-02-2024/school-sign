@@ -2,32 +2,41 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
-import { verifyToken } from "@/lib/jwt"; 
+import { verifyToken } from "@/lib/jwt";
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     try {
       // Valider les données d'entrée
       const data = registerSchemaUser.parse(req.body);
       const hashedPassword = await bcrypt.hash(data.password, 10);
 
-      // Obtenir l'ID de l'école à partir du token (ou d'une autre source)
+      // Obtenir l'ID de l'école et la classe à partir du token
       const tokenCookie = req.cookies.session;
       if (!tokenCookie) {
         return res.status(401).json({ error: "Authorization token required" });
       }
 
       const payload = await verifyToken(tokenCookie);
-      const schoolId = payload.schoolId;
-      if (!schoolId) {
-        return res.status(400).json({ error: "School ID missing from token" });
+      
+      const { schoolId,  } = payload;
+      if (!payload) {
+        return res.status(401).json({ error: "Invalid or expired token" });
+      }
+      if (!schoolId || !data.classId) {
+        return res
+          .status(400)
+          .json({ error: "School ID or Class ID missing from token" });
       }
 
-      // Vérifier que le nom de la classe est valide
+      // Vérifier que la classe est valide
       const classSection = await prisma.classsection.findUnique({
-        where: { name: data.className },
+        where: { id: data.classId },
       });
 
       if (!classSection) {
@@ -41,8 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           lastname: data.lastname,
           email: data.email,
           password: hashedPassword,
-          class: { connect: { name: data.className } },
-          school: { connect: { id: schoolId } }, 
+          class: { connect: { id: data.classId } },
+          school: { connect: { id: schoolId } },
           role: Role.STUDENT,
         },
       });
