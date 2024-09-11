@@ -8,6 +8,7 @@ export interface NavLink {
   name: string;
   icon: (props: IconProps) => JSX.Element;
   variant: "default" | "ghost";
+  href?: string;
 }
 
 export interface NavProps {

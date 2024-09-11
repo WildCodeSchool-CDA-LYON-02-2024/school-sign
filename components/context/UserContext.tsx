@@ -16,9 +16,6 @@ import { useRouter } from "next/navigation";
 import { PrismaClient, Role } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// packages
-import { verifyToken } from "@/lib/jwt";
-
 interface User {
   id: number;
   firstname: string;
@@ -41,23 +38,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = req.cookies.session;
-        if (token) {
-          const decodedToken = await verifyToken(token);
-          const userData = await prisma.user.findUnique({
-            where: { id: decodedToken.userId },
-            include: { school: true },
-          });
-
-          if (userData) {
-            setUser({
-              id: userData.id,
-              firstname: userData.firstname || "",
-              lastname: userData.lastname || "",
-              role: userData.role || "SCHOOL",
-              schoolId: userData.schoolId,
-            });
-          }
+        const response = await fetch("/api/user");
+        if (response.ok) {
+          const userData: User = await response.json();
+          setUser(userData);
+        } else {
+          setUser(null);
         }
       } catch (e) {
         console.error("Error fetching user session:", e);

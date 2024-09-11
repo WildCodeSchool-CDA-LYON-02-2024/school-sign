@@ -19,7 +19,7 @@ export default function SideNav({ links }: NavProps) {
             className={cn(
               buttonVariants({ variant: link.variant, size: "sm" }),
               link.variant &&
-                "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white w-32"
+                "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white w-32",
             )}
           >
             <link.icon className="mr-2 h-4 w-4" />
@@ -28,7 +28,7 @@ export default function SideNav({ links }: NavProps) {
                 className={cn(
                   "mr-auto",
                   link.variant === "default" &&
-                    "text-background dark:text-white"
+                    "text-background dark:text-white",
                 )}
               >
                 {link.name}

@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "POST") {
     try {
@@ -23,11 +23,11 @@ export default async function handler(
       }
 
       const payload = await verifyToken(tokenCookie);
-      
-      const { schoolId,  } = payload;
       if (!payload) {
         return res.status(401).json({ error: "Invalid or expired token" });
       }
+
+      const { schoolId } = payload;
       if (!schoolId || !data.classId) {
         return res
           .status(400)

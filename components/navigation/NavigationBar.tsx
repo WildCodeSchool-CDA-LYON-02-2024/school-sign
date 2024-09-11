@@ -34,67 +34,68 @@ export default function NavigationBar() {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
       variant: "default",
+      href: "/school-dashboard",
     },
     {
-      name: "Teachers",
+      name: "Class",
       icon: (props) => <BackpackIcon {...props} />,
       variant: "ghost",
+      href: "/school-dashboard/class",
     },
     {
       name: "Documents",
       icon: (props) => <FileTextIcon {...props} />,
       variant: "ghost",
+      href: "/documents",
     },
     {
       name: "Settings",
       icon: (props) => <GearIcon {...props} />,
       variant: "ghost",
+      href: "/settings",
     },
+    // ...(user?.role === "SCHOOL" || user?.role === "TEACHER"
+    //   ? [
+    //       {
+    //         name: "Teachers",
+    //         icon: (props) => <BackpackIcon {...props} />,
+    //         variant: "ghost",
+    //         href: "/teachers",
+    //       },
+    //     ]
+    //   : []),
+    // ...(user?.role === "SCHOOL" || user?.role === "STUDENT"
+    //   ? [
+    //       {
+    //         name: "Documents",
+    //         icon: (props) => <FileTextIcon {...props} />,
+    //         variant: "ghost",
+    //         href: "/documents",
+    //       },
+    //     ]
+    //   : []),
+    // ...(user?.role === "SCHOOL"
+    //   ? [
+    //       {
+    //         name: "Settings",
+    //         icon: (props) => <GearIcon {...props} />,
+    //         variant: "ghost",
+    //         href: "/settings",
+    //       },
+    //     ]
+    //   : []),
   ];
+
   return (
     <>
       <nav>
-        {!user ? (
-          <Link href="#" />
-        ) : (
-          <>
-            {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
-          </>
-        )}
-        {/*<ul>*/}
-        {/*  {!user ? (*/}
-        {/*    <li>*/}
-        {/*      <Link href="/login">Login</Link>*/}
-        {/*    </li>*/}
-        {/*  ) : (*/}
-        {/*    <>*/}
-        {/*      <li>*/}
-        {/*        <Link href="/">Home</Link>*/}
-        {/*      </li>*/}
-        {/*      {user.role === "SCHOOL" && (*/}
-        {/*        <li>*/}
-        {/*          <Link href="/school">School Dashboard</Link>*/}
-        {/*        </li>*/}
-        {/*      )}*/}
-        {/*      {user.role === "TEACHER" && (*/}
-        {/*        <li>*/}
-        {/*          <Link href="/teacher">Teacher Dashboard</Link>*/}
-        {/*        </li>*/}
-        {/*      )}*/}
-        {/*      {user.role === "STUDENT" && (*/}
-        {/*        <li>*/}
-        {/*          <Link href="/student">Student Dashboard</Link>*/}
-        {/*        </li>*/}
-        {/*      )}*/}
-        {/*      <li>*/}
-        {/*        <Link href="/profile">Profile</Link>*/}
-        {/*      </li>*/}
-        {/*      <li>*/}
-        {/*        <Link href="/logout">Logout</Link>*/}
-        {/*      </li>*/}
-        {/*    </>*/}
-        {/*  )}*/}
-        {/*</ul>*/}
+        {/*{user?.role ? (*/}
+        {/*  <>*/}
+        {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
+        {/*  </>*/}
+        {/*) : (*/}
+        {/*  <Link href="#" />*/}
+        {/*)}*/}
       </nav>
     </>
   );
