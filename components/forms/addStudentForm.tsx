@@ -4,10 +4,7 @@
 import { useState } from "react";
 
 // next
-import { useRouter } from "next/navigation";
-
-// context
-import { useClassContext } from "@/components/context/ClassContext";
+import { useRouter, useParams } from "next/navigation";
 
 // ui
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -22,12 +19,14 @@ export default function AddStudentForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { classId } = useClassContext();
+  const params = useParams();
+  const className = params ? params.name : null;
+  console.log(className);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!classId) {
+    if (!className) {
       setError("Class ID is missing");
       return;
     }
@@ -43,7 +42,7 @@ export default function AddStudentForm() {
           lastname,
           email,
           password,
-          classId,
+          className,
         }),
         credentials: "include",
       });

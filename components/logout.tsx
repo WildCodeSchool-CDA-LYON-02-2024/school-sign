@@ -22,7 +22,7 @@ export default function Logout() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className=" mt-10 flex flex-col items-center justify-center">
       <Button onClick={handleLogout} className="flex rounded">
         Se déconnecter
       </Button>
