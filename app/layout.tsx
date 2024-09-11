@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { ClassProvider } from "@/components/context/ClassContext";
+import { UserProvider } from "@/components/context/UserContext";
+import NavigationBar from "@/components/navigation/NavigationBar";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -22,9 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.variable + " bg-seasame"}>
-        <ClassProvider>
-          {children}
-        </ClassProvider>
+        <UserProvider>
+          <ClassProvider>
+            <NavigationBar />
+            {children}
+          </ClassProvider>
+        </UserProvider>
       </body>
     </html>
   );
