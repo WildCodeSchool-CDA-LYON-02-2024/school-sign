@@ -31,14 +31,20 @@ export default function DocumentPage() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 items-center justify-center h-screen">
+    <div className="flex flex-col gap-4 items-center justify-center">
       <Link href="/school-dashboard/document/addDocument">
         <Button>Add Document</Button>
       </Link>
       {error && <p className="text-red-500">{error}</p>}
       <ul>
         {documents?.length > 0 ? (
-          documents.map((doc: any) => <li key={doc.id}>{doc.name}</li>)
+          documents.map((doc: any) => (
+            <li key={doc.id}>
+              <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                {doc.name}
+              </a>
+            </li>
+          ))
         ) : (
           <p>No documents available</p>
         )}

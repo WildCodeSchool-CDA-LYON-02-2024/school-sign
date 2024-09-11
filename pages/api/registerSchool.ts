@@ -39,7 +39,7 @@ export default async function handler(
           email: data.email,
           password: hashedPassword,
           school: { connect: { id: school.id } },
-          role: 'SCHOOL'
+          role: "SCHOOL",
         },
       });
 

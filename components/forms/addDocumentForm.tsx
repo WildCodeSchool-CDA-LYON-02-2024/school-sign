@@ -20,8 +20,6 @@ export default function AddDocumentForm() {
     try {
       const response = await fetch("/api/upload", {
         method: "POST",
-        // Remove the Content-Type header when using FormData,
-        // as the browser will automatically set it, including the boundary.
         body: formData,
       });
       if (response.ok) {
