@@ -16,11 +16,9 @@ import {
   GearIcon,
   HomeIcon,
 } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 export default function NavigationBar() {
   const [isMobile, setIsMobile] = useState(false);
-  const { user } = useUserContext();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -54,48 +52,12 @@ export default function NavigationBar() {
       variant: "ghost",
       href: "/settings",
     },
-    // ...(user?.role === "SCHOOL" || user?.role === "TEACHER"
-    //   ? [
-    //       {
-    //         name: "Teachers",
-    //         icon: (props) => <BackpackIcon {...props} />,
-    //         variant: "ghost",
-    //         href: "/teachers",
-    //       },
-    //     ]
-    //   : []),
-    // ...(user?.role === "SCHOOL" || user?.role === "STUDENT"
-    //   ? [
-    //       {
-    //         name: "Documents",
-    //         icon: (props) => <FileTextIcon {...props} />,
-    //         variant: "ghost",
-    //         href: "/documents",
-    //       },
-    //     ]
-    //   : []),
-    // ...(user?.role === "SCHOOL"
-    //   ? [
-    //       {
-    //         name: "Settings",
-    //         icon: (props) => <GearIcon {...props} />,
-    //         variant: "ghost",
-    //         href: "/settings",
-    //       },
-    //     ]
-    //   : []),
   ];
 
   return (
     <>
       <nav>
-        {/*{user?.role ? (*/}
-        {/*  <>*/}
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
-        {/*  </>*/}
-        {/*) : (*/}
-        {/*  <Link href="#" />*/}
-        {/*)}*/}
       </nav>
     </>
   );

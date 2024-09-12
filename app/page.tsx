@@ -47,8 +47,12 @@ export default function Home() {
       <div className="flex items-center justify-center h-screen flex-col gap-4 p-4 md:p-36">
         <LogoIcon size={100} />
         {profiles.map((profile, index) => (
-          <Button className="bg-purple text-seasame w-40" variant="outline">
-            <Link href={`/${profile.href}`} className="flex">
+          <Button
+            key={index}
+            className="bg-purple text-seasame w-40"
+            variant="outline"
+          >
+            <Link href={profile.href} className="flex">
               <profile.icon className="w-5 mr-2" />
               {profile.name}
             </Link>

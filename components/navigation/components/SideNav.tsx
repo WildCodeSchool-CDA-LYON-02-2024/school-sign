@@ -7,6 +7,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { NavProps } from "@/components/navigation/components/navTypes";
+import Logout from "@/components/logout";
 
 export default function SideNav({ links }: NavProps) {
   return (
@@ -15,7 +16,7 @@ export default function SideNav({ links }: NavProps) {
         {links.map((link, index) => (
           <Link
             key={index}
-            href={`/${link.name.toLowerCase()}`}
+            href={link.href}
             className={cn(
               buttonVariants({ variant: link.variant, size: "sm" }),
               link.variant &&
@@ -36,6 +37,7 @@ export default function SideNav({ links }: NavProps) {
             )}
           </Link>
         ))}
+        <Logout />
       </div>
     </>
   );

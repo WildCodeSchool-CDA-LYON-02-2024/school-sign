@@ -10,6 +10,7 @@ import { NavProps } from "@/components/navigation/components/navTypes";
 import { cn } from "@/lib/utils";
 import { Menubar, MenubarMenu } from "@/components/ui/menubar";
 import { buttonVariants } from "@/components/ui/button";
+import Logout from "@/components/logout";
 
 export default function BottomNav({ links }: NavProps) {
   return (
@@ -17,7 +18,7 @@ export default function BottomNav({ links }: NavProps) {
       {links.map((link, index) => (
         <MenubarMenu key={index}>
           <Link
-            href={`/${link.name.toLowerCase()}`}
+            href={link.href}
             className={cn(
               buttonVariants({ variant: link.variant, size: "lg" }),
               link.variant &&
