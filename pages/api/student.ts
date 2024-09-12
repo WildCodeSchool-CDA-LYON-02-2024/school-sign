@@ -3,7 +3,6 @@ import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
 import { verifyToken } from "@/lib/jwt";
-import { log } from "console";
 
 const prisma = new PrismaClient();
 

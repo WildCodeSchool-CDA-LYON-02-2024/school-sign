@@ -7,19 +7,20 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { NavProps } from "@/components/navigation/components/navTypes";
+import Logout from "@/components/logout";
 
 export default function SideNav({ links }: NavProps) {
   return (
     <>
-      <div className="flex flex-col items-start gap-1 p-2">
+      <div className="flex flex-col gap-2">
         {links.map((link, index) => (
           <Link
             key={index}
-            href={`/${link.name.toLowerCase()}`}
+            href={link.href}
             className={cn(
               buttonVariants({ variant: link.variant, size: "sm" }),
               link.variant &&
-                "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white w-32"
+                "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white w-32",
             )}
           >
             <link.icon className="mr-2 h-4 w-4" />
@@ -28,7 +29,7 @@ export default function SideNav({ links }: NavProps) {
                 className={cn(
                   "mr-auto",
                   link.variant === "default" &&
-                    "text-background dark:text-white"
+                    "text-background dark:text-white",
                 )}
               >
                 {link.name}
@@ -36,6 +37,7 @@ export default function SideNav({ links }: NavProps) {
             )}
           </Link>
         ))}
+        <Logout />
       </div>
     </>
   );
