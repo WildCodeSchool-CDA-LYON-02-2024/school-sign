@@ -38,7 +38,7 @@ export default function Logout() {
         onClick={handleLogout}
         className={cn(
           buttonVariants({ variant: "default", size: "sm" }),
-          "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white w-32",
+          "mt-3 bg-red-700 hover:bg-red-600 w-32",
         )}
       >
         <ExitIcon className="mr-2 h-4 w-4" />

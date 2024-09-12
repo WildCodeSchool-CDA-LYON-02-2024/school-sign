@@ -15,6 +15,7 @@ import {
   FileTextIcon,
   GearIcon,
   HomeIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 
 export default function NavigationBar() {
@@ -35,8 +36,14 @@ export default function NavigationBar() {
       href: "/school-dashboard",
     },
     {
-      name: "Class",
+      name: "Teacher",
       icon: (props) => <BackpackIcon {...props} />,
+      variant: "ghost",
+      href: "/school-dashboard/teacher",
+    },
+    {
+      name: "Class",
+      icon: (props) => <PersonIcon {...props} />,
       variant: "ghost",
       href: "/school-dashboard/class",
     },
