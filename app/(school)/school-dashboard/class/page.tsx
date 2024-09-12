@@ -22,7 +22,7 @@ export default function ClassList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/getClass", {
+        const res = await fetch("/api/class", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
