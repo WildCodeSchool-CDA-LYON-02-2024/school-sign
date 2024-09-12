@@ -6,6 +6,10 @@ import { useState, useEffect } from "react";
 // next
 import Link from "next/link";
 
+// context
+import { useClassContext } from "@/components/context/ClassContext";
+
+
 // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,12 +18,13 @@ export default function StudentList({ params }: { params: { name: string } }) {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { classId } = useClassContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `/api/getStudentByClass?classname=${params.name}`,
+          `/api/student?classid=${classId}`,
           {
             method: "GET",
             headers: {
@@ -48,7 +53,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
     };
 
     fetchData();
-  }, [params.name]);
+  }, [classId]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">

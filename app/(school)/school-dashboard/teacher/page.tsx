@@ -6,23 +6,19 @@ import { useState, useEffect } from "react";
 // next
 import Link from "next/link";
 
-// context
-import { useClassContext } from "@/components/context/ClassContext";
-
 // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function ClassList() {
-  const [classData, setClassData] = useState([]);
+export default function TeacherList() {
+  const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const { setClassId } = useClassContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/class", {
+        const res = await fetch("/api/teacher", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -32,8 +28,9 @@ export default function ClassList() {
 
         if (res.ok) {
           const data = await res.json();
+          console.log(data);
 
-          setClassData(data.classSections || []);
+          setTeachers(data.users || []);
         } else {
           const errorData = await res.json();
           setError(
@@ -51,10 +48,6 @@ export default function ClassList() {
     fetchData();
   }, []);
 
-  const handleClassClick = (id: number) => {
-    setClassId(id);
-  };
-
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="flex items-center justify-center">
@@ -62,15 +55,15 @@ export default function ClassList() {
 
         {loading ? (
           <p>Loading...</p>
-        ) : classData.length > 0 ? (
+        ) : teachers.length > 0 ? (
           <ul className="space-y-4">
-            {classData.map((cls: any) => (
-              <li key={cls.id}>
+            {teachers.map((teacher: any) => (
+              <li key={teacher.id}>
                 <Card className="w-40 justify-center items-center">
                   <CardContent className="flex flex-col justify-center items-center">
-                    <Link href={`/school-dashboard/class/${cls.name}/student/`}>
-                      <button onClick={() => handleClassClick(cls.id)}>
-                        {cls.name}
+                    <Link href={`/school-dashboard/teacher/${teacher.id}`}>
+                      <button>
+                        {`${teacher.firstname} ${teacher.lastname}`}
                       </button>
                     </Link>
                   </CardContent>
@@ -79,13 +72,15 @@ export default function ClassList() {
             ))}
           </ul>
         ) : (
-          <p>No classes found.</p>
+          <p>No teacher found.</p>
         )}
       </div>
 
       <div className="flex items-center justify-center  flex-col gap-4 p-4 md:p-36">
         <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school-dashboard/class/addClass">Add a new class</Link>
+          <Link href="/school-dashboard/teacher/addTeacher">
+            Add a new Teacher
+          </Link>
         </Button>
       </div>
     </div>

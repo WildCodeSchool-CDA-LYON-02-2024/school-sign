@@ -11,24 +11,25 @@ export default function StudentDetails({
 }: {
   params: { id: string; className: string };
 }) {
-  const [student, setStudent] = useState<any | null>(null);
+  const [teacher, setTeacher] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const res = await fetch(`/api/student?id=${params.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
+          credentials: "include", 
         });
 
         if (res.ok) {
           const data = await res.json();
-          setStudent(data.user || null);
+          setTeacher(data.user || null);
           setLoading(false);
         } else {
           const errorData = await res.json();
@@ -55,20 +56,20 @@ export default function StudentDetails({
         <p>Loading...</p>
       ) : (
         <>
-          {student ? (
+          {teacher ? (
             <Card className="w-96 mt-10 justify-center items-center">
               <CardContent className="flex flex-col justify-center items-center">
-                {`${student.firstname}`}
+                {`${teacher.firstname}`}
               </CardContent>
               <CardContent className="flex flex-col justify-center items-center">
-                {`${student.lastname}`}
+                {`${teacher.lastname}`}
               </CardContent>
               <CardContent className="flex flex-col justify-center items-center">
-                {`${student.email}`}
+                {`${teacher.email}`}
               </CardContent>
             </Card>
           ) : (
-            <p>No student found with this ID.</p>
+            <p>No teacher found with this ID.</p>
           )}
         </>
       )}
