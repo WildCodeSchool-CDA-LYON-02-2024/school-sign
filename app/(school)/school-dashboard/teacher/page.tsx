@@ -18,7 +18,7 @@ export default function TeacherList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/getAllTeacher", {
+        const res = await fetch("/api/teacher", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export default function TeacherList() {
             ))}
           </ul>
         ) : (
-          <p>No classes found.</p>
+          <p>No teacher found.</p>
         )}
       </div>
 

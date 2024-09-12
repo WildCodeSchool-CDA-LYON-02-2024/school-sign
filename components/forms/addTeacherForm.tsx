@@ -24,7 +24,7 @@ export default function AddTeacherForm() {
     event.preventDefault();
 
     try {
-      const res = await fetch("/api/addTeacher", {
+      const res = await fetch("/api/teacher", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default function AddTeacherForm() {
       });
 
       if (res.ok) {
-        alert("Teacher added successfully");
+        alert("a new teacher has been added successfully");
         router.back();
       } else {
         const errorData = await res.json();
