@@ -5,17 +5,35 @@ import { useState, useEffect } from "react";
 
 // ui
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import SelectMenu from "@/components/SelectMenu";
+
+// Define a type for teacher data
+interface Teacher {
+  firstname: string;
+  lastname: string;
+  email: string;
+}
+
+// Define a type for class data
+interface ClassSection {
+  id: string;
+  name: string;
+}
 
 export default function StudentDetails({
   params,
 }: {
   params: { id: string; className: string };
 }) {
-  const [teacher, setTeacher] = useState<any | null>(null);
-  const [classData, setClassData] = useState([]);
+  const [teacher, setTeacher] = useState<Teacher | null>(null);
+  const [classData, setClassData] = useState<ClassSection[]>([]);
+  const [selectedClass, setSelectedClass] = useState<ClassSection | null>(null)
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+console.log(selectedClass);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +72,7 @@ export default function StudentDetails({
 
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchClassData = async () => {
       try {
         const res = await fetch("/api/class", {
           method: "GET",
@@ -66,13 +84,11 @@ export default function StudentDetails({
 
         if (res.ok) {
           const data = await res.json();
-
           setClassData(data.classSections || []);
         } else {
           const errorData = await res.json();
-          setError(
-            errorData.error || "An error occurred while fetching classes"
-          );
+
+          setError(errorData.error || "An error occurred while fetching classes");
         }
       } catch (err) {
         console.error("Request Error:", err);
@@ -82,8 +98,10 @@ export default function StudentDetails({
       }
     };
 
-    fetchData();
+    fetchClassData();
   }, []);
+
+  const handleUpdate = () => {}
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -110,7 +128,12 @@ export default function StudentDetails({
           )}
         </>
       )}
-      <SelectMenu setSelected={classData} />
+      <SelectMenu
+        selected={selectedClass}
+        setSelected={setSelectedClass}
+        options={classData}
+      />
+      <Button onClick={handleUpdate}>update</Button>
     </div>
   );
 }
