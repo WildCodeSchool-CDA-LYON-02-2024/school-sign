@@ -10,8 +10,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+// Define TypeScript interface for teacher
+interface Teacher {
+  id: number;
+  firstname: string;
+  lastname: string;
+}
+
 export default function TeacherList() {
-  const [teachers, setTeachers] = useState([]);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -28,14 +35,13 @@ export default function TeacherList() {
 
         if (res.ok) {
           const data = await res.json();
-          console.log(data);
+          console.log("Fetched Data:", data); // Log to check structure
 
+          // Assuming the API returns { users: [...] }
           setTeachers(data.users || []);
         } else {
           const errorData = await res.json();
-          setError(
-            errorData.error || "An error occurred while fetching classes"
-          );
+          setError(errorData.error || "An error occurred while fetching teachers");
         }
       } catch (err) {
         console.error("Request Error:", err);
@@ -57,7 +63,7 @@ export default function TeacherList() {
           <p>Loading...</p>
         ) : teachers.length > 0 ? (
           <ul className="space-y-4">
-            {teachers.map((teacher: any) => (
+            {teachers.map((teacher) => (
               <li key={teacher.id}>
                 <Card className="w-40 justify-center items-center">
                   <CardContent className="flex flex-col justify-center items-center">
@@ -72,11 +78,11 @@ export default function TeacherList() {
             ))}
           </ul>
         ) : (
-          <p>No teacher found.</p>
+          <p>No teachers found.</p>
         )}
       </div>
 
-      <div className="flex items-center justify-center  flex-col gap-4 p-4 md:p-36">
+      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-36">
         <Button className="bg-purple text-seasame" variant="outline">
           <Link href="/school-dashboard/teacher/addTeacher">
             Add a new Teacher
