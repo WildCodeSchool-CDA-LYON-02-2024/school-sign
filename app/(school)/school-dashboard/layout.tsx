@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "./globals.css";
+import "../../globals.css";
 import { ClassProvider } from "@/components/context/ClassContext";
+import NavigationBar from "@/components/navigation/NavigationBar";
 import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
@@ -22,9 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.variable + " bg-seasame"}>
+      <body className={roboto.variable + "bg-seasame"}>
         <ClassProvider>
-          {children}
+          <NavigationBar />
+          <main>{children}</main>
           <Toaster />
         </ClassProvider>
       </body>

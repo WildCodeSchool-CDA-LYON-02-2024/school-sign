@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 export default function SchoolDashboard() {
   return (
     <>
-      <div className=" mt-10 flex flex-col items-center justify-center  h-screen">
+      <div className=" flex flex-col items-center justify-center  h-screen">
         <Button className="bg-purple text-seasame" variant="outline">
           <Link href="/school-dashboard/class">Class</Link>
         </Button>
