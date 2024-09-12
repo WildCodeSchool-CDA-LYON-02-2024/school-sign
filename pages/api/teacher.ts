@@ -6,10 +6,7 @@ import { verifyToken } from "@/lib/jwt";
 
 const prisma = new PrismaClient();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
 
   switch (method) {
@@ -19,32 +16,28 @@ export default async function handler(
       return handlePost(req, res);
     case "PUT":
       return handlePut(req, res);
-    // case "DELETE":
-    //   return handleDelete(req, res);
     default:
       return res.status(405).json({ error: "Method not allowed" });
   }
 }
 
-// Handle GET request - Retrieve all student or a single student by ID
+// Handle GET request - Retrieve all teachers or teachers by classId
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    // Handle classId from query
-    const classIdQuery = req.query.classid;
-    let classId: number | undefined = undefined;
-console.log(classId, 'CLASSID');
+  // Handle classId from query
+  const classIdQuery = req.query.classid;
+  let classId: number | undefined = undefined;
 
-if (typeof classIdQuery === "string") {
-  classId = parseInt(classIdQuery, 10);
-  if (isNaN(classId)) {
-    return res.status(400).json({ error: "Invalid class ID format" });
+  if (typeof classIdQuery === "string") {
+    classId = parseInt(classIdQuery, 10);
+    if (isNaN(classId)) {
+      return res.status(400).json({ error: "Invalid class ID format" });
+    }
+  } else if (Array.isArray(classIdQuery)) {
+    classId = parseInt(classIdQuery[0], 10);
+    if (isNaN(classId)) {
+      return res.status(400).json({ error: "Invalid class ID format" });
+    }
   }
-} else if (Array.isArray(classIdQuery)) {
-  // If classIdQuery is an array, handle the first element
-  classId = parseInt(classIdQuery[0], 10);
-  if (isNaN(classId)) {
-    return res.status(400).json({ error: "Invalid class ID format" });
-  }
-}
 
   try {
     // Extract token from cookies
@@ -70,7 +63,7 @@ if (typeof classIdQuery === "string") {
       });
     }
 
-    if (classId) {
+    if (classId !== undefined) {
       // Query by classId
       const users = await prisma.user.findMany({
         where: {
@@ -80,7 +73,9 @@ if (typeof classIdQuery === "string") {
       });
 
       if (users.length === 0) {
-        return res.status(404).json({ error: "No teachers found for the provided classId" });
+        return res
+          .status(404)
+          .json({ error: "No teachers found for the provided classId" });
       }
 
       return res.status(200).json({ users });
@@ -89,7 +84,7 @@ if (typeof classIdQuery === "string") {
       const users = await prisma.user.findMany({
         where: {
           role: Role.TEACHER,
-          schoolId: schoolId, // Filter by schoolId if needed
+          schoolId: schoolId,
         },
       });
 
@@ -105,30 +100,29 @@ if (typeof classIdQuery === "string") {
 
 // Handle POST request - Add a new teacher
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
-  // const { id } = req.query;
-
   try {
-    // Valider les données d'entrée
+    // Validate input data
     const data = registerSchemaUser.parse(req.body);
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // Obtenir l'ID de l'école et la classe à partir du token
+    // Obtain school ID from token
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
     const payload = await verifyToken(tokenCookie);
+    const schoolId = payload.schoolId;
 
-    const { schoolId } = payload;
     if (!payload) {
       return res.status(401).json({ error: "Invalid or expired token" });
     }
+
     if (!schoolId) {
-      return res.status(400).json({ error: "School ID" });
+      return res.status(400).json({ error: "School ID is required" });
     }
 
-    // Créer l'utilisateur et l'affecter à une école et à une classe
+    // Create the user and link to the school
     const user = await prisma.user.create({
       data: {
         firstname: data.firstname,
@@ -159,7 +153,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "Invalid ID" });
     }
 
-    if (typeof classId === 'undefined') {
+    if (typeof classId === "undefined") {
       return res.status(400).json({ error: "classId is required" });
     }
 
