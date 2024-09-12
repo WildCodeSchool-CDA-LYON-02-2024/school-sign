@@ -69,7 +69,7 @@ export default function StudentDetails({
               </CardContent>
             </Card>
           ) : (
-            <p>No student found with this ID.</p>
+            <p>No teacher found with this ID.</p>
           )}
         </>
       )}
