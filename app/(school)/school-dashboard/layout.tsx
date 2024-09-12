@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.variable + " bg-seasame"}>
+      <body className={roboto.variable + "bg-seasame"}>
         <ClassProvider>
           <NavigationBar />
           <main>{children}</main>

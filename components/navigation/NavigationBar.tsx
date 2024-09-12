@@ -2,14 +2,10 @@
 
 // react
 import { useEffect, useState } from "react";
-import { useUserContext } from "@/components/context/UserContext";
-
 // components
 import SideNav from "@/components/navigation/components/SideNav";
 import BottomNav from "@/components/navigation/components/BottomNav";
-import { NavLink } from "@/components/navigation/components/navTypes";
-
-// ui
+import { NavLink } from "@/components/navigation/components/navTypes"; // ui
 import {
   BackpackIcon,
   FileTextIcon,
@@ -63,7 +59,7 @@ export default function NavigationBar() {
 
   return (
     <>
-      <nav>
+      <nav className="flex h-screen py-8 px-4 w-fit border-r absolute">
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
       </nav>
     </>

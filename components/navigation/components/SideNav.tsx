@@ -12,7 +12,7 @@ import Logout from "@/components/logout";
 export default function SideNav({ links }: NavProps) {
   return (
     <>
-      <div className="flex flex-col items-start gap-1 p-2">
+      <div className="flex flex-col gap-2">
         {links.map((link, index) => (
           <Link
             key={index}
