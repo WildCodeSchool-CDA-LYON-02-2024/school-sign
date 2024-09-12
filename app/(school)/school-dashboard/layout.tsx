@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "../../globals.css";
 import { ClassProvider } from "@/components/context/ClassContext";
 import NavigationBar from "@/components/navigation/NavigationBar";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
         <ClassProvider>
           <NavigationBar />
           <main>{children}</main>
+          <Toaster />
         </ClassProvider>
       </body>
     </html>

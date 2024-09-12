@@ -22,8 +22,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Simulate } from "react-dom/test-utils";
-import error = Simulate.error;
 
 export default function SchoolLogin() {
   const [email, setEmail] = useState("");
