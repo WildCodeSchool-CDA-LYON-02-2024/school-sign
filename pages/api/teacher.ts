@@ -23,7 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 // Handle GET request - Retrieve all teachers or teachers by classId
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-  // Handle classId from query
   const classIdQuery = req.query.classid;
   let classId: number | undefined = undefined;
 
@@ -40,23 +39,19 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    // Extract token from cookies
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
-    // Verify token and extract payload
     const payload = await verifyToken(tokenCookie);
     const schoolId = payload.schoolId;
     const role = payload.role;
 
-    // Check if the schoolId is present in the token
     if (!schoolId) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    // Optionally, check for specific roles
     if (role !== "SCHOOL") {
       return res.status(403).json({
         error: "Access denied. You do not have the required permissions.",
@@ -64,7 +59,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (classId !== undefined) {
-      // Query by classId
       const users = await prisma.user.findMany({
         where: {
           classId: classId,
@@ -101,11 +95,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 // Handle POST request - Add a new teacher
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Validate input data
     const data = registerSchemaUser.parse(req.body);
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // Obtain school ID from token
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
@@ -122,7 +114,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "School ID is required" });
     }
 
-    // Create the user and link to the school
     const user = await prisma.user.create({
       data: {
         firstname: data.firstname,
@@ -145,8 +136,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
 // Handle PUT request - Update an existing teacher
 async function handlePut(req: NextApiRequest, res: NextApiResponse) {
-  const id = parseInt(req.query.id as string, 10); // Convert ID to an integer
+  const id = parseInt(req.query.id as string, 10);
   const { classId } = req.body;
+console.log(id);
 
   try {
     if (isNaN(id)) {
@@ -157,7 +149,6 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "classId is required" });
     }
 
-    // Perform the update
     const updatedUser = await prisma.user.update({
       where: { id: id },
       data: {

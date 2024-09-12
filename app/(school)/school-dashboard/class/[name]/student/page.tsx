@@ -1,8 +1,17 @@
 "use client";
-
+// react
 import { useState, useEffect } from "react";
+
+// next
 import Link from "next/link";
+
+// context
 import { useClassContext } from "@/components/context/ClassContext";
+
+// component
+import SelectMenu from "@/components/SelectMenu";
+
+// ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -18,27 +27,71 @@ interface Teacher {
   firstname: string;
   lastname: string;
   role: string;
+  classId?: string | null;
 }
 
 export default function StudentList({ params }: { params: { name: string } }) {
   const [students, setStudents] = useState<Student[]>([]);
+  const [allTeachers, setAllTeachers] = useState<Teacher[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loadingStudents, setLoadingStudents] = useState<boolean>(true);
   const [loadingTeachers, setLoadingTeachers] = useState<boolean>(true);
   const { classId } = useClassContext();
 
+  // Fetch all teachers for selection
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllTeachers = async () => {
       try {
-        // Fetch teachers
-        const teacherRes = await fetch(`/api/teacher?classid=${classId}`, {
+        const res = await fetch("/api/teacher", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
         });
+
+        if (res.ok) {
+          const data = await res.json();
+          setAllTeachers(data.users || []); // Assuming the API returns { users: [...] }
+        } else {
+          const errorData = await res.json();
+          setError(
+            errorData.error || "An error occurred while fetching teachers"
+          );
+        }
+      } catch (err) {
+        console.error("Request Error:", err);
+        setError("An unexpected error occurred. Please try again later.");
+      } finally {
+        setLoadingTeachers(false);
+      }
+    };
+
+    fetchAllTeachers();
+  }, []);
+
+  // Fetch users by class (students and teachers)
+  useEffect(() => {
+    const fetchUsersByClass = async () => {
+      try {
+        const [teacherRes, studentRes] = await Promise.all([
+          fetch(`/api/teacher?classid=${classId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }),
+          fetch(`/api/student?classid=${classId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }),
+        ]);
 
         if (teacherRes.ok) {
           const teacherData = await teacherRes.json();
@@ -50,16 +103,6 @@ export default function StudentList({ params }: { params: { name: string } }) {
               "An error occurred while fetching teachers"
           );
         }
-        setLoadingTeachers(false);
-
-        // Fetch students
-        const studentRes = await fetch(`/api/student?classid=${classId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
 
         if (studentRes.ok) {
           const studentData = await studentRes.json();
@@ -71,7 +114,9 @@ export default function StudentList({ params }: { params: { name: string } }) {
               "An error occurred while fetching students"
           );
         }
+
         setLoadingStudents(false);
+        setLoadingTeachers(false);
       } catch (err) {
         console.error("Request Error:", err);
         setError("An unexpected error occurred. Please try again later.");
@@ -80,8 +125,44 @@ export default function StudentList({ params }: { params: { name: string } }) {
       }
     };
 
-    fetchData();
+    fetchUsersByClass();
   }, [classId]);
+
+  const handleUpdate = async () => {
+    if (!selectedTeacher) {
+      setError("Please select a teacher.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/teacher?id=${selectedTeacher.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ classId }), // Update with the classId
+      });
+
+      if (res.ok) {
+        const updatedTeacher = await res.json();
+        setTeachers((prevTeachers) =>
+          prevTeachers.map((teacher) =>
+            teacher.id === updatedTeacher.id ? updatedTeacher : teacher
+          )
+        );
+        setError(null);
+      } else {
+        const errorData = await res.json();
+        setError(
+          errorData.error || "An error occurred while updating the teacher."
+        );
+      }
+    } catch (err) {
+      console.error("Request Error:", err);
+      setError("An unexpected error occurred. Please try again later.");
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -92,7 +173,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
       ) : (
         <>
           {/* Display teachers */}
-          <div className="flex items-center justify-center flex-col gap-4 p-4  w-full">
+          <div className="flex items-center justify-center flex-col gap-4 p-4 w-full">
             <h2 className="text-xl font-bold">Teachers</h2>
             {teachers.length > 0 ? (
               <ul className="space-y-4">
@@ -115,7 +196,20 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   ))}
               </ul>
             ) : (
-              <p>No teachers found in this class.</p>
+              <div>
+                <SelectMenu
+                  selected={selectedTeacher}
+                  setSelected={setSelectedTeacher}
+                  options={allTeachers}
+                  displayValue={(teacher) =>
+                    `${teacher.firstname} ${teacher.lastname}`
+                  }
+                  label="Select a Teacher" // Add this line
+                />
+                <Button onClick={handleUpdate} className="mt-4">
+                  Update
+                </Button>
+              </div>
             )}
           </div>
 
@@ -143,12 +237,13 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   ))}
               </ul>
             ) : (
-              <p>No students found in this class.</p>
+              <p>No student found in this class.</p>
             )}
           </div>
         </>
       )}
 
+      {/* Add new student button */}
       <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-36">
         <Link
           href={`/school-dashboard/class/${params.name}/student/addStudent`}
