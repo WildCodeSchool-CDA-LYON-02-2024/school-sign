@@ -59,7 +59,7 @@ export default function NavigationBar() {
 
   return (
     <>
-      <nav className="flex h-screen py-8 px-4 w-fit border-r absolute">
+      <nav className="flex h-screen w-fit absolute">
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
       </nav>
     </>

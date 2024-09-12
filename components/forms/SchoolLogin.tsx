@@ -21,11 +21,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Simulate } from "react-dom/test-utils";
+import error = Simulate.error;
 
 export default function SchoolLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,7 +39,11 @@ export default function SchoolLogin() {
       const errorMessage = result.error.errors
         .map((err: z.ZodIssue) => err.message)
         .join(", ");
-      alert(errorMessage);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        duration: 5000,
+      });
       return;
     }
 
@@ -48,10 +56,18 @@ export default function SchoolLogin() {
     });
 
     if (res.ok) {
-      alert("Successful login");
+      toast({
+        title: "Login Successful",
+        description: "Welcome back!",
+        duration: 5000,
+      });
       router.push("/school-dashboard");
     } else {
-      alert("Email or password invalid");
+      toast({
+        title: "Login failed",
+        description: "Email or password invalid.",
+        duration: 5000,
+      });
     }
   };
 
