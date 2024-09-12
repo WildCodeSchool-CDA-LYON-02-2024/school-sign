@@ -15,7 +15,6 @@ interface SelectMenuProps {
 }
 
 export default function SelectMenu({ selected, setSelected, options }: SelectMenuProps) {
-  console.log(selected);
 
   return (
     <Listbox value={selected} onChange={setSelected}>

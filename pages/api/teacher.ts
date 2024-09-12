@@ -17,8 +17,8 @@ export default async function handler(
       return handleGet(req, res);
     case "POST":
       return handlePost(req, res);
-    // case "PUT":
-    //   return handlePut(req, res);
+    case "PUT":
+      return handlePut(req, res);
     // case "DELETE":
     //   return handleDelete(req, res);
     default:
@@ -28,40 +28,73 @@ export default async function handler(
 
 // Handle GET request - Retrieve all student or a single student by ID
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+    // Handle classId from query
+    const classIdQuery = req.query.classid;
+    let classId: number | undefined = undefined;
+console.log(classId, 'CLASSID');
+
+if (typeof classIdQuery === "string") {
+  classId = parseInt(classIdQuery, 10);
+  if (isNaN(classId)) {
+    return res.status(400).json({ error: "Invalid class ID format" });
+  }
+} else if (Array.isArray(classIdQuery)) {
+  // If classIdQuery is an array, handle the first element
+  classId = parseInt(classIdQuery[0], 10);
+  if (isNaN(classId)) {
+    return res.status(400).json({ error: "Invalid class ID format" });
+  }
+}
 
   try {
-    // Extraire le token des cookies
+    // Extract token from cookies
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
-    // Vérifier le token et extraire le payload
+    // Verify token and extract payload
     const payload = await verifyToken(tokenCookie);
     const schoolId = payload.schoolId;
     const role = payload.role;
 
-    // Vérification que l'utilisateur a bien un schoolId
+    // Check if the schoolId is present in the token
     if (!schoolId) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    // Optionnel : Si vous souhaitez limiter l'accès à certains rôles, ajoutez une vérification du rôle ici.
+    // Optionally, check for specific roles
     if (role !== "SCHOOL") {
       return res.status(403).json({
         error: "Access denied. You do not have the required permissions.",
       });
     }
 
-    // Récupérer toutes les classes associées à l'école à partir de schoolId
-    const users = await prisma.user.findMany({
-      where: {
-        role: Role.TEACHER, // Filtrer par l'ID de l'école
-      },
-    });
+    if (classId) {
+      // Query by classId
+      const users = await prisma.user.findMany({
+        where: {
+          classId: classId,
+          role: Role.TEACHER,
+        },
+      });
 
-    // Répondre avec la liste des classes trouvées
-    res.status(200).json({ users });
+      if (users.length === 0) {
+        return res.status(404).json({ error: "No teachers found for the provided classId" });
+      }
+
+      return res.status(200).json({ users });
+    } else {
+      // Query all teachers if no classId is provided
+      const users = await prisma.user.findMany({
+        where: {
+          role: Role.TEACHER,
+          schoolId: schoolId, // Filter by schoolId if needed
+        },
+      });
+
+      return res.status(200).json({ users });
+    }
   } catch (error: any) {
     console.error("API Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -113,5 +146,34 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+// Handle PUT request - Update an existing teacher
+async function handlePut(req: NextApiRequest, res: NextApiResponse) {
+  const id = parseInt(req.query.id as string, 10); // Convert ID to an integer
+  const { classId } = req.body;
+
+  try {
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid ID" });
+    }
+
+    if (typeof classId === 'undefined') {
+      return res.status(400).json({ error: "classId is required" });
+    }
+
+    // Perform the update
+    const updatedUser = await prisma.user.update({
+      where: { id: id },
+      data: {
+        classId: classId,
+      },
+    });
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("API Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

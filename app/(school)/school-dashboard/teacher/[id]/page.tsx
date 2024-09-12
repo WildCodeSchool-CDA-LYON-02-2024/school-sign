@@ -3,6 +3,9 @@
 // react
 import { useState, useEffect } from "react";
 
+// next
+import Link from "next/link";
+
 // ui
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +16,7 @@ interface Teacher {
   firstname: string;
   lastname: string;
   email: string;
+  classId?: string | null; // Add classId for the teacher
 }
 
 // Define a type for class data
@@ -28,23 +32,20 @@ export default function StudentDetails({
 }) {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [classData, setClassData] = useState<ClassSection[]>([]);
-  const [selectedClass, setSelectedClass] = useState<ClassSection | null>(null)
+  const [selectedClass, setSelectedClass] = useState<ClassSection | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-console.log(selectedClass);
-
-
+  // Fetch teacher data
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const res = await fetch(`/api/student?id=${params.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", 
+          credentials: "include",
         });
 
         if (res.ok) {
@@ -68,9 +69,7 @@ console.log(selectedClass);
     fetchData();
   }, [params.id]);
 
-
-
-
+  // Fetch class data
   useEffect(() => {
     const fetchClassData = async () => {
       try {
@@ -87,8 +86,9 @@ console.log(selectedClass);
           setClassData(data.classSections || []);
         } else {
           const errorData = await res.json();
-
-          setError(errorData.error || "An error occurred while fetching classes");
+          setError(
+            errorData.error || "An error occurred while fetching classes"
+          );
         }
       } catch (err) {
         console.error("Request Error:", err);
@@ -101,7 +101,46 @@ console.log(selectedClass);
     fetchClassData();
   }, []);
 
-  const handleUpdate = () => {}
+  // Function to get the class name based on teacher's classId
+  const getClassName = () => {
+    if (teacher?.classId && classData.length > 0) {
+      const classSection = classData.find((cls) => cls.id === teacher.classId);
+      return classSection ? classSection.name : "Class not found";
+    }
+    return null;
+  };
+
+  const className = getClassName();
+
+  const handleUpdate = async () => {
+    if (!selectedClass) {
+      setError("Please select a class.");
+      return;
+    }
+  
+    try {
+      const res = await fetch(`/api/teacher?id=${params.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ classId: selectedClass.id }), // Pass classId in body
+      });
+  
+      if (res.ok) {
+        const updatedTeacher = await res.json();
+        setTeacher(updatedTeacher);
+        setError(null);
+      } else {
+        const errorData = await res.json();
+        setError(errorData.error || "An error occurred while updating the class.");
+      }
+    } catch (err) {
+      console.error("Request Error:", err);
+      setError("An unexpected error occurred. Please try again later.");
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -128,12 +167,27 @@ console.log(selectedClass);
           )}
         </>
       )}
-      <SelectMenu
-        selected={selectedClass}
-        setSelected={setSelectedClass}
-        options={classData}
-      />
-      <Button onClick={handleUpdate}>update</Button>
+
+      <div className="flex flex-col items-center justify-center mt-10">
+        {teacher?.classId ? (
+          <p>
+            Affected Class Name:
+            <Link href={`/school-dashboard/class/${className}/student/`}>
+              {" "}
+              {getClassName()}
+            </Link>
+          </p>
+        ) : (
+          <>
+            <SelectMenu
+              selected={selectedClass}
+              setSelected={setSelectedClass}
+              options={classData}
+            />
+            <Button onClick={handleUpdate}>Update</Button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
