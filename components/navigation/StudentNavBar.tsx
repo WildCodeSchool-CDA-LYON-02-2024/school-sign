@@ -52,7 +52,7 @@ export default function StudentNavBar() {
 
   return (
     <>
-      <nav className="flex h-screen w-fit absolute">
+      <nav className="basis-1/5">
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
       </nav>
     </>
