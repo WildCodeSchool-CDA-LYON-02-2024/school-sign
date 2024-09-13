@@ -10,7 +10,6 @@ import { NavProps } from "@/components/navigation/components/navTypes";
 import { cn } from "@/lib/utils";
 import { Menubar, MenubarMenu } from "@/components/ui/menubar";
 import { buttonVariants } from "@/components/ui/button";
-import Logout from "@/components/logout";
 
 export default function BottomNav({ links }: NavProps) {
   return (
