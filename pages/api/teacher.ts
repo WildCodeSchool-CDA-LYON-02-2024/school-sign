@@ -6,7 +6,10 @@ import { verifyToken } from "@/lib/jwt";
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { method } = req;
 
   switch (method) {
@@ -23,30 +26,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 // Handle GET request - Retrieve all teachers or teachers by classId
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-  const classIdQuery = req.query.classid;
-  let classId: number | undefined = undefined;
-
-  if (typeof classIdQuery === "string") {
-    classId = parseInt(classIdQuery, 10);
-    if (isNaN(classId)) {
-      return res.status(400).json({ error: "Invalid class ID format" });
-    }
-  } else if (Array.isArray(classIdQuery)) {
-    classId = parseInt(classIdQuery[0], 10);
-    if (isNaN(classId)) {
-      return res.status(400).json({ error: "Invalid class ID format" });
-    }
-  }
-
   try {
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
-
     const payload = await verifyToken(tokenCookie);
     const schoolId = payload.schoolId;
     const role = payload.role;
+    const classIdQuery = req.query.classid;
+    let classId: number | undefined = undefined;
+
+    if (typeof classIdQuery === "string") {
+      classId = parseInt(classIdQuery, 10);
+      if (isNaN(classId)) {
+        return res.status(400).json({ error: "Invalid class ID format" });
+      }
+    } else if (Array.isArray(classIdQuery)) {
+      classId = parseInt(classIdQuery[0], 10);
+    }
 
     if (!schoolId) {
       return res.status(400).json({ error: "School ID missing from token" });
@@ -65,13 +63,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
           role: Role.TEACHER,
         },
       });
-
-      if (users.length === 0) {
-        return res
-          .status(404)
-          .json({ error: "No teachers found for the provided classId" });
-      }
-
       return res.status(200).json({ users });
     } else {
       // Query all teachers if no classId is provided
@@ -138,7 +129,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 async function handlePut(req: NextApiRequest, res: NextApiResponse) {
   const id = parseInt(req.query.id as string, 10);
   const { classId } = req.body;
-console.log(id);
+  console.log(id);
 
   try {
     if (isNaN(id)) {

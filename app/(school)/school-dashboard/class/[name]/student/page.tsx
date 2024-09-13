@@ -54,7 +54,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
 
         if (res.ok) {
           const data = await res.json();
-          setAllTeachers(data.users || []); // Assuming the API returns { users: [...] }
+          setAllTeachers(data.users || []);
         } else {
           const errorData = await res.json();
           setError(
@@ -141,16 +141,23 @@ export default function StudentList({ params }: { params: { name: string } }) {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ classId }), // Update with the classId
+        body: JSON.stringify({ classId }),
       });
 
       if (res.ok) {
         const updatedTeacher = await res.json();
-        setTeachers((prevTeachers) =>
-          prevTeachers.map((teacher) =>
-            teacher.id === updatedTeacher.id ? updatedTeacher : teacher
-          )
+
+        // Update the list of teachers with the newly added teacher
+        setTeachers(
+          (prevTeachers) =>
+            prevTeachers.some((teacher) => teacher.id === updatedTeacher.id)
+              ? prevTeachers.map((teacher) =>
+                  teacher.id === updatedTeacher.id ? updatedTeacher : teacher
+                )
+              : [...prevTeachers, updatedTeacher]
         );
+
+        setSelectedTeacher(null); 
         setError(null);
       } else {
         const errorData = await res.json();
@@ -196,7 +203,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   ))}
               </ul>
             ) : (
-              <div>
+              <div className="flex flex-col items-center justify-center ">
                 <SelectMenu
                   selected={selectedTeacher}
                   setSelected={setSelectedTeacher}
@@ -204,7 +211,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   displayValue={(teacher) =>
                     `${teacher.firstname} ${teacher.lastname}`
                   }
-                  label="Select a Teacher" // Add this line
+                  label="Select a Teacher"
                 />
                 <Button onClick={handleUpdate} className="mt-4">
                   Update

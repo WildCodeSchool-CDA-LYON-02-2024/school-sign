@@ -13,15 +13,13 @@ import SelectMenu from "@/components/SelectMenu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// Define a type for teacher data
 interface Teacher {
   firstname: string;
   lastname: string;
   email: string;
-  classId?: string | null; // Add classId for the teacher
+  classId?: string | null;
 }
 
-// Define a type for class data
 interface ClassSection {
   id: string;
   name: string;
@@ -124,7 +122,7 @@ export default function StudentDetails({
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ classId: selectedClass.id }), // Pass classId in body
+        body: JSON.stringify({ classId: selectedClass.id }),
       });
 
       if (res.ok) {
@@ -181,7 +179,7 @@ export default function StudentDetails({
               selected={selectedClass}
               setSelected={setSelectedClass}
               options={classData}
-              displayValue={(classSection) => classSection.name} // display class names
+              displayValue={(classSection) => classSection.name} 
               label="Select a Class"
             />
             <Button onClick={handleUpdate} className="mt-4">
