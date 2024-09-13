@@ -14,7 +14,7 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 
-export default function NavigationBar() {
+export default function SchoolNavBar() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import "../../globals.css";
 import React from "react";
 import { ClassProvider } from "@/components/context/ClassContext";
-import SchoolNavBar from "@/components/navigation/SchoolNavBar";
+import StudentNavBar from "@/components/navigation/StudentNavBar";
 import { Toaster } from "@/components/ui/toaster";
 
-export default function SchoolLayout({
+export default function StudentLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export default function SchoolLayout({
   return (
     <div className={" bg-seasame"}>
       <ClassProvider>
-        <SchoolNavBar />
+        <StudentNavBar />
         <main>{children}</main>
         <Toaster />
       </ClassProvider>

@@ -3,7 +3,7 @@
 // next
 import { useRouter } from "next/navigation";
 // ui
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
