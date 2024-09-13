@@ -84,7 +84,7 @@ export default function SchoolRegisterForm() {
       toast({
         title: "Error",
         className: "bg-red-700 text-white",
-        description: errorMessage,
+        description: "please enter correct informations",
         duration: 5000,
       });
     }

@@ -131,7 +131,7 @@ export default function StudentDetails({
         toast({
           title: "Success",
           className: "bg-green-400",
-          description: "The teacher has been assigne to the selected class",
+          description: "The teacher has been assigned to the selected class",
           duration: 5000,
         });
         const updatedTeacher = await res.json();
