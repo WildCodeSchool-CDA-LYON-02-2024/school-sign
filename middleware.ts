@@ -6,17 +6,17 @@ export default async function middleware(request: NextRequest) {
   const token = tokenCookie?.value;
 
   if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/school-login", request.url));
   }
 
   try {
     await verifyToken(token);
     return NextResponse.next();
   } catch (error) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/school-login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/school/:path*"],
+  matcher: ["/school-dashboard/:path*"],
 };

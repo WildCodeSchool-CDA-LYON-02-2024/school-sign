@@ -10,10 +10,10 @@ export default function SchoolLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={" bg-seasame"}>
+    <div className="md:flex bg-seasame h-screen">
       <ClassProvider>
         <SchoolNavBar />
-        <main>{children}</main>
+        <main className="basis-4/5">{children}</main>
         <Toaster />
       </ClassProvider>
     </div>
