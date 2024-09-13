@@ -86,14 +86,17 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 // Handle POST request - Add a new teacher
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   try {
+    // Validate the incoming request body
     const data = registerSchemaUser.parse(req.body);
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
+    // Check for authorization token
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
+    // Verify the token
     const payload = await verifyToken(tokenCookie);
     const schoolId = payload.schoolId;
 
@@ -105,6 +108,16 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "School ID is required" });
     }
 
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+
+    // Create a new user
     const user = await prisma.user.create({
       data: {
         firstname: data.firstname,
@@ -116,6 +129,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
+    // Send response
     res.status(201).json({ user });
   } catch (error) {
     console.error("API Error:", error);

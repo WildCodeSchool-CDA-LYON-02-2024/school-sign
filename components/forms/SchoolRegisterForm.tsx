@@ -75,6 +75,7 @@ export default function SchoolRegisterForm() {
       console.log(data);
       toast({
         title: "Registration Successful",
+        className: "bg-green-400",
         duration: 5000,
       });
       router.push("/school-login");
@@ -82,7 +83,8 @@ export default function SchoolRegisterForm() {
       const errorMessage = await response.text();
       toast({
         title: "Error",
-        description: errorMessage,
+        className: "bg-red-700 text-white",
+        description: "please enter correct informations",
         duration: 5000,
       });
     }

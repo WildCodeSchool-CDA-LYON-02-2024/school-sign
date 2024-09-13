@@ -12,6 +12,7 @@ import SelectMenu from "@/components/SelectMenu";
 // ui
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface Teacher {
   firstname: string;
@@ -35,6 +36,7 @@ export default function StudentDetails({
   const [selectedClass, setSelectedClass] = useState<ClassSection | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { toast } = useToast();
 
   // Fetch teacher data
   useEffect(() => {
@@ -126,6 +128,12 @@ export default function StudentDetails({
       });
 
       if (res.ok) {
+        toast({
+          title: "Success",
+          className: "bg-green-400",
+          description: "The teacher has been assigned to the selected class",
+          duration: 5000,
+        });
         const updatedTeacher = await res.json();
         setTeacher(updatedTeacher);
         setError(null);

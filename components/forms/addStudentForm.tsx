@@ -14,6 +14,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddStudentForm() {
   const [firstname, setFirstname] = useState("");
@@ -23,6 +24,7 @@ export default function AddStudentForm() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { classId } = useClassContext();
+  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,9 +46,20 @@ export default function AddStudentForm() {
       });
 
       if (res.ok) {
-        alert("Student added successfully");
+        toast({
+          title: "Success",
+          className: "bg-green-400",
+          description: "Student has been added",
+          duration: 5000,
+        });
         router.back();
       } else {
+        toast({
+          title: "Invalid information",
+          className: "bg-red-500",
+          description: 'Email already in use',
+          duration: 5000,
+        });
         const errorData = await res.json();
         setError(errorData.error || "An error occurred while adding the student");
       }
