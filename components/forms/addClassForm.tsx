@@ -49,8 +49,8 @@ export default function AddClassForm() {
       if (res.ok) {
         toast({
           title: "Success",
-          className: "bg-lime-400",
-          description: "New class added",
+          className: "bg-green-400",
+          description: "A new has been class added",
           duration: 5000,
         });
         router.back();

@@ -130,7 +130,7 @@ export default function StudentDetails({
       if (res.ok) {
         toast({
           title: "Success",
-          className: "bg-lime-400",
+          className: "bg-green-400",
           description: "The teacher has been assigne to the selected class",
           duration: 5000,
         });

@@ -149,8 +149,8 @@ export default function StudentList({ params }: { params: { name: string } }) {
       if (res.ok) {
         toast({
           title: "Success",
-          className: "bg-lime-400",
-          description: "Teacher has been added",
+          className: "bg-green-400",
+          description: "Teacher has been added to the class",
           duration: 5000,
         });
         

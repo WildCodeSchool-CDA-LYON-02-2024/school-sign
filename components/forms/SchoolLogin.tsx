@@ -56,6 +56,7 @@ export default function SchoolLogin() {
     if (res.ok) {
       toast({
         title: "Login Successful",
+        className: "bg-green-400",
         description: "Welcome back!",
         duration: 5000,
       });
@@ -63,7 +64,8 @@ export default function SchoolLogin() {
     } else {
       toast({
         title: "Login failed",
-        description: "Email or password invalid.",
+        className: "bg-red-700 text-white",
+        description: "Invalid email or password.",
         duration: 5000,
       });
     }
