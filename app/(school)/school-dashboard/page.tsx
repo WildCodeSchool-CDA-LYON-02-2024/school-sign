@@ -5,7 +5,7 @@ export default function SchoolDashboard() {
   return (
     <>
       <div className="flex justify-center h-screen py-8">
-        <Logout />
+        <h1>School Dashboard</h1>
       </div>
     </>
   );
