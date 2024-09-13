@@ -14,6 +14,7 @@ import SelectMenu from "@/components/SelectMenu";
 // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 interface Student {
   id: number;
@@ -39,6 +40,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
   const [loadingStudents, setLoadingStudents] = useState<boolean>(true);
   const [loadingTeachers, setLoadingTeachers] = useState<boolean>(true);
   const { classId } = useClassContext();
+  const { toast } = useToast();
 
   // Fetch all teachers for selection
   useEffect(() => {
@@ -145,19 +147,24 @@ export default function StudentList({ params }: { params: { name: string } }) {
       });
 
       if (res.ok) {
+        toast({
+          title: "Success",
+          className: "bg-lime-400",
+          description: "Teacher has been added",
+          duration: 5000,
+        });
+        
         const updatedTeacher = await res.json();
 
         // Update the list of teachers with the newly added teacher
-        setTeachers(
-          (prevTeachers) =>
-            prevTeachers.some((teacher) => teacher.id === updatedTeacher.id)
-              ? prevTeachers.map((teacher) =>
-                  teacher.id === updatedTeacher.id ? updatedTeacher : teacher
-                )
-              : [...prevTeachers, updatedTeacher]
+        setTeachers((prevTeachers) =>
+          prevTeachers.some((teacher) => teacher.id === updatedTeacher.id)
+            ? prevTeachers.map((teacher) =>
+                teacher.id === updatedTeacher.id ? updatedTeacher : teacher
+              )
+            : [...prevTeachers, updatedTeacher]
         );
-
-        setSelectedTeacher(null); 
+        setSelectedTeacher(null);
         setError(null);
       } else {
         const errorData = await res.json();
