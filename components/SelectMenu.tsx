@@ -49,23 +49,27 @@ export default function SelectMenu<T>({
         </ListboxButton>
 
         <ListboxOptions className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-          {options.map((option) => (
-            <ListboxOption
-              key={displayValue(option)}
-              value={option}
-              className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-indigo-600 hover:text-white"
-            >
-              <div className="flex items-center">
-                <span className="ml-3 block truncate font-normal group-data-[selected]:font-semibold">
-                  {displayValue(option)}
-                </span>
-              </div>
+          {options.length === 0 ? (
+            <div className="py-2 px-3 text-gray-500">No options available</div>
+          ) : (
+            options.map((option) => (
+              <ListboxOption
+                key={displayValue(option)}
+                value={option}
+                className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 hover:bg-indigo-600 hover:text-white"
+              >
+                <div className="flex items-center">
+                  <span className="ml-3 block truncate font-normal group-data-[selected]:font-semibold">
+                    {displayValue(option)}
+                  </span>
+                </div>
 
-              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-[focus]:text-white [.group:not([data-selected])_&]:hidden">
-                <CheckIcon aria-hidden="true" className="h-5 w-5" />
-              </span>
-            </ListboxOption>
-          ))}
+                <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-[focus]:text-white [.group:not([data-selected])_&]:hidden">
+                  <CheckIcon aria-hidden="true" className="h-5 w-5" />
+                </span>
+              </ListboxOption>
+            ))
+          )}
         </ListboxOptions>
       </div>
     </Listbox>

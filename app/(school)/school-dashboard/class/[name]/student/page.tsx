@@ -251,7 +251,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
       )}
 
       {/* Add new student button */}
-      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-36">
+      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
         <Link
           href={`/school-dashboard/class/${params.name}/student/addStudent`}
         >

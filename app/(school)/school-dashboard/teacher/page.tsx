@@ -82,7 +82,7 @@ export default function TeacherList() {
         )}
       </div>
 
-      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-36">
+      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
         <Button className="bg-purple text-seasame" variant="outline">
           <Link href="/school-dashboard/teacher/addTeacher">
             Add a new Teacher
