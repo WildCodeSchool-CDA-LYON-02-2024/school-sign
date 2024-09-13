@@ -6,20 +6,20 @@ import { useState, useEffect } from "react";
 // next
 import Link from "next/link";
 
+// component
+import SelectMenu from "@/components/SelectMenu";
+
 // ui
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import SelectMenu from "@/components/SelectMenu";
 
-// Define a type for teacher data
 interface Teacher {
   firstname: string;
   lastname: string;
   email: string;
-  classId?: string | null; // Add classId for the teacher
+  classId?: string | null;
 }
 
-// Define a type for class data
 interface ClassSection {
   id: string;
   name: string;
@@ -38,7 +38,7 @@ export default function StudentDetails({
 
   // Fetch teacher data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTeacherData = async () => {
       try {
         const res = await fetch(`/api/student?id=${params.id}`, {
           method: "GET",
@@ -51,22 +51,21 @@ export default function StudentDetails({
         if (res.ok) {
           const data = await res.json();
           setTeacher(data.user || null);
-          setLoading(false);
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching the student"
+            errorData.error || "An error occurred while fetching the student."
           );
-          setLoading(false);
         }
       } catch (err) {
         console.error("Request Error:", err);
         setError("An unexpected error occurred. Please try again later.");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchTeacherData();
   }, [params.id]);
 
   // Fetch class data
@@ -87,14 +86,12 @@ export default function StudentDetails({
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes"
+            errorData.error || "An error occurred while fetching classes."
           );
         }
       } catch (err) {
         console.error("Request Error:", err);
         setError("An unexpected error occurred. Please try again later.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -117,7 +114,7 @@ export default function StudentDetails({
       setError("Please select a class.");
       return;
     }
-  
+
     try {
       const res = await fetch(`/api/teacher?id=${params.id}`, {
         method: "PUT",
@@ -125,9 +122,9 @@ export default function StudentDetails({
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ classId: selectedClass.id }), // Pass classId in body
+        body: JSON.stringify({ classId: selectedClass.id }),
       });
-  
+
       if (res.ok) {
         const updatedTeacher = await res.json();
         setTeacher(updatedTeacher);
@@ -171,9 +168,8 @@ export default function StudentDetails({
       <div className="flex flex-col items-center justify-center mt-10">
         {teacher?.classId ? (
           <p>
-            Affected Class Name:
+            Assigned Class:{" "}
             <Link href={`/school-dashboard/class/${className}/student/`}>
-              {" "}
               {getClassName()}
             </Link>
           </p>
@@ -183,8 +179,12 @@ export default function StudentDetails({
               selected={selectedClass}
               setSelected={setSelectedClass}
               options={classData}
+              displayValue={(classSection) => classSection.name} 
+              label="Select a Class"
             />
-            <Button onClick={handleUpdate}>Update</Button>
+            <Button onClick={handleUpdate} className="mt-4">
+              Update
+            </Button>
           </>
         )}
       </div>
