@@ -1,4 +1,5 @@
 import "../../globals.css";
+import React from "react";
 import { ClassProvider } from "@/components/context/ClassContext";
 import StudentNavBar from "@/components/navigation/StudentNavBar";
 import { Toaster } from "@/components/ui/toaster";
