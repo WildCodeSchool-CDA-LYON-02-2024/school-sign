@@ -33,14 +33,13 @@ export function DeleteDialog({
             Are you sure you want to delete the event "{eventTitle}"?
           </DialogDescription>
         </DialogHeader>
-        <div className="flex items-center justify-center p-4">
-          <ExclamationTriangleIcon
-            className="h-6 w-6 text-red-600"
-            aria-hidden="true"
-          />
-        </div>
+
         <DialogFooter>
           <Button variant="destructive" onClick={onDelete}>
+            <ExclamationTriangleIcon
+              className="h-3.5 w-3.5 text-white mr-2"
+              aria-hidden="true"
+            />
             Delete
           </Button>
           <Button variant="ghost" onClick={onClose}>

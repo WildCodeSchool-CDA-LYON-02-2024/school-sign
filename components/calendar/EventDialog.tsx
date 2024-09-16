@@ -1,11 +1,14 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface EventDialogProps {
   open: boolean;
@@ -27,16 +30,19 @@ export function EventDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Event</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="title"
-            value={event.title}
-            onChange={onChange}
-            placeholder="Title"
-            className="block w-full rounded-md border p-2"
-          />
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              type="text"
+              name="title"
+              value={event.title}
+              onChange={onChange}
+              placeholder="Title"
+            />
+          </div>
           <DialogFooter>
             <Button type="submit" disabled={event.title === ""}>
               Create
