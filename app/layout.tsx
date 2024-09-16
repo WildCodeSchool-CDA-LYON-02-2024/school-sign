@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import React from "react";
+import { ClassProvider } from "@/components/context/ClassContext";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
   weight: ["100", "300", "400", "500", "700", "900"],
 });
-
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(roboto.variable, "bg-seasame")}>{children}</body>
+      <body className={roboto.variable + " bg-seasame"}>
+        <ClassProvider>
+          {children}
+          <Toaster />
+        </ClassProvider>
+      </body>
     </html>
   );
 }

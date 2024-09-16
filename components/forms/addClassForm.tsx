@@ -17,47 +17,51 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddClassForm() {
   const [name, setName] = useState("");
-  const [error, setError] = useState<string | null>(null); // For error handling
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Validate input data using Zod
     const result = classSchema.safeParse({ name });
 
     if (!result.success) {
       setError("Invalid input: " + result.error.errors.map(e => e.message).join(", "));
       return;
     }
-
-    // Reset error if validation passes
     setError(null);
 
     try {
-      // Send the data to the API
       const res = await fetch("/api/class", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // No need to manually set the Authorization header if using cookies
         },
         body: JSON.stringify(result.data),
-        credentials: "include" // Ensure cookies are sent with the request
+        credentials: "include"
       });
 
       if (res.ok) {
-        alert("Class added successfully");
-        router.push("/school/class");
+        toast({
+          title: "Success",
+          className: "bg-green-400",
+          description: "A new has been class added",
+          duration: 5000,
+        });
+        router.back();
       } else {
-        const errorData = await res.json();
-        setError(errorData.error || "An error occurred while adding the class");
+        toast({
+          title: "An error occurred while adding the class",
+          description: "Please try again later",
+          duration: 5000,
+        });
       }
     } catch (err) {
-      console.error("Request Error:", err); // Log error for debugging
       setError("An unexpected error occurred. Please try again later.");
     }
   };
@@ -83,7 +87,7 @@ export default function AddClassForm() {
                 required
               />
             </div>
-            {error && <p className="text-red-500">{error}</p>} {/* Displaying errors */}
+            {error && <p className="text-red-500">{error}</p>} 
             <CardFooter className="flex justify-end">
               <Button type="submit">Submit</Button>
             </CardFooter>

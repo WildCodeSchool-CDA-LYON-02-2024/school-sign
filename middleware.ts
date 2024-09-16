@@ -4,20 +4,19 @@ import { verifyToken } from "@/lib/jwt";
 export default async function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get("session");
   const token = tokenCookie?.value;
-console.log(token);
 
   if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/school-login", request.url));
   }
 
   try {
     await verifyToken(token);
     return NextResponse.next();
   } catch (error) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/school-login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/school"],
+  matcher: ["/school-dashboard/:path*"],
 };

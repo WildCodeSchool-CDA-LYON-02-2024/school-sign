@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { registerSchema } from "@/lib/schemas/registerSchema"; // Assurez-vous que le schéma est adapté aux utilisateurs
+import { registerSchema } from "@/lib/schemas/registerSchemaUser"; // Assurez-vous que le schéma est adapté aux utilisateurs
 
 const prisma = new PrismaClient();
 

@@ -11,20 +11,15 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      // Validation des données d'entrée avec le schéma
       const data = registerSchemaSchool.parse(req.body);
       const hashedPassword = await bcrypt.hash(data.password, 10);
 
-
-      // Create the school (optional, depending on your use case)
       let school;
       if (data.schoolId) {
-        // User provided an existing school ID
         school = await prisma.school.findUnique({
           where: { id: data.schoolId },
         });
       } else {
-        // Create a new school if no ID provided
         school = await prisma.school.create({
           data: {
             name: data.name,
@@ -39,13 +34,12 @@ export default async function handler(
         return res.status(400).json({ error: "School not found or created" });
       }
 
-      // Create the user with the school association and assign the role "SCHOOL"
       const user = await prisma.user.create({
         data: {
           email: data.email,
           password: hashedPassword,
           school: { connect: { id: school.id } },
-          role: 'SCHOOL'  // Assigning the SCHOOL role
+          role: 'SCHOOL'
         },
       });
 

@@ -5,6 +5,7 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 interface CustomJWTPayload extends JWTPayload {
   userId: number;
   schoolId: number;
+  classId : number;
   role: null | string;
 }
 
