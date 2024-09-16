@@ -9,6 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import { Form, useForm } from "react-hook-form";
 
 interface EventDialogProps {
   open: boolean;
@@ -25,6 +27,7 @@ export function EventDialog({
   onChange,
   onSubmit,
 }: EventDialogProps) {
+  const form = useForm();
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
@@ -32,26 +35,41 @@ export function EventDialog({
           <DialogTitle>Add Event</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit}>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              type="text"
+        <Form>
+          <FormField
+              control={form.control}
               name="title"
-              value={event.title}
-              onChange={onChange}
-              placeholder="Title"
-            />
-          </div>
-          <DialogFooter>
-            <Button type="submit" disabled={event.title === ""}>
-              Create
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          </DialogFooter>
-        </form>
+              render={({field}) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormDescription>This is your public title name.</FormDescription>
+                <FormMessage />
+              </FormItem>
+          )}  />
+        </Form>
+        // <form onSubmit={onSubmit}>
+        //   <div className="grid w-full max-w-sm items-center gap-1.5">
+        //     <Label htmlFor="title">Title</Label>
+        //     <Input
+        //       type="text"
+        //       name="title"
+        //       value={event.title}
+        //       onChange={onChange}
+        //       placeholder="Title"
+        //     />
+        //   </div>
+        //   <DialogFooter>
+        //     <Button type="submit" disabled={event.title === ""}>
+        //       Create
+        //     </Button>
+        //     <Button variant="ghost" onClick={onClose}>
+        //       Cancel
+        //     </Button>
+        //   </DialogFooter>
+        // </form>
       </DialogContent>
     </Dialog>
   );
