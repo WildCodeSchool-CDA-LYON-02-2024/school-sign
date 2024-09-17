@@ -60,7 +60,7 @@ export default function StudentLogin() {
         description: "Welcome back!",
         duration: 5000,
       });
-      router.push("/school-dashboard");
+      router.push("/student-dashboard");
     } else {
       toast({
         title: "Login failed",
