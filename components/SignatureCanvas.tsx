@@ -27,11 +27,12 @@ export default function SignatureCanvas() {
     }
   }, [canvasKey]);
 
-  const saveAsPNG = () => {
+  const saveAsPNG = async () => {
     if (signaturePadRef.current) {
       try {
         const dataUrl = signaturePadRef.current.toDataURL();
         setDataURL(dataUrl);
+        await uploadSignature(dataUrl); // Upload the signature to the server
       } catch (error) {
         console.error("Error generating PNG data URL", error);
       }
@@ -51,6 +52,26 @@ export default function SignatureCanvas() {
     setDataURL(null);
   };
 
+  const uploadSignature = async (dataUrl: string) => {
+    try {
+      const response = await fetch("/api/signature", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ dataUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload signature");
+      }
+
+      console.log("Signature uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading signature", error);
+    }
+  };
+
   return (
     <div>
       {!dataURL ? (
@@ -63,18 +84,21 @@ export default function SignatureCanvas() {
               ref={canvasRef}
               key={canvasKey} // Unique key to force re-render
               style={{ width: "100%", height: "100%" }}
+              aria-label="Signature Canvas"
             ></canvas>
           </div>
           <div className="mt-4">
             <button
               onClick={saveAsPNG}
               className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+              aria-label="Save Signature as PNG"
             >
               Save as PNG
             </button>
             <button
               onClick={clearSignature}
               className="px-4 py-2 bg-red-500 text-white rounded"
+              aria-label="Clear Signature"
             >
               Clear
             </button>
@@ -87,6 +111,7 @@ export default function SignatureCanvas() {
           <button
             onClick={restartSignature}
             className="px-4 py-2 bg-green-500 text-white rounded mt-4"
+            aria-label="Restart Signature"
           >
             Restart Signature
           </button>
