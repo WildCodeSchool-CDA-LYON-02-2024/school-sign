@@ -20,7 +20,17 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { calendarSchema } from "@/lib/schemas/calendarSchema";
+import { calendarFormSchema } from "@/lib/schemas/calendarFormSchema";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { toast } from "@/hooks/use-toast";
 
 interface EventDialogProps {
   open: boolean;
@@ -30,22 +40,45 @@ interface EventDialogProps {
   // onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
+type CalendarFormValues = z.infer<typeof calendarFormSchema>;
+
+const defaultValues: Partial<CalendarFormValues> = {
+  title: "Lesson",
+  date: new Date(),
+};
+
 export function EventDialog({
   open,
   onClose,
   event,
   onChange,
 }: EventDialogProps) {
-  const form = useForm<z.infer<typeof calendarSchema>>({
-    resolver: zodResolver(calendarSchema),
-    defaultValues: {
-      title: "Lesson",
-      // date: Date.now().toString(),
-    },
+  const form = useForm<CalendarFormValues>({
+    resolver: zodResolver(calendarFormSchema),
+    defaultValues,
   });
 
-  const onSubmit = (values: z.infer<typeof calendarSchema>) => {
-    console.log(values);
+  const onSubmit = (data: CalendarFormValues) => {
+    // MySQL datetime: 9999-12-31 23:59:59
+    //   
+    // data.date.toDateString() Outputs: Tue Sep 17 2024
+    // getUTCDate() or getDate() Outputs: 17
+    // toLocaleString() Outputs: 9/17/2024, 5:19:55 PM
+    // toLocaleDateString() Outputs: 9/17/2024
+    // toISOString() Outputs: 2024-09-17T15:14:34.810Z
+
+    console.log(": ", data.date.toLocaleString());
+    const formatDateFNS = format(new Date(), "yyyy-MM-dd HH-mm-ss");
+    console.log(formatDateFNS);
+
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
   };
 
   return (
@@ -71,18 +104,64 @@ export function EventDialog({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public title name.
-                  </FormDescription>
+                  <FormDescription>This is the class name.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "yyyy-MM-dd HH-mm-ss")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>This is the class date.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={form.watch("title") === ""}>
+              <Button
+                type="submit"
+                disabled={
+                  form.watch("title") === "" &&
+                  form.watch("date") !== new Date()
+                }
+              >
                 Create
               </Button>
-              <Button variant="ghost" onClick={onClose}>
+              <Button type="reset" variant="ghost" onClick={onClose}>
                 Cancel
               </Button>
             </DialogFooter>
