@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -6,9 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
+  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -16,10 +17,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { calendarSchema } from "@/lib/schemas/calendarSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { calendarSchema } from "@/lib/schemas/calendarSchema";
 
 interface EventDialogProps {
   open: boolean;
@@ -39,7 +40,7 @@ export function EventDialog({
     resolver: zodResolver(calendarSchema),
     defaultValues: {
       title: "Lesson",
-      date: Date.now().toString(),
+      // date: Date.now().toString(),
     },
   });
 
@@ -61,9 +62,14 @@ export function EventDialog({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel htmlFor="title">Title</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Title" {...field} />
+                    <Input
+                      id="title"
+                      type="text"
+                      placeholder="Title"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public title name.
@@ -72,9 +78,8 @@ export function EventDialog({
                 </FormItem>
               )}
             />
-
             <DialogFooter>
-              <Button type="submit" disabled={event.title === ""}>
+              <Button type="submit" disabled={form.watch("title") === ""}>
                 Create
               </Button>
               <Button variant="ghost" onClick={onClose}>
