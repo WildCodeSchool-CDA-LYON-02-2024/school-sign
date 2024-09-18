@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
 import { createContext, useContext, useState } from "react";
+import { verifyToken } from "@/lib/jwt"; // Votre utilitaire JWT
 
-// Le type pour le contexte
+// Type pour le contexte
 interface SignatureContextType {
   isSignatureAllowed: boolean;
   studentSignature: string | null;
-  allowSignature: () => void;
+  currentClassId: number | null;  // Le classId est maintenant un nombre
+  allowSignature: (classId: number) => void;
   disallowSignature: () => void;
   setStudentSignature: (signature: string) => void;
 }
@@ -14,7 +16,7 @@ interface SignatureContextType {
 // Création du contexte
 const SignatureContext = createContext<SignatureContextType | undefined>(undefined);
 
-// Utilisation du contexte
+// Hook pour utiliser le contexte
 export const useSignatureContext = () => {
   const context = useContext(SignatureContext);
   if (!context) {
@@ -23,14 +25,21 @@ export const useSignatureContext = () => {
   return context;
 };
 
-// Provider du contexte
+// Provider pour le contexte
 export const SignatureProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignatureAllowed, setIsSignatureAllowed] = useState(false);
   const [studentSignature, setStudentSignature] = useState<string | null>(null);
+  const [currentClassId, setCurrentClassId] = useState<number | null>(null);
 
-  const allowSignature = () => setIsSignatureAllowed(true);
+  const allowSignature = (classId: number) => {
+    setIsSignatureAllowed(true);
+    setCurrentClassId(classId);
+  };
+
   const disallowSignature = () => {
     setIsSignatureAllowed(false);
+    setCurrentClassId(null);
+    setStudentSignature(null); // Réinitialise la signature quand désactivé
   };
 
   return (
@@ -38,6 +47,7 @@ export const SignatureProvider = ({ children }: { children: React.ReactNode }) =
       value={{
         isSignatureAllowed,
         studentSignature,
+        currentClassId,
         allowSignature,
         disallowSignature,
         setStudentSignature,
