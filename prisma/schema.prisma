@@ -56,6 +56,18 @@ model Classsection {
   users   User[]
 }
 
+model Sign {
+  id         Int      @id @default(autoincrement())
+  hashedSign String   @db.VarChar(255)
+  date       DateTime
+  userId     Int
+  docId      Int
+
+  user       User     @relation(fields: [userId], references: [id])
+  document   Document @relation(fields: [docId], references: [id])
+
+}
+
 
 // model ClassSchool {
 //   id        Int      @id @default(autoincrement())
@@ -89,19 +101,7 @@ model Classsection {
 //   schools School[]
 // }
 
-// model Sign {
-//   id         Int      @id @default(autoincrement())
-//   hashedSign String   @db.VarChar(255)
-//   date       DateTime
-//   userId     Int
-//   docId      Int
 
-//   user       User     @relation(fields: [userId], references: [id])
-//   document   Document @relation(fields: [docId], references: [id])
-
-//   @@index([userId])
-//   @@index([docId])
-// }
 
 // model Document {
 //   id         Int        @id @default(autoincrement())

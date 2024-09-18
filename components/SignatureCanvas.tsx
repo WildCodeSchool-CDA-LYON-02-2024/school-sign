@@ -2,40 +2,35 @@
 
 import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
+import { useSignatureContext } from "../components/context/SignatureContext";
 
 export default function SignatureCanvas() {
   const [dataURL, setDataURL] = useState<string | null>(null);
-  const [canvasKey, setCanvasKey] = useState<number>(0); // Key to force re-render
+  const [canvasKey, setCanvasKey] = useState<number>(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
+  const { setStudentSignature } = useSignatureContext(); // Utilisation du contexte
 
-  // Effect to initialize SignaturePad when canvasKey changes
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
 
-      // Clean up the previous SignaturePad instance
       if (signaturePadRef.current) {
         signaturePadRef.current.off();
       }
 
-      // Initialize the new SignaturePad instance
       const signaturePad = new SignaturePad(canvas);
       signaturePadRef.current = signaturePad;
     }
   }, [canvasKey]);
 
-  const saveAsPNG = async () => {
+  const saveAsPNG = () => {
     if (signaturePadRef.current) {
-      try {
-        const dataUrl = signaturePadRef.current.toDataURL();
-        setDataURL(dataUrl);
-        await uploadSignature(dataUrl); // Upload the signature to the server
-      } catch (error) {
-        console.error("Error generating PNG data URL", error);
-      }
+      const dataUrl = signaturePadRef.current.toDataURL();
+      setDataURL(dataUrl);
+      setStudentSignature(dataUrl); // Envoie la signature au contexte
     }
   };
 
@@ -43,33 +38,13 @@ export default function SignatureCanvas() {
     if (signaturePadRef.current) {
       signaturePadRef.current.clear();
       setDataURL(null);
+      setStudentSignature(null); // Réinitialise la signature dans le contexte
     }
   };
 
   const restartSignature = () => {
-    // Force re-render by changing the key
-    setCanvasKey(prevKey => prevKey + 1);
+    setCanvasKey((prevKey) => prevKey + 1);
     setDataURL(null);
-  };
-
-  const uploadSignature = async (dataUrl: string) => {
-    try {
-      const response = await fetch("/api/signature", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ dataUrl }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload signature");
-      }
-
-      console.log("Signature uploaded successfully");
-    } catch (error) {
-      console.error("Error uploading signature", error);
-    }
   };
 
   return (
@@ -78,11 +53,11 @@ export default function SignatureCanvas() {
         <div className="flex flex-col items-center">
           <div
             className="relative border-4 border-gray-600"
-            style={{ width: "300px", height: "150px" }} // Adjust size as needed
+            style={{ width: "300px", height: "150px" }}
           >
             <canvas
               ref={canvasRef}
-              key={canvasKey} // Unique key to force re-render
+              key={canvasKey}
               style={{ width: "100%", height: "100%" }}
               aria-label="Signature Canvas"
             ></canvas>

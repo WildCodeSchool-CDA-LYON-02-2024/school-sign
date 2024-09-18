@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import { ClassProvider } from "@/components/context/ClassContext";
+import { SignatureProvider } from "../components/context/SignatureContext";
 import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
@@ -25,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={roboto.variable + " bg-seasame"}>
         <ClassProvider>
-          {children}
+          <SignatureProvider>{children}</SignatureProvider>
           <Toaster />
         </ClassProvider>
       </body>
