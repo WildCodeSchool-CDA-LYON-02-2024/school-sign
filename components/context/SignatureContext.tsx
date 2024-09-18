@@ -1,16 +1,16 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { verifyToken } from "@/lib/jwt"; // Votre utilitaire JWT
 
 // Type pour le contexte
 interface SignatureContextType {
   isSignatureAllowed: boolean;
-  studentSignature: string | null;
+  studentSignatures: string[] | null; // Changement ici
   currentClassId: number | null;  // Le classId est maintenant un nombre
   allowSignature: (classId: number) => void;
   disallowSignature: () => void;
-  setStudentSignature: (signature: string) => void;
+  addStudentSignature: (signature: string) => void; // Renommé pour ajouter des signatures
+  clearStudentSignatures: () => void; // Fonction pour réinitialiser les signatures
 }
 
 // Création du contexte
@@ -28,7 +28,7 @@ export const useSignatureContext = () => {
 // Provider pour le contexte
 export const SignatureProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignatureAllowed, setIsSignatureAllowed] = useState(false);
-  const [studentSignature, setStudentSignature] = useState<string | null>(null);
+  const [studentSignatures, setStudentSignatures] = useState<string[] | null>(null); // Changement ici
   const [currentClassId, setCurrentClassId] = useState<number | null>(null);
 
   const allowSignature = (classId: number) => {
@@ -39,18 +39,28 @@ export const SignatureProvider = ({ children }: { children: React.ReactNode }) =
   const disallowSignature = () => {
     setIsSignatureAllowed(false);
     setCurrentClassId(null);
-    setStudentSignature(null); // Réinitialise la signature quand désactivé
+  };
+
+  const addStudentSignature = (signature: string) => {
+    setStudentSignatures((prevSignatures) => 
+      prevSignatures ? [...prevSignatures, signature] : [signature]
+    );
+  };
+
+  const clearStudentSignatures = () => {
+    setStudentSignatures(null); // Réinitialise les signatures
   };
 
   return (
     <SignatureContext.Provider
       value={{
         isSignatureAllowed,
-        studentSignature,
+        studentSignatures,
         currentClassId,
         allowSignature,
         disallowSignature,
-        setStudentSignature,
+        addStudentSignature,
+        clearStudentSignatures,
       }}
     >
       {children}

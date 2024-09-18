@@ -9,7 +9,7 @@ export default function SignatureCanvas() {
   const [canvasKey, setCanvasKey] = useState<number>(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
-  const { setStudentSignature } = useSignatureContext(); // Utilisation du contexte
+  const { addStudentSignature, clearStudentSignatures } = useSignatureContext(); // Utilisation du contexte
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -30,7 +30,7 @@ export default function SignatureCanvas() {
     if (signaturePadRef.current) {
       const dataUrl = signaturePadRef.current.toDataURL();
       setDataURL(dataUrl);
-      setStudentSignature(dataUrl); // Envoie la signature au contexte
+      addStudentSignature(dataUrl); 
     }
   };
 
@@ -38,7 +38,7 @@ export default function SignatureCanvas() {
     if (signaturePadRef.current) {
       signaturePadRef.current.clear();
       setDataURL(null);
-      setStudentSignature(null); // Réinitialise la signature dans le contexte
+      clearStudentSignatures(); 
     }
   };
 
