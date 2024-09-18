@@ -9,19 +9,20 @@ import { useCalendarEvents } from "@/hooks/useCalendarEvents";
 
 export default function Calendar() {
   const {
+    events,
     allEvents,
-    newEvent,
     showModal,
     showDeleteModal,
+    idToDelete,
+    newEvent,
     handleDateClick,
     addEvent,
     handleDeleteModal,
-    handleSubmit,
     handleDelete,
     handleChange,
     handleCloseModal,
-    idToDelete,
-    events,
+    handleSubmit,
+    onEventUpdate,
   } = useCalendarEvents();
 
   return (
@@ -59,11 +60,11 @@ export default function Calendar() {
         />
 
         <EventDialog
+          event={newEvent}
           open={showModal}
           onClose={handleCloseModal}
-          event={newEvent}
           onChange={handleChange}
-          onSubmit={handleSubmit}
+          onEventUpdate={onEventUpdate}
         />
       </div>
     </>

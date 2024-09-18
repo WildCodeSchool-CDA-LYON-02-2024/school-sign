@@ -4,11 +4,11 @@ import { Event } from "@/components/calendar/types";
 
 export function useCalendarEvents() {
   const [events, setEvents] = useState([
-    { title: "event 1", id: "1" },
-    { title: "event 2", id: "2" },
-    { title: "event 3", id: "3" },
-    { title: "event 4", id: "4" },
-    { title: "event 5", id: "5" },
+    { title: "event 1", id: 1 },
+    { title: "event 2", id: 2 },
+    { title: "event 3", id: 3 },
+    { title: "event 4", id: 4 },
+    { title: "event 5", id: 5 },
   ]);
 
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -17,7 +17,7 @@ export function useCalendarEvents() {
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [newEvent, setNewEvent] = useState<Event>({
     title: "",
-    start: "",
+    start: new Date(),
     allDay: false,
     id: 0,
   });
@@ -30,7 +30,7 @@ export function useCalendarEvents() {
         eventData(eventEl) {
           let title = eventEl.getAttribute("title");
           let id = eventEl.getAttribute("data-event");
-          return { title: title, id: JSON.parse(id).id };
+          return { title, id };
         },
       });
       return () => draggable.destroy();
@@ -75,7 +75,7 @@ export function useCalendarEvents() {
     setShowModal(false);
     setNewEvent({
       title: "",
-      start: "",
+      start: new Date(),
       allDay: false,
       id: 0,
     });
@@ -96,25 +96,34 @@ export function useCalendarEvents() {
     setShowModal(false);
     setNewEvent({
       title: "",
-      start: "",
+      start: new Date(),
       allDay: false,
       id: 0,
     });
   };
 
+  const onEventUpdate = (updatedEvent: Event) => {
+    setAllEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event,
+      ),
+    );
+  };
+
   return {
+    events,
     allEvents,
-    newEvent,
     showModal,
     showDeleteModal,
+    idToDelete,
+    newEvent,
     handleDateClick,
     addEvent,
     handleDeleteModal,
-    handleSubmit,
     handleDelete,
     handleChange,
     handleCloseModal,
-    idToDelete,
-    events,
+    handleSubmit,
+    onEventUpdate,
   };
 }

@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { calendarFormSchema } from "@/lib/schemas/calendarFormSchema";
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -30,35 +29,37 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { toast } from "@/hooks/use-toast";
-
-interface EventDialogProps {
-  open: boolean;
-  onClose: () => void;
-  event: { title: string; start: string; allDay: boolean; id: number };
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-}
-
-type CalendarFormValues = z.infer<typeof calendarFormSchema>;
-
-const defaultValues: Partial<CalendarFormValues> = {
-  title: "Lesson",
-  date: new Date(),
-};
+import { useEffect } from "react";
+import {
+  CalendarFormValues,
+  EventDialogProps,
+} from "@/components/calendar/types";
 
 export function EventDialog({
+  event,
   open,
   onClose,
-  event,
-  onChange,
+  onEventUpdate,
 }: EventDialogProps) {
+  const defaultValues: Partial<CalendarFormValues> = {
+    title: event.title,
+    date: new Date(event.start),
+  };
   const form = useForm<CalendarFormValues>({
     resolver: zodResolver(calendarFormSchema),
     defaultValues,
   });
 
   const onSubmit = (data: CalendarFormValues) => {
+    const updatedEvent = {
+      ...event,
+      title: data.title,
+      start: data.date,
+      allDay: event.allDay,
+    };
+    onEventUpdate(updatedEvent);
+    onClose();
+
     // MySQL datetime: 9999-12-31 23:59:59
     //   
     // data.date.toDateString() Outputs: Tue Sep 17 2024
@@ -67,19 +68,28 @@ export function EventDialog({
     // toLocaleDateString() Outputs: 9/17/2024
     // toISOString() Outputs: 2024-09-17T15:14:34.810Z
 
-    console.log(": ", data.date.toLocaleString());
-    const formatDateFNS = format(new Date(), "yyyy-MM-dd HH-mm-ss");
-    console.log(formatDateFNS);
-
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // console.log(": ", data.date.toLocaleString());
+    // const formatDateFNS = format(new Date(), "yyyy-MM-dd HH-mm-ss");
+    // console.log(formatDateFNS);
+    //
+    // toast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
   };
+  console.log("event: ", event);
+  console.log("form: ", form);
+
+  useEffect(() => {
+    form.reset({
+      title: event.title,
+      date: new Date(event.start),
+    });
+  }, [event, form]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -119,9 +129,9 @@ export function EventDialog({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
+                          variant={"outline"}
                           className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
+                            "w-[240px] justify-start pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground",
                           )}
                         >
@@ -155,8 +165,7 @@ export function EventDialog({
               <Button
                 type="submit"
                 disabled={
-                  form.watch("title") === "" &&
-                  form.watch("date") !== new Date()
+                  form.watch("title") === "" && form.watch("date") === Date
                 }
               >
                 Create
