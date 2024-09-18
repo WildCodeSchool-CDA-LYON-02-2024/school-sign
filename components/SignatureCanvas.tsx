@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
 import { useSignatureContext } from "../components/context/SignatureContext";
+import Image from "next/image";
 
 export default function SignatureCanvas() {
   const [dataURL, setDataURL] = useState<string | null>(null);
@@ -10,6 +11,7 @@ export default function SignatureCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
   const { addStudentSignature, clearStudentSignatures } = useSignatureContext(); // Utilisation du contexte
+  console.log(dataURL);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -29,8 +31,10 @@ export default function SignatureCanvas() {
   const saveAsPNG = () => {
     if (signaturePadRef.current) {
       const dataUrl = signaturePadRef.current.toDataURL();
+      console.log(dataUrl);
+
       setDataURL(dataUrl);
-      addStudentSignature(dataUrl); 
+      addStudentSignature(dataUrl);
     }
   };
 
@@ -38,7 +42,7 @@ export default function SignatureCanvas() {
     if (signaturePadRef.current) {
       signaturePadRef.current.clear();
       setDataURL(null);
-      clearStudentSignatures(); 
+      clearStudentSignatures();
     }
   };
 
@@ -82,7 +86,9 @@ export default function SignatureCanvas() {
       ) : (
         <div className="flex flex-col items-center">
           <h4 className="mb-4">Saved Signature</h4>
-          <img src={dataURL} alt="Signature" style={{ maxWidth: "100%", height: "auto" }} />
+          <Image src={dataURL} alt="Signature" width={600} height={500}></Image>
+
+          {/* <img src={dataURL} alt="Signature" style={{ maxWidth: "100%", height: "auto" }} /> */}
           <button
             onClick={restartSignature}
             className="px-4 py-2 bg-green-500 text-white rounded mt-4"

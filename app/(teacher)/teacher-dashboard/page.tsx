@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSignatureContext } from "../../../components/context/SignatureContext";
+import Image from "next/image";
 
 export default function TeacherDashboard() {
   const {
@@ -64,11 +65,12 @@ export default function TeacherDashboard() {
               <div className="grid grid-cols-1 gap-4">
                 {studentSignatures.map((signature, index) => (
                   <div key={index} className="border p-2">
-                    <img
+                    <Image
                       src={signature}
                       alt={`Signature de l'élève ${index + 1}`}
-                      style={{ maxWidth: "100%", height: "auto" }}
-                    />
+                      width={600}
+                      height={500}
+                    ></Image>
                   </div>
                 ))}
               </div>
