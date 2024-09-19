@@ -29,11 +29,11 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { useEffect } from "react";
 import {
   CalendarFormValues,
   EventDialogProps,
 } from "@/components/calendar/types";
+import { toast } from "@/hooks/use-toast";
 
 export function EventDialog({
   event,
@@ -42,22 +42,30 @@ export function EventDialog({
   onEventUpdate,
 }: EventDialogProps) {
   const defaultValues: Partial<CalendarFormValues> = {
-    title: event.title,
-    date: new Date(event.start),
+    title: event.title || "",
+    date: new Date(event.date),
   };
   const form = useForm<CalendarFormValues>({
     resolver: zodResolver(calendarFormSchema),
     defaultValues,
   });
+  // console.log(form);
 
   const onSubmit = (data: CalendarFormValues) => {
     const updatedEvent = {
       ...event,
       title: data.title,
-      start: data.date,
+      date: new Date(data.date), // format(new Date(data.date), "yyyy-MM-dd HH:mm:ss"),
       allDay: event.allDay,
     };
     onEventUpdate(updatedEvent);
+
+    toast({
+      title: "Event updated",
+      description: `Event ${data.title} updated successfully!`,
+    });
+    console.log("updatedEvent: ", updatedEvent);
+
     onClose();
 
     // MySQL datetime: 9999-12-31 23:59:59
@@ -71,7 +79,7 @@ export function EventDialog({
     // console.log(": ", data.date.toLocaleString());
     // const formatDateFNS = format(new Date(), "yyyy-MM-dd HH-mm-ss");
     // console.log(formatDateFNS);
-    //
+
     // toast({
     //   title: "You submitted the following values:",
     //   description: (
@@ -81,15 +89,15 @@ export function EventDialog({
     //   ),
     // });
   };
-  console.log("event: ", event);
-  console.log("form: ", form);
 
-  useEffect(() => {
-    form.reset({
-      title: event.title,
-      date: new Date(event.start),
-    });
-  }, [event, form]);
+  // useEffect(() => {
+  //   if (event) {
+  //     form.reset({
+  //       title: event.title,
+  //       date: event.date, // format(new Date(event.date), "yyyy-MM-dd HH:mm:ss")
+  //     });
+  //   }
+  // }, [event, form]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -105,15 +113,15 @@ export function EventDialog({
               name="title"
               render={({ field }) => (
                 <FormItem>
+                  {/*<FormControl>*/}
                   <FormLabel htmlFor="title">Title</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="title"
-                      type="text"
-                      placeholder="Title"
-                      {...field}
-                    />
-                  </FormControl>
+                  <Input
+                    id="title"
+                    type="text"
+                    placeholder="Title"
+                    {...field}
+                  />
+                  {/*</FormControl>*/}
                   <FormDescription>This is the class name.</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -136,7 +144,7 @@ export function EventDialog({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "yyyy-MM-dd HH-mm-ss")
+                            format(field.value, "yyyy-MM-dd HH:mm:ss") // format(new Date(field.value), "yyyy-MM-dd HH:mm:ss")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -165,7 +173,7 @@ export function EventDialog({
               <Button
                 type="submit"
                 disabled={
-                  form.watch("title") === "" && form.watch("date") === Date
+                  !form.watch("title") || !(form.watch("date") instanceof Date)
                 }
               >
                 Create

@@ -19,9 +19,7 @@ export default function Calendar() {
     addEvent,
     handleDeleteModal,
     handleDelete,
-    handleChange,
     handleCloseModal,
-    handleSubmit,
     onEventUpdate,
   } = useCalendarEvents();
 
@@ -63,7 +61,6 @@ export default function Calendar() {
           event={newEvent}
           open={showModal}
           onClose={handleCloseModal}
-          onChange={handleChange}
           onEventUpdate={onEventUpdate}
         />
       </div>

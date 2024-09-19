@@ -7,9 +7,6 @@ export const calendarFormSchema = z.object({
   date: z.date({
     required_error: "Invalid date.",
   }),
-  // date: z.date().refine((val) => !isNaN(Date.parse(val)), {
-  //   message: "Invalid date",
-  // }),
   // subjectId: z.number().min(1, {
   //   message: "Subject is mandatory",
   // }),

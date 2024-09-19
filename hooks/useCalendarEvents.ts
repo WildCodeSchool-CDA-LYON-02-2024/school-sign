@@ -16,8 +16,8 @@ export function useCalendarEvents() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [newEvent, setNewEvent] = useState<Event>({
-    title: "",
-    start: new Date(),
+    title: "New Lesson",
+    date: new Date(),
     allDay: false,
     id: 0,
   });
@@ -29,18 +29,24 @@ export function useCalendarEvents() {
         itemSelector: ".fc-event",
         eventData(eventEl) {
           let title = eventEl.getAttribute("title");
+          let date = eventEl.getAttribute("date");
           let id = eventEl.getAttribute("data-event");
-          return { title, id };
+          return { title, date, id };
         },
       });
       return () => draggable.destroy();
     }
   }, []);
 
-  const handleDateClick = (arg: { date: Date; allDay: boolean }) => {
+  const handleDateClick = (arg: {
+    title: string;
+    date: Date;
+    allDay: boolean;
+  }) => {
     setNewEvent({
       ...newEvent,
-      start: arg.date,
+      title: arg.title,
+      date: arg.date,
       allDay: arg.allDay,
       id: new Date().getTime(),
     });
@@ -51,10 +57,12 @@ export function useCalendarEvents() {
     const event = {
       ...newEvent,
       title: data.draggedEl.innerText,
-      start: data.date.toISOString(),
+      date: data.date, // .toISOString()
       allDay: data.allDay,
       id: new Date().getTime(),
     };
+    console.log("event: ", event);
+    console.log("allEvents: ", allEvents);
     setAllEvents([...allEvents, event]);
   };
 
@@ -73,12 +81,12 @@ export function useCalendarEvents() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setNewEvent({
-      title: "",
-      start: new Date(),
-      allDay: false,
-      id: 0,
-    });
+    // setNewEvent({
+    //   title: "",
+    //   date: new Date(),
+    //   allDay: false,
+    //   id: 0,
+    // });
     setShowDeleteModal(false);
     setIdToDelete(null);
   };
@@ -96,7 +104,7 @@ export function useCalendarEvents() {
     setShowModal(false);
     setNewEvent({
       title: "",
-      start: new Date(),
+      date: new Date(),
       allDay: false,
       id: 0,
     });

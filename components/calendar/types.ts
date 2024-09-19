@@ -3,7 +3,7 @@ import { calendarFormSchema } from "@/lib/schemas/calendarFormSchema";
 
 export interface Event {
   title: string;
-  start: Date;
+  date: Date;
   allDay: boolean;
   id: number;
 }
