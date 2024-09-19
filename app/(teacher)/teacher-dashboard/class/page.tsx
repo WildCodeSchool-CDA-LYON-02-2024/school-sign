@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSignatureContext } from "../../../../components/context/SignatureContext";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +34,7 @@ export default function ClassWithSignatures() {
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [classes, setClasses] = useState<ClassSection[]>([]);
   const [classId, setClassId] = useState<number | null>(null);
+  const [className, setClassName] = useState<string | null>(null); // Ajout de l'état pour le nom de la classe
   const [schoolDetails, setSchoolDetails] = useState<{
     name: string;
     address: string;
@@ -40,6 +42,8 @@ export default function ClassWithSignatures() {
     city: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { allowSignature, disallowSignature, isSignatureAllowed } =
+    useSignatureContext();
 
   useEffect(() => {
     const fetchClassId = async () => {
@@ -59,16 +63,24 @@ export default function ClassWithSignatures() {
       const res = await fetch("/api/class");
       const data = await res.json();
       setClasses(data.classSections || []);
+
+      // Trouver le nom de la classe correspondante au classId
+      const currentClass = data.classSections.find(
+        (cls: ClassSection) => cls.id === classId
+      );
+      if (currentClass) {
+        setClassName(currentClass.name);
+      }
     };
     fetchClasses();
-  }, []);
+  }, [classId]);
 
   useEffect(() => {
     const fetchSchoolDetails = async () => {
       try {
-        const res = await fetch("/api/school"); // API pour récupérer les détails de l'école
+        const res = await fetch("/api/school");
         const data = await res.json();
-        setSchoolDetails(data); // En supposant que l'API retourne les détails sous forme d'objet
+        setSchoolDetails(data);
       } catch (error) {
         console.error("Error fetching school details:", error);
       }
@@ -90,7 +102,6 @@ export default function ClassWithSignatures() {
           });
           if (res.ok) {
             const data = await res.json();
-            console.log("Response data:", data);
             if (data.users && data.users.length > 0) {
               setStudents(data.users);
             } else {
@@ -100,7 +111,9 @@ export default function ClassWithSignatures() {
           } else {
             const errorData = await res.json();
             console.error("Error fetching students:", errorData);
-            setError(errorData.error || "An error occurred while fetching students");
+            setError(
+              errorData.error || "An error occurred while fetching students"
+            );
           }
         } catch (err) {
           console.error("Request Error:", err);
@@ -144,7 +157,6 @@ export default function ClassWithSignatures() {
       color: rgb(0, 0, 0),
     });
 
-    // Ajout des détails de l'école
     if (schoolDetails) {
       page.drawText(schoolDetails.name, {
         x: 50,
@@ -168,6 +180,7 @@ export default function ClassWithSignatures() {
         color: rgb(0, 0, 0),
       });
     }
+
     page.drawText("Nom", {
       x: 100,
       y: height - 240,
@@ -202,7 +215,9 @@ export default function ClassWithSignatures() {
           try {
             const response = await fetch(studentSignature);
             if (!response.ok)
-              throw new Error(`Failed to fetch signature: ${response.statusText}`);
+              throw new Error(
+                `Failed to fetch signature: ${response.statusText}`
+              );
             const signatureImageBytes = await response.arrayBuffer();
             const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
             const signatureDims = signatureImage.scale(0.4);
@@ -245,38 +260,76 @@ export default function ClassWithSignatures() {
     link.click();
   };
 
+  const handleAllowSignature = () => {
+    if (classId) {
+      allowSignature(classId);
+    } else {
+      alert("Aucune classe ne vous est affectée");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-5">
-      {students.length > 0 ? (
-        <ul className="space-y-4">
-          {students
-            .filter((student) => student.role === "STUDENT")
-            .map((student: Student) => (
-              <li key={student.id}>
-                <Card className="w-80 justify-center items-center">
-                  <CardContent className="flex flex-col justify-center items-center">
-                    <p>{`Name: ${student.firstname} ${student.lastname}`}</p>
-                    {findSignatureForStudent(student.id) ? (
-                      <div className="mt-4">
-                        <Image
-                          src={findSignatureForStudent(student.id) || ""}
-                          alt={`Signature de ${student.firstname} ${student.lastname}`}
-                          width={600}
-                          height={500}
-                        />
-                      </div>
-                    ) : (
-                      <p className="mt-4 text-red-500">Aucune signature reçue.</p>
-                    )}
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
-        </ul>
-      ) : (
-        <p>Aucun étudiant trouvé pour cette classe.</p>
-      )}
+      {classId ? (
+        <div className="flex flex-col justify-center items-center container mx-auto py-10 gap-y-10">
+          <h2 className="text-2xl mb-4">
+            {className ? `Classe : ${className}` : "Classe inconnue"}
+          </h2>
+          <div>
+            <button
+              onClick={handleAllowSignature}
+              className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+            >
+              Autoriser les signatures
+            </button>
+            <button
+              onClick={disallowSignature}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Désactiver les signatures
+            </button>
+          </div>
+          <p className="mt-4">
+            {isSignatureAllowed
+              ? `Les signatures sont autorisées pour la classe ${classId}.`
+              : "Les signatures sont désactivées."}
+          </p>
 
+          {students.length > 0 ? (
+            <ul className="space-y-4 flex flex-col justify-center items-center">
+              {students
+                .filter((student) => student.role === "STUDENT")
+                .map((student: Student) => (
+                  <li key={student.id}>
+                    <Card className="w-80 justify-center items-center">
+                      <CardContent className="flex flex-col justify-center items-center">
+                        <p>{`Nom: ${student.firstname} ${student.lastname}`}</p>
+                        {findSignatureForStudent(student.id) ? (
+                          <div className="mt-4">
+                            <Image
+                              src={findSignatureForStudent(student.id) || ""}
+                              alt={`Signature de ${student.firstname} ${student.lastname}`}
+                              width={600}
+                              height={500}
+                            />
+                          </div>
+                        ) : (
+                          <p className="mt-4 text-red-500">
+                            Aucune signature reçue.
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </li>
+                ))}
+            </ul>
+          ) : (
+            <p>Aucun étudiant trouvé pour cette classe.</p>
+          )}
+        </div>
+      ) : (
+        <p>Aucune classe ne vous est affectée</p>
+      )}
       {/* Button to generate PDF */}
       <Button onClick={generatePDF}>Générer PDF</Button>
       {error && <p className="text-red-500">{error}</p>}
