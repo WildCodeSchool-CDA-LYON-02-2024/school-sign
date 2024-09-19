@@ -31,6 +31,8 @@ export default async function handler(
       const schoolId = user.schoolId; // Récupère l'ID de l'école associée
       const role = user.role;
       const classId = user.classId;
+      const firstname = user.firstname;
+      const lastname = user.lastname;
 
       // Création du token avec userId et schoolId
       const token = await createToken({
@@ -38,6 +40,8 @@ export default async function handler(
         schoolId,
         role,
         classId,
+        firstname,
+        lastname,
       });
 
       // Configuration du cookie avec le token

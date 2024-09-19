@@ -28,15 +28,34 @@ export default function SignatureCanvas() {
     }
   }, [canvasKey]);
 
-  const saveAsPNG = () => {
+  const saveAsPNG = async () => {
     if (signaturePadRef.current) {
       const dataUrl = signaturePadRef.current.toDataURL();
-      console.log(dataUrl);
-
-      setDataURL(dataUrl);
-      addStudentSignature(dataUrl);
+  
+      try {
+        const response = await fetch('/api/signature', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            dataUrl: dataUrl, 
+            userId: 1,
+          }),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Signature sauvegardée:', data.message);
+        } else {
+          console.error('Erreur:', await response.json());
+        }
+      } catch (error) {
+        console.error('Erreur de réseau ou serveur:', error);
+      }
     }
   };
+  
 
   const clearSignature = () => {
     if (signaturePadRef.current) {
