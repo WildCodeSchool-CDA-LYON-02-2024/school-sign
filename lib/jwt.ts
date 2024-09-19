@@ -4,12 +4,16 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 interface CustomJWTPayload extends JWTPayload {
   userId: number;
+  firstname: string | null;
+  lastname: string | null;
   schoolId: number;
-  classId : number;
+  classId: number | null;
   role: null | string;
 }
 
 export async function createToken(payload: CustomJWTPayload): Promise<string> {
+  console.log(payload);
+
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

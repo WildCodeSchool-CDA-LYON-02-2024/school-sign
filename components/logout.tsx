@@ -22,7 +22,7 @@ export default function Logout() {
     });
 
     if (res.ok) {
-      router.push("/school-login");
+      router.push("/");
     } else {
       toast({
         title: "Logout Error",

@@ -29,10 +29,20 @@ export default async function handler(
     // Vérification de l'utilisateur et du mot de passe
     if (user && (await bcrypt.compare(password, user.password))) {
       const schoolId = user.schoolId; // Récupère l'ID de l'école associée
-      const role = user.role
+      const role = user.role;
+      const classId = user.classId;
+      const firstname = user.firstname;
+      const lastname = user.lastname;
 
       // Création du token avec userId et schoolId
-      const token = await createToken({ userId: user.id, schoolId, role });
+      const token = await createToken({
+        userId: user.id,
+        schoolId,
+        role,
+        classId,
+        firstname,
+        lastname,
+      });
 
       // Configuration du cookie avec le token
       const cookie = serialize("session", token, {

@@ -28,17 +28,17 @@ export default function Home() {
     {
       name: "School",
       icon: (props) => <SchoolIcon {...props} />,
-      href: "/school-dashboard",
+      href: "/school-login",
     },
     {
       name: "Teacher",
       icon: (props) => <TeacherIcon {...props} />,
-      href: "/teacher-dashboard",
+      href: "/teacher-login",
     },
     {
       name: "Student",
       icon: (props) => <StudentIcon {...props} />,
-      href: "/student-dashboard",
+      href: "/student-login",
     },
   ];
 
