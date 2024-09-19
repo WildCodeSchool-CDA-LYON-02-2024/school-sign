@@ -24,17 +24,12 @@ interface ClassSection {
   name: string;
 }
 
-interface SchoolDetails {
-  name: string;
-  address: string;
-}
-
 export default function ClassWithSignatures() {
   const [students, setStudents] = useState<Student[]>([]);
+  const [teacherName, setTeacherName] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
-  const [classes, setClasses] = useState<ClassSection[]>([]);
   const [classId, setClassId] = useState<number | null>(null);
-  const [className, setClassName] = useState<string | null>(null); // Ajout de l'état pour le nom de la classe
+  const [className, setClassName] = useState<string | null>(null); 
   const [schoolDetails, setSchoolDetails] = useState<{
     name: string;
     address: string;
@@ -50,7 +45,8 @@ export default function ClassWithSignatures() {
       const response = await fetch("/api/getClassIdByToken");
       if (response.ok) {
         const data = await response.json();
-        setClassId(data.classId);
+        setTeacherName(`${data.user.firstname} ${data.user.lastname} `);
+        setClassId(data.user.classId);
       } else {
         console.error("Erreur lors de la récupération du classId");
       }
@@ -62,9 +58,6 @@ export default function ClassWithSignatures() {
     const fetchClasses = async () => {
       const res = await fetch("/api/class");
       const data = await res.json();
-      setClasses(data.classSections || []);
-
-      // Trouver le nom de la classe correspondante au classId
       const currentClass = data.classSections.find(
         (cls: ClassSection) => cls.id === classId
       );
@@ -91,7 +84,6 @@ export default function ClassWithSignatures() {
   useEffect(() => {
     const fetchAllStudents = async () => {
       if (classId) {
-        console.log(`Fetching students for classId: ${classId}`);
         try {
           const res = await fetch(`/api/student?classid=${classId}`, {
             method: "GET",
@@ -150,8 +142,8 @@ export default function ClassWithSignatures() {
     const fontSize = 12;
 
     page.drawText("Feuille d'émargement", {
-      x: width / 2 - 50,
-      y: height - 150,
+      x: width / 2 - 70,
+      y: height - 120,
       size: fontSize + 4,
       font,
       color: rgb(0, 0, 0),
@@ -167,14 +159,34 @@ export default function ClassWithSignatures() {
       });
       page.drawText(schoolDetails.address, {
         x: 50,
-        y: height - 65,
+        y: height - 70,
         size: fontSize,
         font,
         color: rgb(0, 0, 0),
       });
       page.drawText(`${schoolDetails.zipcode} ${schoolDetails.city}`, {
         x: 50,
-        y: height - 80,
+        y: height - 90,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+    }
+
+    if (className) {
+      page.drawText(`Classe: ${className}`, {
+        x: 50,
+        y: height - 160,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+    }
+
+    if (teacherName) {
+      page.drawText(`Enseignant: ${teacherName}`, {
+        x: 50,
+        y: height - 180,
         size: fontSize,
         font,
         color: rgb(0, 0, 0),
@@ -330,7 +342,6 @@ export default function ClassWithSignatures() {
       ) : (
         <p>Aucune classe ne vous est affectée</p>
       )}
-      {/* Button to generate PDF */}
       <Button onClick={generatePDF}>Générer PDF</Button>
       {error && <p className="text-red-500">{error}</p>}
     </div>
