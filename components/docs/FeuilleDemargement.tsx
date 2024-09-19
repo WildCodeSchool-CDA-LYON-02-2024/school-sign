@@ -36,20 +36,21 @@ export default function FeuilleDemargement() {
   const [schoolDetails, setSchoolDetails] = useState<{
     name: string;
     address: string;
-    zipcode?: string;  // Utilisez 'zipcode' au lieu de 'zipCode'
+    zipCode: string;
     city: string;
   } | null>(null);
+
 
   useEffect(() => {
     const fetchSchoolDetails = async () => {
       const res = await fetch("/api/school");
       const data = await res.json();
-      console.log(data, 'DATA'); // Debug: check API response
-
+      console.log(data, 'DATA');
+      
       setSchoolDetails({
         name: data.name,
         address: data.address,
-        zipcode: data.zipcode,  // Assurez-vous de correspondre au nom de la propriété renvoyée
+        zipCode: data.zipcode,
         city: data.city,
       });
     };
@@ -135,8 +136,6 @@ export default function FeuilleDemargement() {
     const fontSize = 12;
 
     if (schoolDetails) {
-      console.log('School Details in PDF:', schoolDetails); // Debug: Check if school details are correct
-
       page.drawText(schoolDetails.name, {
         x: 50,
         y: height - 50,
@@ -151,16 +150,13 @@ export default function FeuilleDemargement() {
         font,
         color: rgb(0, 0, 0),
       });
-      page.drawText(
-        schoolDetails.zipcode ? `${schoolDetails.zipcode} ${schoolDetails.city}` : `Adresse non disponible`,
-        {
-          x: 50,
-          y: height - 80,
-          size: fontSize,
-          font,
-          color: rgb(0, 0, 0),
-        }
-      );
+      page.drawText(`${schoolDetails.zipCode} ${schoolDetails.city}`, {
+        x: 50,
+        y: height - 80,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
     }
 
     page.drawText("Feuille d'émargement", {
@@ -222,27 +218,77 @@ export default function FeuilleDemargement() {
         });
 
         page.drawLine({
-          start: { x: 40, y: yPosition - 5 },
-          end: { x: width - 40, y: yPosition - 5 },
+          start: { x: 40, y: yPosition - 20 },
+          end: { x: width - 40, y: yPosition - 20 },
           thickness: 1,
           color: rgb(0, 0, 0),
         });
 
+        const studentSignature = signatures.find(
+          (sig) => sig.userId === student.id
+        );
+
+        if (studentSignature?.hashedSign) {
+          try {
+            const signatureUrl = studentSignature.hashedSign;
+            const response = await fetch(signatureUrl);
+            if (!response.ok)
+              throw new Error(
+                `Failed to fetch signature: ${response.statusText}`
+              );
+            const signatureImageBytes = await response.arrayBuffer();
+            const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+            const signatureDims = signatureImage.scale(0.4);
+
+            // Draw the signature image
+            page.drawImage(signatureImage, {
+              x: 400,
+              y: yPosition - 25,
+              width: signatureDims.width,
+              height: signatureDims.height,
+            });
+          } catch (error) {
+            console.error("Error loading signature image:", error);
+            page.drawText("Signature non disponible", {
+              x: 400,
+              y: yPosition,
+              size: fontSize,
+              font,
+              color: rgb(1, 0, 0),
+            });
+          }
+        } else {
+          // Display message when signature is missing
+          page.drawText("Signature absente", {
+            x: 400,
+            y: yPosition,
+            size: fontSize,
+            font,
+            color: rgb(1, 0, 0),
+          });
+        }
+
+        // Move to the next row position
         yPosition -= rowHeight;
       }
     }
 
+    // Footer
+    page.drawText("Professeur: " + teacherName, {
+      x: 50,
+      y: 50,
+      size: fontSize,
+      font,
+      color: rgb(0, 0, 0),
+    });
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "feuille_demargement.pdf";
-    a.click();
-    URL.revokeObjectURL(url);
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "feuille_demargement.pdf";
+    link.click();
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-5">
