@@ -6,25 +6,44 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 
+interface Signature {
+  userId: string;
+  hashedSign: string;
+}
+
+interface Student {
+  id: string;
+  firstname: string;
+  lastname: string;
+  role: string;
+}
+
 export default function FeuilleDemargement() {
-  const [schoolName, setSchoolName] = useState("");
-  const [schoolAddress, setSchoolAddress] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [city, setCity] = useState("");
-  const [students, setStudents] = useState([{ firstname: "", lastname: "" }]);
-  const [teacherName, setTeacherName] = useState("");
-  const [classes, setClasses] = useState([]);
-  const [teachers, setTeachers] = useState([]);
-  const [selectedClass, setSelectedClass] = useState("");
+  const [students, setStudents] = useState<Student[]>([]);
+  const [teacherName, setTeacherName] = useState<string>("");
+  const [classes, setClasses] = useState<{ id: string; name: string }[]>([]);
+  const [teachers, setTeachers] = useState<
+    { id: string; firstname: string; lastname: string }[]
+  >([]);
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [signatures, setSignatures] = useState<Signature[]>([]);
+  const [schoolDetails, setSchoolDetails] = useState<{
+    name: string;
+    address: string;
+    zipCode: string;
+    city: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchSchoolDetails = async () => {
       const res = await fetch("/api/school");
       const data = await res.json();
-      setSchoolName(data.name);
-      setSchoolAddress(data.address);
-      setZipCode(data.zipCode);
-      setCity(data.city);
+      setSchoolDetails({
+        name: data.name,
+        address: data.address,
+        zipCode: data.zipCode,
+        city: data.city,
+      });
     };
     fetchSchoolDetails();
   }, []);
@@ -33,7 +52,7 @@ export default function FeuilleDemargement() {
     const fetchClasses = async () => {
       const res = await fetch("/api/class");
       const data = await res.json();
-      setClasses(data.classSections);
+      setClasses(data.classSections || []);
     };
     fetchClasses();
   }, []);
@@ -58,13 +77,29 @@ export default function FeuilleDemargement() {
     }
   }, [selectedClass]);
 
+  useEffect(() => {
+    const fetchSignatures = async () => {
+      try {
+        const res = await fetch("/api/signature");
+        const data = await res.json();
+        setSignatures(data.signs || []);
+      } catch (error) {
+        console.error("Error fetching signatures:", error);
+      }
+    };
+    fetchSignatures();
+  }, []);
+
   const handleAddStudent = () => {
-    setStudents([...students, { firstname: "", lastname: "" }]);
+    setStudents([
+      ...students,
+      { id: "", firstname: "", lastname: "", role: "" },
+    ]);
   };
 
   const handleStudentChange = (
     index: number,
-    field: keyof (typeof students)[number],
+    field: keyof Student,
     value: string
   ) => {
     const newStudents = [...students];
@@ -79,31 +114,30 @@ export default function FeuilleDemargement() {
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontSize = 12;
 
-    // Header
-    page.drawText(schoolName, {
-      x: 50,
-      y: height - 50,
-      size: fontSize,
-      font,
-      color: rgb(0, 0, 0),
-    });
-    page.drawText(schoolAddress, {
-      x: 50,
-      y: height - 65,
-      size: fontSize,
-      font,
-      color: rgb(0, 0, 0),
-    });
+    if (schoolDetails) {
+      page.drawText(schoolDetails.name, {
+        x: 50,
+        y: height - 50,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+      page.drawText(schoolDetails.address, {
+        x: 50,
+        y: height - 65,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+      page.drawText(`${schoolDetails.zipCode} ${schoolDetails.city}`, {
+        x: 50,
+        y: height - 80,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+    }
 
-    page.drawText(`${zipCode} ${city}`, {
-      x: 50,
-      y: height - 80,
-      size: fontSize,
-      font,
-      color: rgb(0, 0, 0),
-    });
-
-    // Title
     page.drawText("Feuille d'émargement", {
       x: width / 2 - 50,
       y: height - 150,
@@ -112,7 +146,6 @@ export default function FeuilleDemargement() {
       color: rgb(0, 0, 0),
     });
 
-    // Formation details
     page.drawText("Nom de la formation: " + selectedClass, {
       x: 50,
       y: height - 180,
@@ -121,7 +154,6 @@ export default function FeuilleDemargement() {
       color: rgb(0, 0, 0),
     });
 
-    // Table header
     page.drawText("N°", {
       x: 50,
       y: height - 210,
@@ -144,27 +176,79 @@ export default function FeuilleDemargement() {
       color: rgb(0, 0, 0),
     });
 
-    // Table rows
+    const rowHeight = 50;
     let yPosition = height - 230;
-    students.forEach((student, index) => {
-      page.drawText((index + 1).toString(), {
-        x: 50,
-        y: yPosition,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      });
-      page.drawText(`${student.firstname} ${student.lastname}`, {
-        x: 100,
-        y: yPosition,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      });
-      yPosition -= 30;
-    });
 
-    // Footer
+    for (const [index, student] of students.entries()) {
+      if (student.role === "STUDENT") {
+        page.drawText((index + 1).toString(), {
+          x: 50,
+          y: yPosition,
+          size: fontSize,
+          font,
+          color: rgb(0, 0, 0),
+        });
+        page.drawText(`${student.firstname} ${student.lastname}`, {
+          x: 100,
+          y: yPosition,
+          size: fontSize,
+          font,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawLine({
+          start: { x: 40, y: yPosition - 20 },
+          end: { x: width - 40, y: yPosition - 20 },
+          thickness: 1,
+          color: rgb(0, 0, 0),
+        });
+
+        const studentSignature = signatures.find(
+          (sig) => sig.userId === student.id
+        );
+
+        if (studentSignature?.hashedSign) {
+          try {
+            const signatureUrl = studentSignature.hashedSign;
+            const response = await fetch(signatureUrl);
+            if (!response.ok)
+              throw new Error(
+                `Failed to fetch signature: ${response.statusText}`
+              );
+            const signatureImageBytes = await response.arrayBuffer();
+            const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+            const signatureDims = signatureImage.scale(0.4);
+
+            page.drawImage(signatureImage, {
+              x: 400,
+              y: yPosition - 25,
+              width: signatureDims.width,
+              height: signatureDims.height,
+            });
+          } catch (error) {
+            console.error("Error loading signature image:", error);
+            page.drawText("Signature non disponible", {
+              x: 400,
+              y: yPosition,
+              size: fontSize,
+              font,
+              color: rgb(1, 0, 0),
+            });
+          }
+        } else {
+          page.drawText("Signature absente", {
+            x: 400,
+            y: yPosition,
+            size: fontSize,
+            font,
+            color: rgb(1, 0, 0),
+          });
+        }
+
+        yPosition -= rowHeight;
+      }
+    }
+
     page.drawText("Professeur: " + teacherName, {
       x: 50,
       y: 50,
@@ -183,79 +267,42 @@ export default function FeuilleDemargement() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-5">
-      <Input
-        type="text"
-        placeholder="School Name"
-        value={schoolName}
-        onChange={(e) => setSchoolName(e.target.value)}
-      />
-      <Input
-        type="text"
-        placeholder="School Address"
-        value={schoolAddress}
-        onChange={(e) => setSchoolAddress(e.target.value)}
-      />
-      <Input
-        type="text"
-        placeholder="Zip Code"
-        value={zipCode}
-        onChange={(e) => setZipCode(e.target.value)}
-      />
-      <Input
-        type="text"
-        placeholder="City"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
       <select
         value={selectedClass}
-        onChange={(e) =>
-          setSelectedClass((e.target as HTMLSelectElement).value)
-        }
+        onChange={(e) => setSelectedClass(e.target.value)}
         className="p-2 border rounded"
       >
-        <option>Sélectionnez une classe</option>
-        {classes.map((classItem: any) => (
+        <option value="">Sélectionnez une classe</option>
+        {classes.map((classItem) => (
           <option key={classItem.id} value={classItem.id}>
             {classItem.name}
           </option>
         ))}
       </select>
-      <select
-        value={teacherName}
-        onChange={(e) => setTeacherName((e.target as HTMLSelectElement).value)}
-        className="p-2 border rounded"
-      >
-        <option>Sélectionnez un professeur</option>
-        {teachers.map((teacher: any) => (
-          <option
-            key={teacher.id}
-            value={teacher.firstname + " " + teacher.lastname}
-          >
-            {teacher.firstname} {teacher.lastname}
-          </option>
+
+      {students
+        .filter((student) => student.role === "STUDENT")
+        .map((student, index) => (
+          <div key={index} className="flex space-x-2">
+            <Input
+              type="text"
+              placeholder="Prénom"
+              value={student.firstname}
+              onChange={(e) =>
+                handleStudentChange(index, "firstname", e.target.value)
+              }
+            />
+            <Input
+              type="text"
+              placeholder="Nom"
+              value={student.lastname}
+              onChange={(e) =>
+                handleStudentChange(index, "lastname", e.target.value)
+              }
+            />
+          </div>
         ))}
-      </select>
-      {students.map((student, index) => (
-        <div key={index} className="flex space-x-2">
-          <Input
-            type="text"
-            placeholder="Firstname"
-            value={student.firstname}
-            onChange={(e) =>
-              handleStudentChange(index, "firstname", e.target.value)
-            }
-          />
-          <Input
-            type="text"
-            placeholder="Lastname"
-            value={student.lastname}
-            onChange={(e) =>
-              handleStudentChange(index, "lastname", e.target.value)
-            }
-          />
-        </div>
-      ))}
+
       <Button
         onClick={handleAddStudent}
         className="flex items-center space-x-2"
@@ -263,7 +310,7 @@ export default function FeuilleDemargement() {
         <PlusIcon className="h-5 w-5" />
         <span>Ajouter un élève</span>
       </Button>
-      <Button onClick={generatePDF}>Téléchargement du PDF de présence</Button>
+      <Button onClick={generatePDF}>Générer PDF</Button>
     </div>
   );
 }

@@ -47,7 +47,7 @@ export default function SchoolNavBar() {
       name: "Documents",
       icon: (props) => <FileTextIcon {...props} />,
       variant: "ghost",
-      href: "/documents",
+      href: "/school-dashboard/docs",
     },
     {
       name: "Settings",
