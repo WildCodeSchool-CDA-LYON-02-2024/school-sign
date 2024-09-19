@@ -86,6 +86,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 // Handle GET request - Retrieve all student or a single student by ID
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
+console.log(req.query);
 
   try {
     const tokenCookie = req.cookies.session;
@@ -115,7 +116,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    if (role !== "SCHOOL") {
+    if (role === "STUDENT") {
       return res
         .status(403)
         .json({
