@@ -59,7 +59,7 @@ export default function TeacherNavBar() {
 
   return (
     <>
-      <nav className="basis-1/5">
+      <nav>
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
       </nav>
     </>
