@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 // zod
 import { z } from "zod";
 import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
+import { toast, useToast } from "@/hooks/use-toast";
 
 export default function SchoolRegisterForm() {
   const [name, setName] = useState("");
@@ -35,6 +36,7 @@ export default function SchoolRegisterForm() {
   >({});
 
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,11 +73,20 @@ export default function SchoolRegisterForm() {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      alert("Registration successful!");
+      toast({
+        title: "Registration Successful",
+        className: "bg-green-400",
+        duration: 5000,
+      });
       router.push("/school-login");
     } else {
       const errorMessage = await response.text();
-      alert(`Error: ${errorMessage}`);
+      toast({
+        title: "Error",
+        className: "bg-red-700 text-white",
+        description: "please enter correct informations",
+        duration: 5000,
+      });
     }
   };
   return (

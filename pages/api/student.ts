@@ -3,7 +3,6 @@ import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
 import { verifyToken } from "@/lib/jwt";
-import { log } from "console";
 
 const prisma = new PrismaClient();
 
@@ -94,11 +93,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
-    // Verify the token and extract the payload
     const payload = await verifyToken(tokenCookie);
     const { schoolId, role } = payload;
 
-    // Handle classId from query
     const classIdQuery = req.query.classid;
     let classId: number | undefined = undefined;
 
@@ -108,7 +105,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         return res.status(400).json({ error: "Invalid class ID format" });
       }
     } else if (Array.isArray(classIdQuery)) {
-      // If classIdQuery is an array, handle the first element
       classId = parseInt(classIdQuery[0], 10);
       if (isNaN(classId)) {
         return res.status(400).json({ error: "Invalid class ID format" });
@@ -119,7 +115,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    // Optionally restrict access to certain roles
     if (role !== "SCHOOL") {
       return res
         .status(403)
@@ -128,7 +123,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         });
     }
 
-    // Fetch a single student by ID if `id` is provided
     if (id) {
       const userId = Number(id);
       if (isNaN(userId)) {
@@ -146,11 +140,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       return res.status(200).json({ user });
     }
 
-    // Fetch all students if `id` is not provided
     const users = await prisma.user.findMany({
       where: {
         schoolId,
-        classId: classId, // This will be undefined if not set
+        classId: classId,
       },
     });
 

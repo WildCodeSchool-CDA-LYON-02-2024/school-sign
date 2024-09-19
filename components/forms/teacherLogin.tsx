@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-export default function SchoolLogin() {
+export default function TeacherLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function SchoolLogin() {
         description: "Welcome back!",
         duration: 5000,
       });
-      router.push("/school-dashboard");
+      router.push("/teacher-dashboard");
     } else {
       toast({
         title: "Login failed",

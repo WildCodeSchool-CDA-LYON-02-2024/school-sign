@@ -17,52 +17,64 @@ export default async function handler(
       return handleGet(req, res);
     case "POST":
       return handlePost(req, res);
-    // case "PUT":
-    //   return handlePut(req, res);
-    // case "DELETE":
-    //   return handleDelete(req, res);
+    case "PUT":
+      return handlePut(req, res);
     default:
       return res.status(405).json({ error: "Method not allowed" });
   }
 }
 
-// Handle GET request - Retrieve all student or a single student by ID
+// Handle GET request - Retrieve all teachers or teachers by classId
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-
   try {
-    // Extraire le token des cookies
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
-
-    // Vérifier le token et extraire le payload
     const payload = await verifyToken(tokenCookie);
     const schoolId = payload.schoolId;
     const role = payload.role;
+    const classIdQuery = req.query.classid;
+    let classId: number | undefined = undefined;
 
-    // Vérification que l'utilisateur a bien un schoolId
+    if (typeof classIdQuery === "string") {
+      classId = parseInt(classIdQuery, 10);
+      if (isNaN(classId)) {
+        return res.status(400).json({ error: "Invalid class ID format" });
+      }
+    } else if (Array.isArray(classIdQuery)) {
+      classId = parseInt(classIdQuery[0], 10);
+    }
+
     if (!schoolId) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    // Optionnel : Si vous souhaitez limiter l'accès à certains rôles, ajoutez une vérification du rôle ici.
     if (role !== "SCHOOL") {
       return res.status(403).json({
         error: "Access denied. You do not have the required permissions.",
       });
     }
 
-    // Récupérer toutes les classes associées à l'école à partir de schoolId
-    const users = await prisma.user.findMany({
-      where: {
-        role: Role.TEACHER,
-        schoolId: schoolId, // Filtrer par l'ID de l'école
-      },
-    });
+    if (classId !== undefined) {
+      const users = await prisma.user.findMany({
+        where: {
+          classId: classId,
+          role: Role.TEACHER,
+        },
+      });
+      return res.status(200).json({ users });
+    } else {
+      // Query all teachers if no classId is provided
+      const users = await prisma.user.findMany({
+        where: {
+          role: Role.TEACHER,
+          schoolId: schoolId,
+        },
+      });
 
-    // Répondre avec la liste des classes trouvées
-    res.status(200).json({ users });
+      return res.status(200).json({ users });
+    }
   } catch (error: any) {
     console.error("API Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -73,30 +85,39 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
 // Handle POST request - Add a new teacher
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
-  // const { id } = req.query;
-
   try {
-    // Valider les données d'entrée
+    // Validate the incoming request body
     const data = registerSchemaUser.parse(req.body);
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // Obtenir l'ID de l'école et la classe à partir du token
+    // Check for authorization token
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
+    // Verify the token
     const payload = await verifyToken(tokenCookie);
+    const schoolId = payload.schoolId;
 
-    const { schoolId } = payload;
     if (!payload) {
       return res.status(401).json({ error: "Invalid or expired token" });
     }
+
     if (!schoolId) {
-      return res.status(400).json({ error: "School ID" });
+      return res.status(400).json({ error: "School ID is required" });
     }
 
-    // Créer l'utilisateur et l'affecter à une école et à une classe
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+
+    // Create a new user
     const user = await prisma.user.create({
       data: {
         firstname: data.firstname,
@@ -108,11 +129,41 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
+    // Send response
     res.status(201).json({ user });
   } catch (error) {
     console.error("API Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+// Handle PUT request - Update an existing teacher
+async function handlePut(req: NextApiRequest, res: NextApiResponse) {
+  const id = parseInt(req.query.id as string, 10);
+  const { classId } = req.body;
+  console.log(id);
+
+  try {
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid ID" });
+    }
+
+    if (typeof classId === "undefined") {
+      return res.status(400).json({ error: "classId is required" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: id },
+      data: {
+        classId: classId,
+      },
+    });
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("API Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

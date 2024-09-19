@@ -17,7 +17,7 @@ export default function BottomNav({ links }: NavProps) {
       {links.map((link, index) => (
         <MenubarMenu key={index}>
           <Link
-            href={`/${link.name.toLowerCase()}`}
+            href={link.href}
             className={cn(
               buttonVariants({ variant: link.variant, size: "lg" }),
               link.variant &&

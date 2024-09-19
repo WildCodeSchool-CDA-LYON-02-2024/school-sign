@@ -17,11 +17,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddClassForm() {
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -45,11 +47,19 @@ export default function AddClassForm() {
       });
 
       if (res.ok) {
-        alert("Class added successfully");
+        toast({
+          title: "Success",
+          className: "bg-green-400",
+          description: "A new has been class added",
+          duration: 5000,
+        });
         router.back();
       } else {
-        const errorData = await res.json();
-        setError(errorData.error || "An error occurred while adding the class");
+        toast({
+          title: "An error occurred while adding the class",
+          description: "Please try again later",
+          duration: 5000,
+        });
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.");

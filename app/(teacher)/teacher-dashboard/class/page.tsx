@@ -1,31 +1,22 @@
 "use client";
 
 // react
-import { useState, useEffect } from "react";
-
-// next
-import Link from "next/link";
-
-// ui
+import { useEffect, useState } from "react"; // next
+import Link from "next/link"; // context
+import { useClassContext } from "@/components/context/ClassContext"; // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-// Define TypeScript interface for teacher
-interface Teacher {
-  id: number;
-  firstname: string;
-  lastname: string;
-}
-
-export default function TeacherList() {
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
+export default function ClassList() {
+  const [classData, setClassData] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { setClassId } = useClassContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/teacher", {
+        const res = await fetch("/api/class", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -35,13 +26,13 @@ export default function TeacherList() {
 
         if (res.ok) {
           const data = await res.json();
-          console.log("Fetched Data:", data); // Log to check structure
 
-          // Assuming the API returns { users: [...] }
-          setTeachers(data.users || []);
+          setClassData(data.classSections || []);
         } else {
           const errorData = await res.json();
-          setError(errorData.error || "An error occurred while fetching teachers");
+          setError(
+            errorData.error || "An error occurred while fetching classes",
+          );
         }
       } catch (err) {
         console.error("Request Error:", err);
@@ -54,6 +45,10 @@ export default function TeacherList() {
     fetchData();
   }, []);
 
+  const handleClassClick = (id: number) => {
+    setClassId(id);
+  };
+
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="flex items-center justify-center">
@@ -61,15 +56,15 @@ export default function TeacherList() {
 
         {loading ? (
           <p>Loading...</p>
-        ) : teachers.length > 0 ? (
+        ) : classData.length > 0 ? (
           <ul className="space-y-4">
-            {teachers.map((teacher) => (
-              <li key={teacher.id}>
+            {classData.map((cls: any) => (
+              <li key={cls.id}>
                 <Card className="w-40 justify-center items-center">
                   <CardContent className="flex flex-col justify-center items-center">
-                    <Link href={`/school-dashboard/teacher/${teacher.id}`}>
-                      <button>
-                        {`${teacher.firstname} ${teacher.lastname}`}
+                    <Link href={`/school-dashboard/class/${cls.name}/student/`}>
+                      <button onClick={() => handleClassClick(cls.id)}>
+                        {cls.name}
                       </button>
                     </Link>
                   </CardContent>
@@ -78,15 +73,13 @@ export default function TeacherList() {
             ))}
           </ul>
         ) : (
-          <p>No teachers found.</p>
+          <p>No classes found.</p>
         )}
       </div>
 
-      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
+      <div className="flex items-center justify-center  flex-col gap-4 p-4 md:p-36">
         <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school-dashboard/teacher/addTeacher">
-            Add a new Teacher
-          </Link>
+          <Link href="/school-dashboard/class/addClass">Add a new class</Link>
         </Button>
       </div>
     </div>
