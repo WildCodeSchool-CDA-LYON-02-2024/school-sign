@@ -56,7 +56,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     // Récupérer toutes les classes associées à l'école à partir de schoolId
     const users = await prisma.user.findMany({
       where: {
-        role: Role.TEACHER, // Filtrer par l'ID de l'école
+        role: Role.TEACHER,
+        schoolId: schoolId, // Filtrer par l'ID de l'école
       },
     });
 
