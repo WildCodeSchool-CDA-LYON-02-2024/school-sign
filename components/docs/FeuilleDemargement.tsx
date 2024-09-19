@@ -18,14 +18,20 @@ interface Student {
   role: string;
 }
 
+interface ClassSection {
+  id: number;
+  name: string;
+}
+
 export default function FeuilleDemargement() {
   const [students, setStudents] = useState<Student[]>([]);
-  const [teacherName, setTeacherName] = useState<string>("");
-  const [classes, setClasses] = useState<{ id: string; name: string }[]>([]);
+  const [teacherName, setTeacherName] = useState("");
+  const [classes, setClasses] = useState<ClassSection[]>([]);
   const [teachers, setTeachers] = useState<
     { id: string; firstname: string; lastname: string }[]
   >([]);
   const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedClassName, setSelectedClassName] = useState<string>("");
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [schoolDetails, setSchoolDetails] = useState<{
     name: string;
@@ -33,6 +39,7 @@ export default function FeuilleDemargement() {
     zipCode: string;
     city: string;
   } | null>(null);
+console.log(selectedClassName, 'classname');
 
   useEffect(() => {
     const fetchSchoolDetails = async () => {
@@ -90,11 +97,24 @@ export default function FeuilleDemargement() {
     fetchSignatures();
   }, []);
 
+  useEffect(() => {
+    // Update selectedClassName when selectedClass changes
+    const classItem = classes.find((classItem) => classItem.id === parseInt(selectedClass));
+    if (classItem) {
+      setSelectedClassName(classItem.name);
+    } else {
+      setSelectedClassName(""); // Clear if not found
+    }
+  }, [selectedClass, classes]);
+
+  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const classId = e.target.value;
+    console.log("Selected Class ID:", classId); // Debug log
+    setSelectedClass(classId);
+  };
+
   const handleAddStudent = () => {
-    setStudents([
-      ...students,
-      { id: "", firstname: "", lastname: "", role: "" },
-    ]);
+    setStudents([...students, { id: "", firstname: "", lastname: "", role: "STUDENT" }]);
   };
 
   const handleStudentChange = (
@@ -146,7 +166,7 @@ export default function FeuilleDemargement() {
       color: rgb(0, 0, 0),
     });
 
-    page.drawText("Nom de la formation: " + selectedClass, {
+    page.drawText("Nom de la formation: " + selectedClassName, {
       x: 50,
       y: height - 180,
       size: fontSize,
@@ -219,6 +239,7 @@ export default function FeuilleDemargement() {
             const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
             const signatureDims = signatureImage.scale(0.4);
 
+            // Draw the signature image
             page.drawImage(signatureImage, {
               x: 400,
               y: yPosition - 25,
@@ -236,6 +257,7 @@ export default function FeuilleDemargement() {
             });
           }
         } else {
+          // Display message when signature is missing
           page.drawText("Signature absente", {
             x: 400,
             y: yPosition,
@@ -245,10 +267,12 @@ export default function FeuilleDemargement() {
           });
         }
 
+        // Move to the next row position
         yPosition -= rowHeight;
       }
     }
 
+    // Footer
     page.drawText("Professeur: " + teacherName, {
       x: 50,
       y: 50,
@@ -269,7 +293,7 @@ export default function FeuilleDemargement() {
     <div className="flex flex-col items-center justify-center h-screen gap-5">
       <select
         value={selectedClass}
-        onChange={(e) => setSelectedClass(e.target.value)}
+        onChange={handleClassChange}
         className="p-2 border rounded"
       >
         <option value="">Sélectionnez une classe</option>
@@ -279,30 +303,26 @@ export default function FeuilleDemargement() {
           </option>
         ))}
       </select>
-
-      {students
-        .filter((student) => student.role === "STUDENT")
-        .map((student, index) => (
-          <div key={index} className="flex space-x-2">
-            <Input
-              type="text"
-              placeholder="Prénom"
-              value={student.firstname}
-              onChange={(e) =>
-                handleStudentChange(index, "firstname", e.target.value)
-              }
-            />
-            <Input
-              type="text"
-              placeholder="Nom"
-              value={student.lastname}
-              onChange={(e) =>
-                handleStudentChange(index, "lastname", e.target.value)
-              }
-            />
-          </div>
-        ))}
-
+      {students.filter(student => student.role === "STUDENT").map((student, index) => (
+        <div key={index} className="flex space-x-2">
+          <Input
+            type="text"
+            placeholder="Prénom"
+            value={student.firstname}
+            onChange={(e) =>
+              handleStudentChange(index, "firstname", e.target.value)
+            }
+          />
+          <Input
+            type="text"
+            placeholder="Nom"
+            value={student.lastname}
+            onChange={(e) =>
+              handleStudentChange(index, "lastname", e.target.value)
+            }
+          />
+        </div>
+      ))}
       <Button
         onClick={handleAddStudent}
         className="flex items-center space-x-2"
