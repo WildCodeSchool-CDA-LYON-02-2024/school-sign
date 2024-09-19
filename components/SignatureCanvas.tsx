@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
 import { useSignatureContext } from "../components/context/SignatureContext";
@@ -8,10 +6,12 @@ import Image from "next/image";
 export default function SignatureCanvas() {
   const [dataURL, setDataURL] = useState<string | null>(null);
   const [canvasKey, setCanvasKey] = useState<number>(0);
+  const [signatureId, setSignatureId] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
-  const { addStudentSignature, clearStudentSignatures } = useSignatureContext(); // Utilisation du contexte
-  console.log(dataURL);
+  const { addStudentSignature, clearStudentSignatures } = useSignatureContext();
+
+  console.log(signatureId);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -31,41 +31,57 @@ export default function SignatureCanvas() {
   const saveAsPNG = async () => {
     if (signaturePadRef.current) {
       const dataUrl = signaturePadRef.current.toDataURL();
+      setDataURL(dataUrl);
   
       try {
-        const response = await fetch('/api/signature', {
-          method: 'POST',
+        const response = await fetch("/api/signature", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            dataUrl: dataUrl, 
-            userId: 1,
-          }),
+          body: JSON.stringify({ dataUrl }),
         });
   
         if (response.ok) {
-          const data = await response.json();
-          console.log('Signature sauvegardée:', data.message);
+          const result = await response.json();
+          setSignatureId(result.sign.id); // Store the signature ID
+          addStudentSignature(dataUrl);
         } else {
-          console.error('Erreur:', await response.json());
+          const error = await response.json();
+          console.error("Failed to save signature:", error);
         }
       } catch (error) {
-        console.error('Erreur de réseau ou serveur:', error);
+        console.error("Error saving signature:", error);
       }
     }
   };
-  
 
-  const clearSignature = () => {
+  const clearSignature = async () => {
     if (signaturePadRef.current) {
       signaturePadRef.current.clear();
       setDataURL(null);
-      clearStudentSignatures();
+      setSignatureId(null);
     }
   };
 
-  const restartSignature = () => {
+  const restartSignature = async () => {
+    if (signatureId) {
+      try {
+        const response = await fetch(`/api/signature/${signatureId}`, {
+          method: "DELETE",
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Signature deleted:", result);
+        } else {
+          const error = await response.json();
+          console.error("Error deleting signature:", error);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    }
     setCanvasKey((prevKey) => prevKey + 1);
     setDataURL(null);
   };
@@ -105,9 +121,8 @@ export default function SignatureCanvas() {
       ) : (
         <div className="flex flex-col items-center">
           <h4 className="mb-4">Saved Signature</h4>
-          <Image src={dataURL} alt="Signature" width={600} height={500}></Image>
+          <Image src={dataURL} alt="Signature" width={600} height={500} />
 
-          {/* <img src={dataURL} alt="Signature" style={{ maxWidth: "100%", height: "auto" }} /> */}
           <button
             onClick={restartSignature}
             className="px-4 py-2 bg-green-500 text-white rounded mt-4"
