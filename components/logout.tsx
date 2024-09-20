@@ -22,6 +22,11 @@ export default function Logout() {
     });
 
     if (res.ok) {
+      toast({
+        className: "bg-green-400",
+        description: "See you soon",
+        duration: 2000,
+      });
       router.push("/");
     } else {
       toast({

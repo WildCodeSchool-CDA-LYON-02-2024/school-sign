@@ -28,13 +28,13 @@ export default function StudentNavBar() {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
       variant: "default",
-      href: "/school-dashboard",
+      href: "/student-dashboard",
     },
     {
       name: "Schedule",
       icon: (props) => <CalendarIcon {...props} />,
       variant: "ghost",
-      href: "/school-dashboard/schedule",
+      href: "/student-dashboard/schedule",
     },
     {
       name: "Documents",
@@ -52,7 +52,7 @@ export default function StudentNavBar() {
 
   return (
     <>
-      <nav className="basis-1/5">
+      <nav>
         {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
       </nav>
     </>

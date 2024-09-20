@@ -143,7 +143,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 async function handlePut(req: NextApiRequest, res: NextApiResponse) {
   const id = parseInt(req.query.id as string, 10);
   const { classId } = req.body;
-  console.log(id);
 
   try {
     if (isNaN(id)) {

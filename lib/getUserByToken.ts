@@ -8,10 +8,6 @@ export async function getUserByToken(userId: number) {
       where: {
         id: userId,
       },
-      // select: {
-      //   classId: true,
-      //   // Autres champs si nécessaire...
-      // },
     });
 
     if (!user) {

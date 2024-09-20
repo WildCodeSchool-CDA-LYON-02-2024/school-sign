@@ -148,10 +148,9 @@ export default function StudentList({ params }: { params: { name: string } }) {
 
       if (res.ok) {
         toast({
-          title: "Success",
           className: "bg-green-400",
-          description: "Teacher has been added to the class",
-          duration: 5000,
+          description: "The teacher has been added to the class",
+          duration: 2000,
         });
         
         const updatedTeacher = await res.json();

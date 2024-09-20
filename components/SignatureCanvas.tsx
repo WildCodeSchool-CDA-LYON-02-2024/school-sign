@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
 import { useSignatureContext } from "../components/context/SignatureContext";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SignatureCanvas() {
   const [dataURL, setDataURL] = useState<string | null>(null);
@@ -10,8 +11,7 @@ export default function SignatureCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
   const { addStudentSignature, clearStudentSignatures } = useSignatureContext();
-
-  console.log(signatureId);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -43,8 +43,13 @@ export default function SignatureCanvas() {
         });
   
         if (response.ok) {
+          toast({
+            className: "bg-green-400",
+            description: "Signature registered",
+            duration: 2000,
+          });
           const result = await response.json();
-          setSignatureId(result.sign.id); // Store the signature ID
+          setSignatureId(result.sign.id); 
           addStudentSignature(dataUrl);
         } else {
           const error = await response.json();
@@ -58,6 +63,11 @@ export default function SignatureCanvas() {
 
   const clearSignature = async () => {
     if (signaturePadRef.current) {
+      toast({
+        description: "Signature cleared",
+        className: "bg-green-400",
+        duration: 2000,
+      });
       signaturePadRef.current.clear();
       setDataURL(null);
       setSignatureId(null);
@@ -72,8 +82,11 @@ export default function SignatureCanvas() {
         });
   
         if (response.ok) {
-          const result = await response.json();
-          console.log("Signature deleted:", result);
+          toast({
+            description: "Signature deleted",
+            className: "bg-green-400",
+            duration: 2000,
+          });
         } else {
           const error = await response.json();
           console.error("Error deleting signature:", error);

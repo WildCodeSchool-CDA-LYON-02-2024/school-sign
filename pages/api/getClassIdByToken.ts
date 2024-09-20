@@ -15,7 +15,7 @@ export default async function handler(
   try {
     const { userId } = await verifyToken(token);
     const user = await getUserByToken(userId);
-    return res.status(200).json({ classId: user.classId });
+    return res.status(200).json({ user });
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
