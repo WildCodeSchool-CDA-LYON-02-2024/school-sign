@@ -40,7 +40,7 @@ export default function StudentLogin() {
       toast({
         title: "Error",
         description: errorMessage,
-        duration: 5000,
+        duration: 2000,
       });
       return;
     }
@@ -55,18 +55,16 @@ export default function StudentLogin() {
 
     if (res.ok) {
       toast({
-        title: "Login Successful",
         className: "bg-green-400",
         description: "Welcome back!",
-        duration: 5000,
+        duration: 2000,
       });
       router.push("/student-dashboard");
     } else {
       toast({
-        title: "Login failed",
         className: "bg-red-700 text-white",
         description: "Invalid email or password.",
-        duration: 5000,
+        duration: 2000,
       });
     }
   };
@@ -74,8 +72,8 @@ export default function StudentLogin() {
   return (
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10 justify-center items-center">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
+        <CardHeader className="flex items-center justify-center">
+          <CardTitle>Student login</CardTitle>
           <CardDescription>Enter your login details</CardDescription>
         </CardHeader>
         <CardContent>

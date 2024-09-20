@@ -13,8 +13,8 @@ export default function StudentDashboard() {
       try {
         const response = await fetch("/api/getClassIdByToken");
         if (response.ok) {
-          const data = await response.json();
-          setStudentClassId(data.classId);
+          const data = await response.json();       
+          setStudentClassId(data.user.classId);
         } else {
           console.error("Erreur lors de la récupération du classId");
         }

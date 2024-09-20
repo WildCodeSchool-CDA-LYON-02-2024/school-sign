@@ -129,10 +129,9 @@ export default function StudentDetails({
 
       if (res.ok) {
         toast({
-          title: "Success",
           className: "bg-green-400",
           description: "The teacher has been assigned to the selected class",
-          duration: 5000,
+          duration: 2000,
         });
         const updatedTeacher = await res.json();
         setTeacher(updatedTeacher);

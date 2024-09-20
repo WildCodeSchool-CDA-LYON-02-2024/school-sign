@@ -115,7 +115,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    if (role !== "SCHOOL") {
+    if (role === "STUDENT") {
       return res
         .status(403)
         .json({

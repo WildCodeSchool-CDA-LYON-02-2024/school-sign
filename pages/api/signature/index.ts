@@ -15,6 +15,8 @@ export default async function handler(
   switch (method) {
     case "POST":
       return handlePost(req, res);
+    case "GET":
+      return handleGet(req, res);
     default:
       return res.status(405).json({ error: "Method not allowed" });
   }
@@ -69,6 +71,26 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     });
   } catch (error) {
     console.error("Error saving image:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    // Vérification du cookie d'autorisation
+    const tokenCookie = req.cookies.session;
+
+    if (!tokenCookie) {
+      return res.status(401).json({ error: "Authorization token required" });
+    }
+
+    // Récupération des signatures depuis la base de données
+    const signs = await prisma.sign.findMany();
+
+    // Réponse avec les signatures
+    res.status(200).json({ signs });
+  } catch (error) {
+    console.error("Error fetching signatures:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }
