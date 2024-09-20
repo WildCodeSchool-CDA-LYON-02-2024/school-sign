@@ -40,7 +40,7 @@ export default function StudentNavBar() {
       name: "Documents",
       icon: (props) => <FileTextIcon {...props} />,
       variant: "ghost",
-      href: "/student-dashboard/documents",
+      href: "/student-dashboard/card",
     },
     {
       name: "Settings",

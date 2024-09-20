@@ -3,5 +3,5 @@ export interface CardEl {
 }
 
 export interface CardElProps {
-  links: CardEl[];
+  elements: CardEl[];
 }
