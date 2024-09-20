@@ -1,5 +1,5 @@
-import SchoolLogin from "@/components/forms/SchoolLogin";
+import TeacherLogin from "@/components/forms/teacherLogin";
 
 export default function LoginPage() {
-  return <SchoolLogin />;
+  return <TeacherLogin/>;
 }
