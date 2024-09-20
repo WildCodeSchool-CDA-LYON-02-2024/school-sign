@@ -50,7 +50,9 @@ export default function ClassList() {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <>
+      <h1 className="text-center text-2xl pb-8">Teacher Class</h1>
+
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}
 
@@ -82,6 +84,6 @@ export default function ClassList() {
           <Link href="/school-dashboard/class/addClass">Add a new class</Link>
         </Button>
       </div>
-    </div>
+    </>
   );
 }

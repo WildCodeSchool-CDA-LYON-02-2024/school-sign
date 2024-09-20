@@ -28,25 +28,25 @@ export default function StudentNavBar() {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
       variant: "default",
-      href: "/school-dashboard",
+      href: "/student-dashboard",
     },
     {
       name: "Schedule",
       icon: (props) => <CalendarIcon {...props} />,
       variant: "ghost",
-      href: "/school-dashboard/schedule",
+      href: "/student-dashboard/schedule",
     },
     {
       name: "Documents",
       icon: (props) => <FileTextIcon {...props} />,
       variant: "ghost",
-      href: "/documents",
+      href: "/student-dashboard/documents",
     },
     {
       name: "Settings",
       icon: (props) => <GearIcon {...props} />,
       variant: "ghost",
-      href: "/settings",
+      href: "/student-dashboard/settings",
     },
   ];
 

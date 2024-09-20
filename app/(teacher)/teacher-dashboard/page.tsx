@@ -64,7 +64,8 @@ export default function TeacherDashboard() {
   };
 
   return (
-    <div className="h-screen py-8 w-full">
+    <>
+      {/*<div className="h-screen py-8 w-full">*/}
       <h1 className="text-center">Teacher Dashboard</h1>
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={data} />
@@ -113,6 +114,7 @@ export default function TeacherDashboard() {
       ) : (
         <p>Aucune classe ne vous est affectée</p>
       )}
-    </div>
+      {/*</div>*/}
+    </>
   );
 }

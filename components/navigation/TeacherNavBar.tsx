@@ -29,39 +29,35 @@ export default function TeacherNavBar() {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
       variant: "default",
-      href: "/school-dashboard",
+      href: "/teacher-dashboard",
     },
     {
       name: "Schedule",
       icon: (props) => <CalendarIcon {...props} />,
       variant: "ghost",
-      href: "/school-dashboard/schedule",
+      href: "/teacher-dashboard/schedule",
     },
     {
       name: "Class",
       icon: (props) => <PersonIcon {...props} />,
       variant: "ghost",
-      href: "/school-dashboard/class",
+      href: "/teacher-dashboard/class",
     },
     {
       name: "Documents",
       icon: (props) => <FileTextIcon {...props} />,
       variant: "ghost",
-      href: "/documents",
+      href: "/teacher-dashboard/documents",
     },
     {
       name: "Settings",
       icon: (props) => <GearIcon {...props} />,
       variant: "ghost",
-      href: "/settings",
+      href: "/teacher-dashboard/settings",
     },
   ];
 
   return (
-    <>
-      <nav className="basis-1/5">
-        {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
-      </nav>
-    </>
+    <>{isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}</>
   );
 }

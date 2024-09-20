@@ -12,8 +12,10 @@ export default function SchoolLayout({
   return (
     <div className="md:flex bg-seasame h-screen">
       <ClassProvider>
-        <SchoolNavBar />
-        <main className="basis-4/5">{children}</main>
+        <nav className="basis-1/6">
+          <SchoolNavBar />
+        </nav>
+        <main className="basis-5/6">{children}</main>
         <Toaster />
       </ClassProvider>
     </div>
