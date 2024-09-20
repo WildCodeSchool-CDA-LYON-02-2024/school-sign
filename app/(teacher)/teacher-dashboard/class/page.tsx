@@ -55,34 +55,38 @@ export default function ClassList() {
 
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}
-
         {loading ? (
           <p>Loading...</p>
         ) : classData.length > 0 ? (
-          <ul className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {classData.map((cls: any) => (
-              <li key={cls.id}>
-                <Card className="w-40 justify-center items-center">
-                  <CardContent className="flex flex-col justify-center items-center">
-                    <Link href={`/school-dashboard/class/${cls.name}/student/`}>
-                      <button onClick={() => handleClassClick(cls.id)}>
-                        {cls.name}
-                      </button>
-                    </Link>
+              <Link
+                key={cls.id}
+                href={`/school-dashboard/class/${cls.name}/student/`}
+                passHref
+              >
+                <Card
+                  onClick={() => handleClassClick(cls.id)}
+                  className="w-40 max-w-40 cursor-pointer"
+                >
+                  <CardContent>
+                    <p>{cls.name}</p>
                   </CardContent>
                 </Card>
-              </li>
+              </Link>
             ))}
-          </ul>
+          </div>
         ) : (
           <p>No classes found.</p>
         )}
       </div>
 
-      <div className="flex items-center justify-center  flex-col gap-4 p-4 md:p-36">
-        <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school-dashboard/class/addClass">Add a new class</Link>
-        </Button>
+      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-36">
+        <Link href="/school-dashboard/class/addClass" passHref>
+          <Button className="bg-purple text-seasame" variant="outline">
+            Add a new class
+          </Button>
+        </Link>
       </div>
     </>
   );
