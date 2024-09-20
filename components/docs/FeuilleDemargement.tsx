@@ -25,11 +25,7 @@ interface ClassSection {
 
 export default function FeuilleDemargement() {
   const [students, setStudents] = useState<Student[]>([]);
-  const [teacherName, setTeacherName] = useState("");
   const [classes, setClasses] = useState<ClassSection[]>([]);
-  const [teachers, setTeachers] = useState<
-    { id: string; firstname: string; lastname: string }[]
-  >([]);
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [selectedClassName, setSelectedClassName] = useState<string>("");
   const [signatures, setSignatures] = useState<Signature[]>([]);
@@ -45,7 +41,6 @@ export default function FeuilleDemargement() {
     const fetchSchoolDetails = async () => {
       const res = await fetch("/api/school");
       const data = await res.json();
-      console.log(data, 'DATA');
       
       setSchoolDetails({
         name: data.name,
@@ -64,15 +59,6 @@ export default function FeuilleDemargement() {
       setClasses(data.classSections || []);
     };
     fetchClasses();
-  }, []);
-
-  useEffect(() => {
-    const fetchTeachers = async () => {
-      const res = await fetch("/api/teacher");
-      const data = await res.json();
-      setTeachers(data.users || []);
-    };
-    fetchTeachers();
   }, []);
 
   useEffect(() => {
@@ -105,7 +91,7 @@ export default function FeuilleDemargement() {
     if (classItem) {
       setSelectedClassName(classItem.name);
     } else {
-      setSelectedClassName(""); // Clear if not found
+      setSelectedClassName("");
     }
   }, [selectedClass, classes]);
 
@@ -274,7 +260,7 @@ export default function FeuilleDemargement() {
     }
 
     // Footer
-    page.drawText("Professeur: " + teacherName, {
+    page.drawText("Professeur: ", {
       x: 50,
       y: 50,
       size: fontSize,

@@ -47,18 +47,16 @@ export default function AddStudentForm() {
 
       if (res.ok) {
         toast({
-          title: "Success",
           className: "bg-green-400",
-          description: "Student has been added",
-          duration: 5000,
+          description: "Student added",
+          duration: 2000,
         });
         router.back();
       } else {
         toast({
-          title: "Invalid information",
           className: "bg-red-500",
           description: 'Email already in use',
-          duration: 5000,
+          duration: 2000,
         });
         const errorData = await res.json();
         setError(errorData.error || "An error occurred while adding the student");

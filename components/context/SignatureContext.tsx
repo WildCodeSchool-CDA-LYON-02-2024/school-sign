@@ -5,12 +5,12 @@ import { createContext, useContext, useState } from "react";
 // Type pour le contexte
 interface SignatureContextType {
   isSignatureAllowed: boolean;
-  studentSignatures: string[] | null; // Changement ici
-  currentClassId: number | null;  // Le classId est maintenant un nombre
+  studentSignatures: string[] | null;
+  currentClassId: number | null; 
   allowSignature: (classId: number) => void;
   disallowSignature: () => void;
-  addStudentSignature: (signature: string) => void; // Renommé pour ajouter des signatures
-  clearStudentSignatures: () => void; // Fonction pour réinitialiser les signatures
+  addStudentSignature: (signature: string) => void;
+  clearStudentSignatures: () => void;
 }
 
 // Création du contexte
@@ -28,7 +28,7 @@ export const useSignatureContext = () => {
 // Provider pour le contexte
 export const SignatureProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignatureAllowed, setIsSignatureAllowed] = useState(false);
-  const [studentSignatures, setStudentSignatures] = useState<string[] | null>(null); // Changement ici
+  const [studentSignatures, setStudentSignatures] = useState<string[] | null>(null);
   const [currentClassId, setCurrentClassId] = useState<number | null>(null);
 
   const allowSignature = (classId: number) => {
@@ -48,7 +48,7 @@ export const SignatureProvider = ({ children }: { children: React.ReactNode }) =
   };
 
   const clearStudentSignatures = () => {
-    setStudentSignatures(null); // Réinitialise les signatures
+    setStudentSignatures(null);
   };
 
   return (

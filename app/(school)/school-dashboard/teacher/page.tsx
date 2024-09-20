@@ -10,7 +10,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-// Define TypeScript interface for teacher
 interface Teacher {
   id: number;
   firstname: string;
@@ -35,9 +34,6 @@ export default function TeacherList() {
 
         if (res.ok) {
           const data = await res.json();
-          console.log("Fetched Data:", data); // Log to check structure
-
-          // Assuming the API returns { users: [...] }
           setTeachers(data.users || []);
         } else {
           const errorData = await res.json();

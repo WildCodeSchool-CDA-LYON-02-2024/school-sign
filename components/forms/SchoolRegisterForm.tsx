@@ -71,21 +71,18 @@ export default function SchoolRegisterForm() {
     });
 
     if (response.ok) {
-      const data = await response.json();
-      console.log(data);
       toast({
         title: "Registration Successful",
         className: "bg-green-400",
-        duration: 5000,
+        duration: 2000,
       });
       router.push("/school-login");
     } else {
       const errorMessage = await response.text();
       toast({
-        title: "Error",
         className: "bg-red-700 text-white",
-        description: "please enter correct informations",
-        duration: 5000,
+        description: "Please enter correct informations",
+        duration: 2000,
       });
     }
   };

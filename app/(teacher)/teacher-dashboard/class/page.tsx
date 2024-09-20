@@ -6,6 +6,7 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 interface Signature {
   userId: string;
@@ -39,6 +40,7 @@ export default function ClassWithSignatures() {
   const [error, setError] = useState<string | null>(null);
   const { allowSignature, disallowSignature, isSignatureAllowed } =
     useSignatureContext();
+    const { toast } = useToast();
 
   useEffect(() => {
     const fetchClassId = async () => {
@@ -135,6 +137,11 @@ export default function ClassWithSignatures() {
   };
 
   const generatePDF = async () => {
+    toast({
+      title: "Attendance sheet PDF generated",
+      className: "bg-green-400",
+      duration: 2000,
+    });
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595.28, 841.89]);
     const { width, height } = page.getSize();
@@ -221,6 +228,13 @@ export default function ClassWithSignatures() {
           color: rgb(0, 0, 0),
         });
 
+        page.drawLine({
+          start: { x: 40, y: yPosition - 20 },
+          end: { x: width - 40, y: yPosition - 20 },
+          thickness: 1,
+          color: rgb(0, 0, 0),
+        });
+
         const studentSignature = findSignatureForStudent(student.id);
 
         if (studentSignature) {
@@ -274,11 +288,24 @@ export default function ClassWithSignatures() {
 
   const handleAllowSignature = () => {
     if (classId) {
+      toast({
+        title: "Signatures launched",
+        className: "bg-green-400",
+        duration: 2000,
+      });
       allowSignature(classId);
     } else {
       alert("Aucune classe ne vous est affectée");
     }
   };
+  const handleDisallowSignature = () => {
+    toast({
+      title: "Signatures desactivated",
+      className: "bg-red-400",
+      duration: 2000,
+    });
+    disallowSignature()
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-5">
@@ -295,7 +322,7 @@ export default function ClassWithSignatures() {
               Autoriser les signatures
             </button>
             <button
-              onClick={disallowSignature}
+              onClick={handleDisallowSignature}
               className="px-4 py-2 bg-red-500 text-white rounded"
             >
               Désactiver les signatures

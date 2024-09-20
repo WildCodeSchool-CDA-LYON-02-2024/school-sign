@@ -42,10 +42,9 @@ export default function AddTeacherForm() {
 
       if (res.ok) {
         toast({
-          title: "Success",
           className: "bg-green-400",
-          description: "Teacher has been added",
-          duration: 5000,
+          description: "Teacher added",
+          duration: 2000,
         });
         router.back();
       } else {
