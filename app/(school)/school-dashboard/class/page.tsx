@@ -11,7 +11,7 @@ import { useClassContext } from "@/components/context/ClassContext";
 
 // ui
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);
@@ -37,7 +37,7 @@ export default function ClassList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes"
+            errorData.error || "An error occurred while fetching classes",
           );
         }
       } catch (err) {
@@ -56,24 +56,30 @@ export default function ClassList() {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <>
+      <h1 className="text-center text-2xl pb-8">School Classes</h1>
+
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}
 
         {loading ? (
           <p>Loading...</p>
         ) : classData.length > 0 ? (
-          <ul className="space-y-4">
+          <ul>
             {classData.map((cls: any) => (
               <li key={cls.id}>
-                <Card className="w-40 justify-center items-center">
-                  <CardContent className="flex flex-col justify-center items-center">
-                    <Link href={`/school-dashboard/class/${cls.name}/student/`}>
-                      <button onClick={() => handleClassClick(cls.id)}>
-                        {cls.name}
-                      </button>
-                    </Link>
-                  </CardContent>
+                <Card className="w-40">
+                  <CardHeader>
+                    <CardTitle className="text-center">
+                      <Link
+                        href={`/school-dashboard/class/${cls.name}/student/`}
+                      >
+                        <button onClick={() => handleClassClick(cls.id)}>
+                          {cls.name}
+                        </button>
+                      </Link>
+                    </CardTitle>
+                  </CardHeader>
                 </Card>
               </li>
             ))}
@@ -83,11 +89,11 @@ export default function ClassList() {
         )}
       </div>
 
-      <div className="flex items-center justify-center  flex-col gap-4 p-4 md:p-36">
+      <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-10">
         <Button className="bg-purple text-seasame" variant="outline">
           <Link href="/school-dashboard/class/addClass">Add a new class</Link>
         </Button>
       </div>
-    </div>
+    </>
   );
 }

@@ -281,7 +281,7 @@ export default function AttendanceSheet() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-5">
+    <>
       <select
         value={selectedClass}
         onChange={handleClassChange}
@@ -319,11 +319,12 @@ export default function AttendanceSheet() {
       <Button
         onClick={handleAddStudent}
         className="flex items-center space-x-2"
+        variant="outline"
       >
         <PlusIcon className="h-5 w-5" />
         <span>Ajouter un élève</span>
       </Button>
       <Button onClick={generatePDF}>Générer PDF</Button>
-    </div>
+    </>
   );
 }
