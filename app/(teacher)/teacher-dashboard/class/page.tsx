@@ -2,12 +2,12 @@
 
 // react
 import { useEffect, useState } from "react"; // next
-import Link from "next/link"; // context
-import { useClassContext } from "@/components/context/ClassContext"; // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
+import { useSignatureContext } from "@/components/context/SignatureContext";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
 interface Signature {
   userId: string;
