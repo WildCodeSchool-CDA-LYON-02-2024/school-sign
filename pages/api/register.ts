@@ -1,18 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { registerSchema } from "@/lib/schemas/registerSchemaUser"; // Assurez-vous que le schéma est adapté aux utilisateurs
+import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser"; // Assurez-vous que le schéma est adapté aux utilisateurs
 
 const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "POST") {
     try {
       // Validation des données d'entrée avec le schéma
-      const data = registerSchema.parse(req.body);
+      const data = registerSchemaUser.parse(req.body);
 
       // Vérification si l'email est déjà utilisé
       const existingUser = await prisma.user.findFirst({

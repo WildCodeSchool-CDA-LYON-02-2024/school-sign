@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import * as path from "path";
 import { verifyToken } from "@/lib/jwt";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 

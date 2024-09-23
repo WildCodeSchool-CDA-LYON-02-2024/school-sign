@@ -53,7 +53,7 @@ export default function SignatureActions({
       >
         Disable signatures
       </button>
-      <p className="mt-4">
+      <p className="mt-4 text-center">
         {isSignatureAllowed
           ? `Signatures are authorised for the class ${classId}.`
           : "Signatures are disabled."}

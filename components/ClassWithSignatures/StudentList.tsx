@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface Student {
   id: string;
@@ -31,14 +32,18 @@ export default function StudentList({
   return (
     <>
       {students && students.length > 0 ? (
-        <ul className="space-y-4 flex flex-col justify-center items-center">
+        <ul className="flex gap-6 my-10">
           {students
             .filter((student) => student.role === "STUDENT")
             .map((student) => (
               <li key={student.id}>
-                <div className="card w-80 justify-center items-center">
-                  <div className="card-content flex flex-col justify-center items-center">
-                    <p>{`Nom: ${student.firstname} ${student.lastname}`}</p>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      {`Name: ${student.firstname} ${student.lastname}`}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-col">
                     {findSignatureForStudent(student.id) ? (
                       <Image
                         src={findSignatureForStudent(student.id) || ""}
@@ -47,12 +52,12 @@ export default function StudentList({
                         height={500}
                       />
                     ) : (
-                      <p className="mt-4 text-red-500">
-                        No signatures received.
+                      <p className="text-red-500 font-light">
+                        No signature received.
                       </p>
                     )}
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               </li>
             ))}
         </ul>
