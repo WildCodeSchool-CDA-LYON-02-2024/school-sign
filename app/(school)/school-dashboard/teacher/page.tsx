@@ -8,7 +8,7 @@ import Link from "next/link";
 
 // ui
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Teacher {
   id: number;
@@ -37,7 +37,9 @@ export default function TeacherList() {
           setTeachers(data.users || []);
         } else {
           const errorData = await res.json();
-          setError(errorData.error || "An error occurred while fetching teachers");
+          setError(
+            errorData.error || "An error occurred while fetching teachers",
+          );
         }
       } catch (err) {
         console.error("Request Error:", err);
@@ -51,7 +53,9 @@ export default function TeacherList() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <>
+      <h1 className="text-center text-2xl pb-8">School Teachers</h1>
+
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}
 
@@ -61,14 +65,16 @@ export default function TeacherList() {
           <ul className="space-y-4">
             {teachers.map((teacher) => (
               <li key={teacher.id}>
-                <Card className="w-40 justify-center items-center">
-                  <CardContent className="flex flex-col justify-center items-center">
-                    <Link href={`/school-dashboard/teacher/${teacher.id}`}>
-                      <button>
-                        {`${teacher.firstname} ${teacher.lastname}`}
-                      </button>
-                    </Link>
-                  </CardContent>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <Link href={`/school-dashboard/teacher/${teacher.id}`}>
+                        <button>
+                          {`${teacher.firstname} ${teacher.lastname}`}
+                        </button>
+                      </Link>
+                    </CardTitle>
+                  </CardHeader>
                 </Card>
               </li>
             ))}
@@ -85,6 +91,6 @@ export default function TeacherList() {
           </Link>
         </Button>
       </div>
-    </div>
+    </>
   );
 }

@@ -60,7 +60,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers"
+            errorData.error || "An error occurred while fetching teachers",
           );
         }
       } catch (err) {
@@ -102,7 +102,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
           const teacherErrorData = await teacherRes.json();
           setError(
             teacherErrorData.error ||
-              "An error occurred while fetching teachers"
+              "An error occurred while fetching teachers",
           );
         }
 
@@ -113,7 +113,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
           const studentErrorData = await studentRes.json();
           setError(
             studentErrorData.error ||
-              "An error occurred while fetching students"
+              "An error occurred while fetching students",
           );
         }
 
@@ -152,23 +152,23 @@ export default function StudentList({ params }: { params: { name: string } }) {
           description: "The teacher has been added to the class",
           duration: 2000,
         });
-        
+
         const updatedTeacher = await res.json();
 
         // Update the list of teachers with the newly added teacher
         setTeachers((prevTeachers) =>
           prevTeachers.some((teacher) => teacher.id === updatedTeacher.id)
             ? prevTeachers.map((teacher) =>
-                teacher.id === updatedTeacher.id ? updatedTeacher : teacher
+                teacher.id === updatedTeacher.id ? updatedTeacher : teacher,
               )
-            : [...prevTeachers, updatedTeacher]
+            : [...prevTeachers, updatedTeacher],
         );
         setSelectedTeacher(null);
         setError(null);
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while updating the teacher."
+          errorData.error || "An error occurred while updating the teacher.",
         );
       }
     } catch (err) {
@@ -178,7 +178,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <>
       {error && <p className="text-red-500">{error}</p>}
 
       {loadingStudents || loadingTeachers ? (
@@ -266,6 +266,6 @@ export default function StudentList({ params }: { params: { name: string } }) {
           </Button>
         </Link>
       </div>
-    </div>
+    </>
   );
 }

@@ -7,7 +7,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 // ui
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -50,7 +56,7 @@ export default function AddTeacherForm() {
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while adding the teacher"
+          errorData.error || "An error occurred while adding the teacher",
         );
       }
     } catch (err) {
@@ -60,59 +66,60 @@ export default function AddTeacherForm() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <Card className="w-96 mt-10">
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col space-y-2">
-              <Label htmlFor="firstname">Firstname</Label>
-              <Input
-                id="firstname"
-                name="firstname"
-                type="text"
-                placeholder="Firstname"
-                value={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-                required
-              />
-              <Label htmlFor="lastname">Lastname</Label>
-              <Input
-                id="lastname"
-                name="lastname"
-                type="text"
-                placeholder="Lastname"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
-                required
-              />
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className="text-red-500 mt-2">{error}</p>}
-            <CardFooter>
-              <Button type="submit">Submit</Button>
-            </CardFooter>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="w-96">
+      <CardHeader>
+        <CardTitle className="text-center">Add a new Teacher</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="firstname">Firstname</Label>
+            <Input
+              id="firstname"
+              name="firstname"
+              type="text"
+              placeholder="Firstname"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              required
+            />
+            <Label htmlFor="lastname">Lastname</Label>
+            <Input
+              id="lastname"
+              name="lastname"
+              type="text"
+              placeholder="Lastname"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              required
+            />
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+        </form>
+      </CardContent>
+      <CardFooter className="flex justify-end">
+        <Button type="submit">Submit</Button>
+      </CardFooter>
+    </Card>
   );
 }

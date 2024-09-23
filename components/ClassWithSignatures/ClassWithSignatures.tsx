@@ -46,7 +46,6 @@ export default function ClassWithSignatures() {
 
   return (
     <>
-      <h1 className="text-center text-2xl pb-8">Teacher Class</h1>
       {classId ? (
         <div className="flex flex-col items-center">
           <ClassComponent className={className} classId={classId} />
