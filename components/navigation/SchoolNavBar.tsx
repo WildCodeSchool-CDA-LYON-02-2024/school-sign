@@ -47,21 +47,17 @@ export default function SchoolNavBar() {
       name: "Documents",
       icon: (props) => <FileTextIcon {...props} />,
       variant: "ghost",
-      href: "/school-dashboard/docs",
+      href: "/school-dashboard/documents",
     },
     {
       name: "Settings",
       icon: (props) => <GearIcon {...props} />,
       variant: "ghost",
-      href: "/settings",
+      href: "/school-dashboard/settings",
     },
   ];
 
   return (
-    <>
-      <nav>
-        {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
-      </nav>
-    </>
+    <>{isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}</>
   );
 }

@@ -53,15 +53,11 @@ export default function TeacherNavBar() {
       name: "Settings",
       icon: (props) => <GearIcon {...props} />,
       variant: "ghost",
-      href: "/settings",
+      href: "/teacher-dashboard/settings",
     },
   ];
 
   return (
-    <>
-      <nav>
-        {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
-      </nav>
-    </>
+    <>{isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}</>
   );
 }

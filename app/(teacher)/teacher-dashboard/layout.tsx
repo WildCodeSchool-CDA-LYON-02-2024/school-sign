@@ -12,8 +12,12 @@ export default function TeacherLayout({
   return (
     <div className="md:flex bg-seasame h-screen">
       <ClassProvider>
-        <TeacherNavBar />
-        <main className="basis-4/5">{children}</main>
+        <nav className="basis-1/6">
+          <TeacherNavBar />
+        </nav>
+        <main className="basis-5/6 scroll">
+          <div className="h-screen py-8 w-full">{children}</div>
+        </main>
         <Toaster />
       </ClassProvider>
     </div>

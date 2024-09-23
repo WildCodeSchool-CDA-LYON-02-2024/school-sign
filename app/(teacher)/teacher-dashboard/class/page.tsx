@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSignatureContext } from "../../../../components/context/SignatureContext";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+// react
+import { useEffect, useState } from "react"; // next
+import Link from "next/link"; // context
+import { useClassContext } from "@/components/context/ClassContext"; // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
@@ -30,7 +31,7 @@ export default function ClassWithSignatures() {
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [classId, setClassId] = useState<number | null>(null);
-  const [className, setClassName] = useState<string | null>(null); 
+  const [className, setClassName] = useState<string | null>(null);
   const [schoolDetails, setSchoolDetails] = useState<{
     name: string;
     address: string;
@@ -40,7 +41,7 @@ export default function ClassWithSignatures() {
   const [error, setError] = useState<string | null>(null);
   const { allowSignature, disallowSignature, isSignatureAllowed } =
     useSignatureContext();
-    const { toast } = useToast();
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchClassId = async () => {
@@ -61,7 +62,7 @@ export default function ClassWithSignatures() {
       const res = await fetch("/api/class");
       const data = await res.json();
       const currentClass = data.classSections.find(
-        (cls: ClassSection) => cls.id === classId
+        (cls: ClassSection) => cls.id === classId,
       );
       if (currentClass) {
         setClassName(currentClass.name);
@@ -106,7 +107,7 @@ export default function ClassWithSignatures() {
             const errorData = await res.json();
             console.error("Error fetching students:", errorData);
             setError(
-              errorData.error || "An error occurred while fetching students"
+              errorData.error || "An error occurred while fetching students",
             );
           }
         } catch (err) {
@@ -242,7 +243,7 @@ export default function ClassWithSignatures() {
             const response = await fetch(studentSignature);
             if (!response.ok)
               throw new Error(
-                `Failed to fetch signature: ${response.statusText}`
+                `Failed to fetch signature: ${response.statusText}`,
               );
             const signatureImageBytes = await response.arrayBuffer();
             const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
@@ -304,11 +305,12 @@ export default function ClassWithSignatures() {
       className: "bg-red-400",
       duration: 2000,
     });
-    disallowSignature()
-  }
+    disallowSignature();
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-5">
+    <>
+      <h1 className="text-center text-2xl pb-8">Teacher Class</h1>
       {classId ? (
         <div className="flex flex-col justify-center items-center container mx-auto py-10 gap-y-10">
           <h2 className="text-2xl mb-4">
@@ -371,6 +373,6 @@ export default function ClassWithSignatures() {
       )}
       <Button onClick={generatePDF}>Générer PDF</Button>
       {error && <p className="text-red-500">{error}</p>}
-    </div>
+    </>
   );
 }

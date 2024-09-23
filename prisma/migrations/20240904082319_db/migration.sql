@@ -5,7 +5,7 @@
   - You are about to alter the column `city` on the `school` table. The data in that column could be lost. The data in that column will be cast from `VarChar(255)` to `VarChar(191)`.
   - You are about to drop the `category` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `classschool` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `document` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `documents` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `lesson` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `sign` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `subject` table. If the table is not empty, all the data it contains will be lost.

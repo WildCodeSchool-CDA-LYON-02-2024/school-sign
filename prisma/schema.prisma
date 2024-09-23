@@ -20,12 +20,12 @@ enum Role {
 }
 
 model School {
-  id      Int     @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   name    String
   address String
   zipcode String
   city    String
-  
+
   users   User[]
   classes Classsection[]
 }
@@ -34,27 +34,27 @@ model User {
   id        Int     @id @default(autoincrement())
   firstname String? @db.VarChar(255)
   lastname  String? @db.VarChar(255)
-  email     String  @db.VarChar(255) @unique
+  email     String  @unique @db.VarChar(255)
   password  String  @db.VarChar(255)
-  
-  school    School  @relation(fields: [schoolId], references: [id])
-  schoolId  Int
 
-  class     Classsection? @relation(fields: [classId], references: [id])
-  classId    Int?
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId Int
 
-  role      Role?
-   signs     Sign[]
+  class   Classsection? @relation(fields: [classId], references: [id])
+  classId Int?
+
+  role  Role?
+  signs Sign[]
 }
 
 model Classsection {
-  id      Int     @id @default(autoincrement())
-  name    String  @db.VarChar(100)
-  
-  school  School  @relation(fields: [schoolId], references: [id])
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  school   School @relation(fields: [schoolId], references: [id])
   schoolId Int
-  
-  users   User[]
+
+  users User[]
 }
 
 model Sign {
@@ -64,11 +64,9 @@ model Sign {
   userId     Int
   // docId      Int
 
-  user       User     @relation(fields: [userId], references: [id])
-  // document   Document @relation(fields: [docId], references: [id])
-
+  user User @relation(fields: [userId], references: [id])
+  // documents   Document @relation(fields: [docId], references: [id])
 }
-
 
 // model ClassSchool {
 //   id        Int      @id @default(autoincrement())
@@ -102,8 +100,6 @@ model Sign {
 //   schools School[]
 // }
 
-
-
 // model Document {
 //   id         Int        @id @default(autoincrement())
 //   name       String     @db.VarChar(100)
@@ -119,7 +115,7 @@ model Sign {
 // model Category {
 //   id        Int        @id @default(autoincrement())
 //   name      String     @db.VarChar(100)
-//   documents Document[]
+//   card Document[]
 // }
 
 // model Lesson {

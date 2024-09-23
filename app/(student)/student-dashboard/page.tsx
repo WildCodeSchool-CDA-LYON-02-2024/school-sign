@@ -29,8 +29,9 @@ export default function StudentDashboard() {
   const canSign = isSignatureAllowed && currentClassId === studentClassId;
 
   return (
-    <div className="flex flex-col justify-center items-center py-8">
-      <h1 className="text-center">Student Dashboard</h1>
+    <>
+      <h1 className="text-center text-2xl pb-8">Student Dashboard</h1>
+
       {canSign ? (
         <SignatureCanvas />
       ) : (
@@ -40,6 +41,6 @@ export default function StudentDashboard() {
             : "Les signatures ne sont pas encore autorisées."}
         </p>
       )}
-    </div>
+    </>
   );
 }
