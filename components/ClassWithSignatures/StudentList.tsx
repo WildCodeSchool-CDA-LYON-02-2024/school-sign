@@ -6,6 +6,7 @@ export interface Student {
   firstname: string;
   lastname: string;
   role: string;
+  signature?: string;
 }
 
 export interface Signature {
@@ -16,7 +17,7 @@ export interface Signature {
 interface StudentListProps {
   students: Student[];
   signatures: Signature[];
-  error?: string;
+  error?: string | null;
 }
 
 export default function StudentList({
@@ -35,31 +36,38 @@ export default function StudentList({
         <ul className="flex gap-6 my-10">
           {students
             .filter((student) => student.role === "STUDENT")
-            .map((student) => (
-              <li key={student.id}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      {`Name: ${student.firstname} ${student.lastname}`}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex flex-col">
-                    {findSignatureForStudent(student.id) ? (
-                      <Image
-                        src={findSignatureForStudent(student.id) || ""}
-                        alt={`Signature de ${student.firstname} ${student.lastname}`}
-                        width={600}
-                        height={500}
-                      />
-                    ) : (
-                      <p className="text-red-500 font-light">
-                        No signature received.
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
+            .map((student) => {
+              const studentSignature = findSignatureForStudent(student.id);
+              return (
+                <li key={student.id}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>
+                        {`Name: ${student.firstname} ${student.lastname}`}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col">
+                      {studentSignature ? (
+                        <Image
+                          src={
+                            findSignatureForStudent(student.id) ||
+                            "/default-signature.png"
+                          } 
+                          alt={`Signature of ${student.firstname} ${student.lastname}`}
+                          width={600}
+                          height={500}
+                          priority 
+                        />
+                      ) : (
+                        <p className="text-red-500 font-light">
+                          No signature received.
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </li>
+              );
+            })}
         </ul>
       ) : (
         <p>No students were found for this class.</p>

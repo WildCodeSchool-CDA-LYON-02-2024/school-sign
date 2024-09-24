@@ -1,8 +1,42 @@
+import { useCallback, useEffect } from "react";
+
+export interface ClassSection {
+  id: number;
+  name: string;
+}
+
 export function useFetchClassDetails(
   setTeacherName: (name: string) => void,
   setClassId: (id: number | null) => void,
+  setClassName: (name: string | null) => void,
+  classId: number | null 
 ) {
-  const fetchClassId = async () => {
+  const fetchClassName = useCallback(async () => {
+    if (classId === null) return; 
+
+    try {
+      const res = await fetch("/api/class");
+      if (!res.ok) {
+        throw new Error("Failed to fetch classes");
+      }
+
+      const data = await res.json();
+      const currentClass = data.classSections.find((cls: ClassSection) => cls.id === classId);
+      if (currentClass) {
+        setClassName(currentClass.name);
+      } else {
+        console.warn("Class not found");
+      }
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+    }
+  }, [setClassName, classId]);
+
+  useEffect(() => {
+    fetchClassName(); 
+  }, [fetchClassName]);
+
+  const fetchClassId = useCallback(async () => {
     try {
       const response = await fetch("/api/getClassIdByToken");
       if (response.ok) {
@@ -14,9 +48,9 @@ export function useFetchClassDetails(
       }
     } catch (error) {
       console.error("Error fetching class ID:", error);
-      setClassId(null); // Handle failure
+      setClassId(null); 
     }
-  };
+  }, [setTeacherName, setClassId]);
 
-  return { fetchClassId };
+  return { fetchClassId, fetchClassName };
 }
