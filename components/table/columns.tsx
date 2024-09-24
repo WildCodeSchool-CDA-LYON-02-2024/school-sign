@@ -6,8 +6,8 @@ export type ClassCol = {
   id: string;
   lastname: string;
   firstname: string;
-  email: string;
-  signature: "pending" | "processing" | "success" | "failed";
+  // email: string;
+  // signature: "pending" | "processing" | "success" | "failed";
 };
 
 export const columns: ColumnDef<ClassCol>[] = [
@@ -19,12 +19,12 @@ export const columns: ColumnDef<ClassCol>[] = [
     accessorKey: "firstname",
     header: "Firstname",
   },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "signature",
-    header: "Signature",
-  },
+  // {
+  //   accessorKey: "email",
+  //   header: "Email",
+  // },
+  // {
+  //   accessorKey: "signature",
+  //   header: "Signature",
+  // },
 ];
