@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-export type Payment = {
+export type Class = {
   id: string;
   lastname: string;
   firstname: string;
@@ -10,7 +10,7 @@ export type Payment = {
   signature: "pending" | "processing" | "success" | "failed";
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Class>[] = [
   {
     accessorKey: "lastname",
     header: "Lastname",
