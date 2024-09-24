@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode } from "react";
 
 interface ClassContextType {
   classId: number | null;
@@ -9,7 +9,9 @@ interface ClassContextType {
 
 const ClassContext = createContext<ClassContextType | undefined>(undefined);
 
-export const ClassProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ClassProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [classId, setClassId] = useState<number | null>(null);
 
   return (
@@ -22,7 +24,7 @@ export const ClassProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 export const useClassContext = () => {
   const context = useContext(ClassContext);
   if (!context) {
-    throw new Error('useClassContext must be used within a ClassProvider');
+    throw new Error("useClassContext must be used within a ClassProvider");
   }
   return context;
 };

@@ -33,7 +33,7 @@ export default function StudentDetails({
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching the student"
+            errorData.error || "An error occurred while fetching the student",
           );
           setLoading(false);
         }

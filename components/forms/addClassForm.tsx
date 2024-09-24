@@ -10,7 +10,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
@@ -31,7 +30,10 @@ export default function AddClassForm() {
     const result = classSchema.safeParse({ name });
 
     if (!result.success) {
-      setError("Invalid input: " + result.error.errors.map(e => e.message).join(", "));
+      setError(
+        "Invalid input: " +
+          result.error.errors.map((e) => e.message).join(", "),
+      );
       return;
     }
     setError(null);
@@ -43,7 +45,7 @@ export default function AddClassForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(result.data),
-        credentials: "include"
+        credentials: "include",
       });
 
       if (res.ok) {
@@ -66,33 +68,30 @@ export default function AddClassForm() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <Card className="w-96 mt-10 justify-center items-center">
-        <CardHeader>
-          <CardTitle>Nouvelle classe</CardTitle>
-          <CardDescription>Ajoutez une nouvelle classe</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className="text-red-500">{error}</p>} 
-            <CardFooter className="flex justify-end">
-              <Button type="submit">Submit</Button>
-            </CardFooter>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="w-96">
+      <CardHeader>
+        <CardTitle className="text-center">Add a new Class</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+          {error && <p className="text-red-500">{error}</p>}
+        </form>
+      </CardContent>
+      <CardFooter className="flex justify-end">
+        <Button type="submit">Submit</Button>
+      </CardFooter>
+    </Card>
   );
 }

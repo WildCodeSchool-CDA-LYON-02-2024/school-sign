@@ -56,7 +56,7 @@ export default function StudentDetails({
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching the student."
+            errorData.error || "An error occurred while fetching the student.",
           );
         }
       } catch (err) {
@@ -88,7 +88,7 @@ export default function StudentDetails({
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes."
+            errorData.error || "An error occurred while fetching classes.",
           );
         }
       } catch (err) {
@@ -138,7 +138,9 @@ export default function StudentDetails({
         setError(null);
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "An error occurred while updating the class.");
+        setError(
+          errorData.error || "An error occurred while updating the class.",
+        );
       }
     } catch (err) {
       console.error("Request Error:", err);
@@ -186,7 +188,7 @@ export default function StudentDetails({
               selected={selectedClass}
               setSelected={setSelectedClass}
               options={classData}
-              displayValue={(classSection) => classSection.name} 
+              displayValue={(classSection) => classSection.name}
               label="Select a Class"
             />
             <Button onClick={handleUpdate} className="mt-4">

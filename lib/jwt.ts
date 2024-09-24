@@ -12,7 +12,6 @@ interface CustomJWTPayload extends JWTPayload {
 }
 
 export async function createToken(payload: CustomJWTPayload): Promise<string> {
-
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

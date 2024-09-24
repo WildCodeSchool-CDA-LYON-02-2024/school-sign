@@ -4,7 +4,7 @@ import { getUserByToken } from "@/lib/getUserByToken"; // Fonction pour obtenir 
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const token = req.cookies.session;
 

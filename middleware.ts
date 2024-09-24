@@ -21,7 +21,6 @@ export const config = {
   matcher: ["/school-dashboard/:path*"],
 };
 
-
 // import { NextRequest, NextResponse } from "next/server";
 // import { verifyToken } from "@/lib/jwt";
 

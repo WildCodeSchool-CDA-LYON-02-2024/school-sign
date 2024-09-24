@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
@@ -116,11 +116,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (role === "STUDENT") {
-      return res
-        .status(403)
-        .json({
-          error: "Access denied. You do not have the required permissions.",
-        });
+      return res.status(403).json({
+        error: "Access denied. You do not have the required permissions.",
+      });
     }
 
     if (id) {

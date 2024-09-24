@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "POST") {
     try {
@@ -39,7 +39,7 @@ export default async function handler(
           email: data.email,
           password: hashedPassword,
           school: { connect: { id: school.id } },
-          role: 'SCHOOL'
+          role: "SCHOOL",
         },
       });
 

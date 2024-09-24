@@ -6,7 +6,7 @@ import { createContext, useContext, useState } from "react";
 interface SignatureContextType {
   isSignatureAllowed: boolean;
   studentSignatures: string[] | null;
-  currentClassId: number | null; 
+  currentClassId: number | null;
   allowSignature: (classId: number) => void;
   disallowSignature: () => void;
   addStudentSignature: (signature: string) => void;
@@ -14,21 +14,31 @@ interface SignatureContextType {
 }
 
 // Création du contexte
-const SignatureContext = createContext<SignatureContextType | undefined>(undefined);
+const SignatureContext = createContext<SignatureContextType | undefined>(
+  undefined,
+);
 
 // Hook pour utiliser le contexte
 export const useSignatureContext = () => {
   const context = useContext(SignatureContext);
   if (!context) {
-    throw new Error("useSignatureContext must be used within a SignatureProvider");
+    throw new Error(
+      "useSignatureContext must be used within a SignatureProvider",
+    );
   }
   return context;
 };
 
 // Provider pour le contexte
-export const SignatureProvider = ({ children }: { children: React.ReactNode }) => {
+export const SignatureProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isSignatureAllowed, setIsSignatureAllowed] = useState(false);
-  const [studentSignatures, setStudentSignatures] = useState<string[] | null>(null);
+  const [studentSignatures, setStudentSignatures] = useState<string[] | null>(
+    null,
+  );
   const [currentClassId, setCurrentClassId] = useState<number | null>(null);
 
   const allowSignature = (classId: number) => {
@@ -42,8 +52,8 @@ export const SignatureProvider = ({ children }: { children: React.ReactNode }) =
   };
 
   const addStudentSignature = (signature: string) => {
-    setStudentSignatures((prevSignatures) => 
-      prevSignatures ? [...prevSignatures, signature] : [signature]
+    setStudentSignatures((prevSignatures) =>
+      prevSignatures ? [...prevSignatures, signature] : [signature],
     );
   };
 

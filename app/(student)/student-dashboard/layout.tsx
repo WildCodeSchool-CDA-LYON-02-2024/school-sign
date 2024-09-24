@@ -15,7 +15,9 @@ export default function StudentLayout({
         <nav className="basis-1/6">
           <StudentNavBar />
         </nav>
-        <main className="basis-5/6">{children}</main>
+        <main className="basis-5/6">
+          <div className="h-screen py-8 w-full">{children}</div>
+        </main>
         <Toaster />
       </ClassProvider>
     </div>
