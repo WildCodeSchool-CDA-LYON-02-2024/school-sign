@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
   const { id } = req.query;
@@ -20,7 +20,11 @@ export default async function handler(
   }
 }
 
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, id: string | string[] | undefined) {
+async function handleDelete(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  id: string | string[] | undefined,
+) {
   try {
     if (typeof id !== "string") {
       return res.status(400).json({ error: "Invalid signature ID" });
@@ -39,7 +43,12 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, id: strin
       return res.status(404).json({ error: "Signature not found" });
     }
 
-    const filePath = path.join(process.cwd(), "public", "signatures", path.basename(sign.hashedSign));
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      "signatures",
+      path.basename(sign.hashedSign),
+    );
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }

@@ -32,7 +32,7 @@ export default function SignatureCanvas() {
     if (signaturePadRef.current) {
       const dataUrl = signaturePadRef.current.toDataURL();
       setDataURL(dataUrl);
-  
+
       try {
         const response = await fetch("/api/signature", {
           method: "POST",
@@ -41,7 +41,7 @@ export default function SignatureCanvas() {
           },
           body: JSON.stringify({ dataUrl }),
         });
-  
+
         if (response.ok) {
           toast({
             className: "bg-green-400",
@@ -49,7 +49,7 @@ export default function SignatureCanvas() {
             duration: 2000,
           });
           const result = await response.json();
-          setSignatureId(result.sign.id); 
+          setSignatureId(result.sign.id);
           addStudentSignature(dataUrl);
         } else {
           const error = await response.json();
@@ -80,7 +80,7 @@ export default function SignatureCanvas() {
         const response = await fetch(`/api/signature/${signatureId}`, {
           method: "DELETE",
         });
-  
+
         if (response.ok) {
           toast({
             description: "Signature deleted",

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
@@ -90,11 +90,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Optionnel : Si vous souhaitez limiter l'accès à certains rôles, ajoutez une vérification du rôle ici.
     if (role !== "SCHOOL" && role !== "TEACHER") {
-      return res
-        .status(403)
-        .json({
-          error: "Access denied. You do not have the required permissions.",
-        });
+      return res.status(403).json({
+        error: "Access denied. You do not have the required permissions.",
+      });
     }
 
     // Récupérer toutes les classes associées à l'école à partir de schoolId

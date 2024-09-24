@@ -33,7 +33,7 @@ export default function AddStudentForm() {
       const res = await fetch("/api/student", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           firstname,
@@ -55,11 +55,13 @@ export default function AddStudentForm() {
       } else {
         toast({
           className: "bg-red-500",
-          description: 'Email already in use',
+          description: "Email already in use",
           duration: 2000,
         });
         const errorData = await res.json();
-        setError(errorData.error || "An error occurred while adding the student");
+        setError(
+          errorData.error || "An error occurred while adding the student",
+        );
       }
     } catch (err) {
       console.error("Request Error:", err);
