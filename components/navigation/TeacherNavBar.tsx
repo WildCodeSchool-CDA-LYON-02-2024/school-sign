@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 // components
 import SideNav from "@/components/navigation/components/SideNav";
 import BottomNav from "@/components/navigation/components/BottomNav";
-import { NavLink } from "@/components/navigation/components/navTypes"; // ui
+import { NavLink } from "@/components/navigation/components/navTypes";
+// ui
 import {
   CalendarIcon,
   FileTextIcon,
@@ -28,7 +29,7 @@ export default function TeacherNavBar() {
     {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
-      variant: "default",
+      variant: "ghost",
       href: "/teacher-dashboard",
     },
     {
