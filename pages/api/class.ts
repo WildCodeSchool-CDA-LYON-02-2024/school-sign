@@ -70,47 +70,45 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
 // Handle GET request - Retrieve all student or a single student by ID
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
   try {
-    // Extraire le token des cookies
+    // Extract the token from cookies
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
     }
 
-    // Vérifier le token et extraire le payload
+    // Verify the token and extract the payload
     const payload = await verifyToken(tokenCookie);
+    
     const schoolId = payload.schoolId;
     const role = payload.role;
 
-    // Vérification que l'utilisateur a bien un schoolId
+    // Verify that the user has a schoolId
     if (!schoolId) {
       return res.status(400).json({ error: "School ID missing from token" });
     }
 
-    // Optionnel : Si vous souhaitez limiter l'accès à certains rôles, ajoutez une vérification du rôle ici.
+    // Optional: Check if the user has the right role
     if (role !== "SCHOOL" && role !== "TEACHER") {
       return res.status(403).json({
         error: "Access denied. You do not have the required permissions.",
       });
     }
 
-    // Récupérer toutes les classes associées à l'école à partir de schoolId
+    // Retrieve all class sections associated with the school
     const classSections = await prisma.classsection.findMany({
       where: {
-        schoolId: schoolId, // Filtrer par l'ID de l'école
+        schoolId: schoolId,
       },
       include: {
-        users: true, // Optionnel : inclure les utilisateurs de la classe si nécessaire
+        users: true, // Include users if necessary
       },
     });
 
-    // Répondre avec la liste des classes trouvées
+    // Respond with the list of found class sections
     res.status(200).json({ classSections });
   } catch (error: any) {
-    console.error("API Error:", error);
+    console.error("API Error:", error); // Log the error for debugging
     res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
   }
 }

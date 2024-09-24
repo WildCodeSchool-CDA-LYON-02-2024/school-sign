@@ -1,16 +1,16 @@
+import { useCallback } from "react";
 import { Student } from "@/components/ClassWithSignatures/StudentList";
 
 export function useFetchStudents(
   classId: number | null,
   setStudents: (students: Student[]) => void,
-  setError: (error: string | null) => void,
+  setError: (error: string | undefined) => void,
 ) {
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     if (classId) {
       try {
         const res = await fetch(`/api/student?classid=${classId}`, {
           method: "GET",
-          cache: "no-store",
           headers: {
             "Content-Type": "application/json",
           },
@@ -18,7 +18,6 @@ export function useFetchStudents(
         });
         if (res.ok) {
           const data = await res.json();
-          console.log("data inside useFetchStudents", data);
           setStudents(data.users || []);
         } else {
           throw new Error("Failed to fetch students");
@@ -27,8 +26,10 @@ export function useFetchStudents(
         console.error("Request Error:", error);
         setError("Failed to fetch students");
       }
+    } else {
+      setError(undefined);
     }
-  };
+  }, [classId, setStudents, setError]);
 
   return { fetchStudents };
 }

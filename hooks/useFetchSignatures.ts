@@ -1,14 +1,14 @@
+import { useCallback } from "react";
 import { Signature } from "@/components/ClassWithSignatures/StudentList";
 
 export function useFetchSignatures(
   setSignatures: (signatures: Signature[]) => void,
   setError: (error: string | null) => void,
 ) {
-  const fetchSignatures = async () => {
+  const fetchSignatures = useCallback(async () => {
     try {
       const res = await fetch("/api/signature", {
         method: "GET",
-        cache: "no-store",
         headers: {
           "Content-Type": "application/json",
         },
@@ -25,7 +25,7 @@ export function useFetchSignatures(
       console.error("Request Error:", error);
       setError("Failed to fetch signatures");
     }
-  };
+  }, [setSignatures, setError]);
 
   return { fetchSignatures };
 }

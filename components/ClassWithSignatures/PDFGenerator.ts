@@ -1,39 +1,48 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { Student } from "@/components/ClassWithSignatures/StudentList";
 
+interface Signature {
+  userId: string;
+  hashedSign?: string;
+}
+
 interface PDFGeneratorProps {
   students: Student[];
-  schoolDetails: (
-    details: {
-      name: string;
-      address: string;
-      zipcode: string;
-      city: string;
-    } | null,
-  ) => void;
+  signatures: Signature[]; // Added signatures prop
+  schoolDetails: {
+    name: string;
+    address: string;
+    zipcode: string;
+    city: string;
+  } | null;
   className: string | null;
   teacherName: string | null;
-  toast: any;
+  toast: (options: { title: string; className: string; duration: number }) => void; // Specify toast type
 }
 
 export default async function PDFGenerator({
   students,
+  signatures,
   schoolDetails,
   className,
   teacherName,
   toast,
 }: PDFGeneratorProps) {
+  // Notification d'achèvement
   toast({
     title: "Attendance sheet PDF generated",
     className: "bg-green-400",
     duration: 2000,
   });
+
+  // Création du PDF
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595.28, 841.89]);
   const { width, height } = page.getSize();
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontSize = 12;
 
+  // Titre du document
   page.drawText("Attendance sheet", {
     x: width / 2 - 70,
     y: height - 120,
@@ -42,6 +51,7 @@ export default async function PDFGenerator({
     color: rgb(0, 0, 0),
   });
 
+  // Détails de l'école
   if (schoolDetails) {
     page.drawText(schoolDetails.name, {
       x: 50,
@@ -66,6 +76,7 @@ export default async function PDFGenerator({
     });
   }
 
+  // Détails de la classe et de l'enseignant
   if (className) {
     page.drawText(`Class: ${className}`, {
       x: 50,
@@ -86,6 +97,15 @@ export default async function PDFGenerator({
     });
   }
 
+  // En-têtes de colonne
+  page.drawText("No.", {
+    x: 50,
+    y: height - 240,
+    size: fontSize,
+    font,
+    color: rgb(0, 0, 0),
+  });
+
   page.drawText("Name", {
     x: 100,
     y: height - 240,
@@ -102,10 +122,82 @@ export default async function PDFGenerator({
     color: rgb(0, 0, 0),
   });
 
+  const rowHeight = 50;
+  let yPosition = height - 290;
+
+  for (const [index, student] of students.entries()) {
+    if (student.role === "STUDENT") {
+      
+      // Display student name
+      page.drawText(`${student.firstname} ${student.lastname}`, {
+        x: 100,
+        y: yPosition,
+        size: fontSize,
+        font,
+        color: rgb(0, 0, 0),
+      });
+
+      // Draw a line for signature
+      page.drawLine({
+        start: { x: 40, y: yPosition - 20 },
+        end: { x: width - 40, y: yPosition - 20 },
+        thickness: 1,
+        color: rgb(0, 0, 0),
+      });
+
+      // Find the student's signature
+      const studentSignature = signatures.find(
+        (sig) => sig.userId === student.id
+      );
+
+      if (studentSignature?.hashedSign) {
+        try {
+          const signatureUrl = studentSignature.hashedSign;
+          const response = await fetch(signatureUrl);
+          if (!response.ok) throw new Error(`Failed to fetch signature: ${response.statusText}`);
+          const signatureImageBytes = await response.arrayBuffer();
+          const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+          const signatureDims = signatureImage.scale(0.4);
+
+          // Draw the signature image
+          page.drawImage(signatureImage, {
+            x: 400,
+            y: yPosition - 25,
+            width: signatureDims.width,
+            height: signatureDims.height,
+          });
+        } catch (error) {
+          console.error("Error loading signature image:", error);
+          // Display message when signature is missing
+          page.drawText("Signature unavailable", {
+            x: 400,
+            y: yPosition,
+            size: fontSize,
+            font,
+            color: rgb(1, 0, 0),
+          });
+        }
+      } else {
+        // Display message when signature is missing
+        page.drawText("Signature absent", {
+          x: 400,
+          y: yPosition,
+          size: fontSize,
+          font,
+          color: rgb(1, 0, 0),
+        });
+      }
+
+      // Move to the next row position
+      yPosition -= rowHeight;
+    }
+  }
+
+  // Génération du PDF
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "feuille_demargement.pdf";
+  link.download = "attendance_sheet.pdf";
   link.click();
 }

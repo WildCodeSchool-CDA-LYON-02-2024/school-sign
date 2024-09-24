@@ -1,18 +1,19 @@
+import { useCallback } from "react";
+
+export interface SchoolDetails {
+  name: string;
+  address: string;
+  zipcode: string;
+  city: string;
+}
+
 export function useFetchSchoolDetails(
-  setSchoolDetails: (
-    details: {
-      name: string;
-      address: string;
-      zipcode: string;
-      city: string;
-    } | null,
-  ) => void,
+  setSchoolDetails: (details: SchoolDetails | null) => void,
 ) {
-  const fetchSchoolDetails = async () => {
+  const fetchSchoolDetails = useCallback(async () => {
     try {
       const res = await fetch("/api/school", {
         method: "GET",
-        cache: "no-store",
         headers: {
           "Content-Type": "application/json",
         },
@@ -20,16 +21,16 @@ export function useFetchSchoolDetails(
       });
 
       if (res.ok) {
-        const data = await res.json();
+        const data: SchoolDetails = await res.json();
         setSchoolDetails(data);
       } else {
         throw new Error("Failed to fetch school details");
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
-      setSchoolDetails(null); // Handle failure
+      setSchoolDetails(null);
     }
-  };
+  }, [setSchoolDetails]);
 
   return { fetchSchoolDetails };
 }
