@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-export type Class = {
+export type ClassCol = {
   id: string;
   lastname: string;
   firstname: string;
@@ -10,7 +10,7 @@ export type Class = {
   signature: "pending" | "processing" | "success" | "failed";
 };
 
-export const columns: ColumnDef<Class>[] = [
+export const columns: ColumnDef<ClassCol>[] = [
   {
     accessorKey: "lastname",
     header: "Lastname",
