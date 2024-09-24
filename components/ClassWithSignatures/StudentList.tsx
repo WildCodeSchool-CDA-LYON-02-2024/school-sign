@@ -17,7 +17,7 @@ export interface Signature {
 interface StudentListProps {
   students: Student[];
   signatures: Signature[];
-  error?: string;
+  error?: string | null;
 }
 
 export default function StudentList({

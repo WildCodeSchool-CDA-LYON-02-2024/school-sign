@@ -19,7 +19,7 @@ export default function ClassWithSignatures() {
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
   const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]); 
 
   const { allowSignature, disallowSignature, isSignatureAllowed } = useSignatureContext();
@@ -48,17 +48,17 @@ export default function ClassWithSignatures() {
 
   const handleGeneratePDF = async () => {
     const studentSignatures = students.map(student => {
-      const studentSignature = signatures.find(sig => sig.userId === student.id); // Find the signature by userId
+      const studentSignature = signatures.find(sig => sig.userId === student.id);
       return { 
         userId: student.id, 
-        hashedSign: studentSignature ? studentSignature.hashedSign : "" // Use the hashedSign if found, else empty string
+        hashedSign: studentSignature ? studentSignature.hashedSign : "" 
       }; 
     });
-    
+
     try {
       await PDFGenerator({
         students,
-        signatures: studentSignatures, // Pass the correctly mapped signatures
+        signatures: studentSignatures,
         schoolDetails,
         className,
         teacherName,
@@ -69,15 +69,18 @@ export default function ClassWithSignatures() {
         className: "bg-green-400",
         duration: 2000,
       });
-    } catch (error) {
+    } catch (error: unknown) { // Explicitly typing the error as unknown
       console.error("Error generating PDF:", error);
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
       toast({
         title: "Failed to generate PDF.",
+        description: errorMessage,
         className: "bg-red-500",
         duration: 2000,
       });
     }
-  };
+};
+
 
   return (
     <>

@@ -4,7 +4,7 @@ import { Student } from "@/components/ClassWithSignatures/StudentList";
 export function useFetchStudents(
   classId: number | null,
   setStudents: (students: Student[]) => void,
-  setError: (error: string | undefined) => void,
+  setError: (error: string | null) => void,
 ) {
   const fetchStudents = useCallback(async () => {
     if (classId) {
@@ -27,7 +27,7 @@ export function useFetchStudents(
         setError("Failed to fetch students");
       }
     } else {
-      setError(undefined);
+      setError(null);
     }
   }, [classId, setStudents, setError]);
 
