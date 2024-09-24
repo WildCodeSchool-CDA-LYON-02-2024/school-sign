@@ -5,6 +5,14 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Signature {
   userId: string;
@@ -96,9 +104,9 @@ export default function AttendanceSheet() {
     }
   }, [selectedClass, classes]);
 
-  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const classId = e.target.value;
-    setSelectedClass(classId);
+  const handleClassChange = (value: string) => {
+    // const classId = e.target.value;
+    setSelectedClass(value);
   };
 
   const handleAddStudent = () => {
@@ -282,18 +290,20 @@ export default function AttendanceSheet() {
 
   return (
     <>
-      <select
-        value={selectedClass}
-        onChange={handleClassChange}
-        className="p-2 border rounded"
-      >
-        <option value="">Sélectionnez une classe</option>
-        {classes.map((classItem) => (
-          <option key={classItem.id} value={classItem.id}>
-            {classItem.name}
-          </option>
-        ))}
-      </select>
+      <Select value={selectedClass} onValueChange={handleClassChange}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select a class" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {classes.map((classItem) => (
+              <SelectItem key={classItem.id} value={classItem.id}>
+                {classItem.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       {students
         .filter((student) => student.role === "STUDENT")
         .map((student, index) => (
@@ -322,9 +332,9 @@ export default function AttendanceSheet() {
         variant="outline"
       >
         <PlusIcon className="h-5 w-5" />
-        <span>Ajouter un élève</span>
+        <span>Add a Student</span>
       </Button>
-      <Button onClick={generatePDF}>Générer PDF</Button>
+      <Button onClick={generatePDF}>Generate PDF</Button>
     </>
   );
 }

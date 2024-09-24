@@ -70,7 +70,7 @@ export default function AddClassForm() {
   return (
     <Card className="w-96">
       <CardHeader>
-        <CardTitle>Add a new Class</CardTitle>
+        <CardTitle className="text-center">Add a new Class</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>

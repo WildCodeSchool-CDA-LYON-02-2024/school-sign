@@ -68,7 +68,7 @@ export default function AddTeacherForm() {
   return (
     <Card className="w-96">
       <CardHeader>
-        <CardTitle className="text-center">Add a new Teacher</CardTitle>
+        <CardTitle>Add a new Teacher</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>

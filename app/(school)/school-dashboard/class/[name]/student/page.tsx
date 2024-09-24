@@ -13,7 +13,7 @@ import SelectMenu from "@/components/SelectMenu";
 
 // ui
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
 interface Student {
@@ -194,16 +194,18 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   .filter((teacher) => teacher.role === "TEACHER")
                   .map((teacher) => (
                     <li key={teacher.id}>
-                      <Card className="w-96 mt-10 justify-center items-center">
-                        <CardContent className="flex flex-col justify-center items-center">
-                          <Link
-                            href={`/school-dashboard/class/${params.name}/teacher/${teacher.id}`}
-                          >
-                            <button>
-                              {`${teacher.firstname} ${teacher.lastname}`}
-                            </button>
-                          </Link>
-                        </CardContent>
+                      <Card className="w-96">
+                        <CardHeader>
+                          <CardTitle className="text-center">
+                            <Link
+                              href={`/school-dashboard/class/${params.name}/teacher/${teacher.id}`}
+                            >
+                              <button>
+                                {`${teacher.firstname} ${teacher.lastname}`}
+                              </button>
+                            </Link>
+                          </CardTitle>
+                        </CardHeader>
                       </Card>
                     </li>
                   ))}
@@ -235,16 +237,18 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   .filter((student) => student.role === "STUDENT")
                   .map((student) => (
                     <li key={student.id}>
-                      <Card className="w-96 mt-10 justify-center items-center">
-                        <CardContent className="flex flex-col justify-center items-center">
-                          <Link
-                            href={`/school-dashboard/class/${params.name}/student/${student.id}`}
-                          >
-                            <button>
-                              {`${student.firstname} ${student.lastname}`}
-                            </button>
-                          </Link>
-                        </CardContent>
+                      <Card className="w-96">
+                        <CardHeader>
+                          <CardTitle className="text-center">
+                            <Link
+                              href={`/school-dashboard/class/${params.name}/student/${student.id}`}
+                            >
+                              <button>
+                                {`${student.firstname} ${student.lastname}`}
+                              </button>
+                            </Link>
+                          </CardTitle>
+                        </CardHeader>
                       </Card>
                     </li>
                   ))}
