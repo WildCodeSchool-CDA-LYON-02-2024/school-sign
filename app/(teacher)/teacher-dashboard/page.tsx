@@ -89,7 +89,7 @@ export default function TeacherDashboard() {
   return (
     <>
       <h1 className="text-center text-2xl pb-8">Teacher Dashboard</h1>
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto py-10 flex justify-center">
         <DataTable columns={columns} data={data} />
       </div>
     </>
