@@ -2,18 +2,15 @@
 
 // tanstack
 import { Table } from "@tanstack/react-table";
+import { statuses } from "@/components/table/columns";
 
 // ui
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { DataTableFacetedFilter } from "@/components/table/data-table-faceted-filter";
-import { statuses } from "@/components/table/columns";
 
 // import { DataTableViewOptions } from "@/app/(app)/examples/tasks/components/data-table-view-options";
-
-// import { priorities, statuses } from "../data/data";
-// import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -37,13 +34,6 @@ export function DataTableToolbar<TData>({
             column={table.getColumn("signature")}
             title="Signature"
             options={statuses}
-          />
-        )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
           />
         )}
         {isFiltered && (

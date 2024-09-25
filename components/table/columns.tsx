@@ -38,6 +38,7 @@ export const statuses = [
 
 export type ClassCol = {
   id: string;
+  class: string;
   lastname: string;
   firstname: string;
   email: string;
@@ -63,11 +64,17 @@ export const columns: ColumnDef<ClassCol>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
-        className="translate-y-[2px]"
+        className="translate-y-[0px]"
       />
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "class",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Class" />
+    ),
   },
   {
     accessorKey: "lastname",
