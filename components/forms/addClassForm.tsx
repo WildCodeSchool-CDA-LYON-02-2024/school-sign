@@ -31,8 +31,7 @@ export default function AddClassForm() {
 
     if (!result.success) {
       setError(
-        "Invalid input: " +
-          result.error.errors.map((e) => e.message).join(", "),
+        "Invalid input: " + result.error.errors.map((e) => e.message).join(", ")
       );
       return;
     }
@@ -87,11 +86,11 @@ export default function AddClassForm() {
             />
           </div>
           {error && <p className="text-red-500">{error}</p>}
+          <CardFooter className="flex justify-end">
+            <Button type="submit">Submit</Button>
+          </CardFooter>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button type="submit">Submit</Button>
-      </CardFooter>
     </Card>
   );
 }
