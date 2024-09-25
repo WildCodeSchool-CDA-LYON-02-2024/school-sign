@@ -14,7 +14,7 @@ import {
   Signature,
   Student,
 } from "@/components/ClassWithSignatures/StudentList";
-import { useSignatureContext } from "@/components/context/SignatureContext";
+// import { useSignatureContext } from "@/components/context/SignatureContext";
 import {
   SchoolDetails,
   useFetchSchoolDetails,
@@ -33,8 +33,8 @@ export default function TeacherDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
 
-  const { allowSignature, disallowSignature, isSignatureAllowed } =
-    useSignatureContext();
+  // const { allowSignature, disallowSignature, isSignatureAllowed } =
+  //   useSignatureContext();
   const { toast } = useToast();
 
   const { fetchClassId, fetchClassName } = useFetchClassDetails(
@@ -84,7 +84,7 @@ export default function TeacherDashboard() {
 
       setData(combinedData);
     }
-  }, [students]);
+  }, [signatures, students]);
 
   return (
     <>
