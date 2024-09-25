@@ -4,17 +4,44 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 // ui
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CaretSortIcon } from "@radix-ui/react-icons";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import {
+  CheckCircledIcon,
+  Cross2Icon,
+  LapTimerIcon,
+  UpdateIcon,
+} from "@radix-ui/react-icons";
+
+export const statuses = [
+  {
+    value: "pending",
+    label: "Pending",
+    icon: LapTimerIcon,
+  },
+  {
+    value: "processing",
+    label: "Processing",
+    icon: UpdateIcon,
+  },
+  {
+    value: "received",
+    label: "Received",
+    icon: CheckCircledIcon,
+  },
+  {
+    value: "failed",
+    label: "Failed",
+    icon: Cross2Icon,
+  },
+];
 
 export type ClassCol = {
   id: string;
   lastname: string;
   firstname: string;
   email: string;
-  signature: "pending" | "processing" | "success" | "failed";
+  signature: "pending" | "processing" | "received" | "failed";
 };
 
 export const columns: ColumnDef<ClassCol>[] = [

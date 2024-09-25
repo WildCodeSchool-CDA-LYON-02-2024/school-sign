@@ -5,10 +5,11 @@ import {
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  GlobalFilterColumn,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -22,8 +23,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { DataTablePagination } from "@/components/table/data-table-pagination";
+import { DataTableToolbar } from "@/components/table/data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,17 +59,13 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: "includesString",
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
   return (
     <div className="rounded-md border p-4">
-      <div className="flex items-center pb-4">
-        <Input
-          placeholder="Search..."
-          onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-          className="w-full"
-        />
-      </div>
+      <DataTableToolbar table={table} />
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
