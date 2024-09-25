@@ -38,10 +38,12 @@ export default function CalendarTest() {
   const handleDateClick = (arg: { dateStr: string }) => {
     setNewEvent({
       ...newEvent,
-      dateStart: new Date(new Date(arg.dateStr).getTime()).toISOString(),
+      dateStart: new Date(
+        new Date(arg.dateStr).getTime() + 60 * 60 * 2000
+      ).toISOString(),
       dateEnd: new Date(
-        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
-      ).toISOString(), // Date + 1 heure
+        new Date(arg.dateStr).getTime() + 60 * 60 * 3000
+      ).toISOString(),
     });
     setShowModal(true);
   };
@@ -92,13 +94,19 @@ export default function CalendarTest() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
+        eventTimeFormat={{
+          hour: "numeric",
+          minute: "2-digit",
+          meridiem: false,
+        }}
+        locale="en-GB"
         dateClick={handleDateClick}
         ref={calendarRef}
         initialView="dayGridMonth"
         events={events.map((event) => ({
           title: event.name,
-          start: event.dateStart,
-          end: event.dateEnd,
+          start: new Date(event.dateStart).getTime() - 60 * 60 * 2000,
+          end: new Date(event.dateEnd).getTime() - 60 * 60 * 2000,
         }))}
       />
       {showModal && (
