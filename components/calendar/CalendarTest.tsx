@@ -9,7 +9,7 @@ interface Lesson {
   name: string;
   dateStart: string;
   dateEnd: string;
-  classId?: number;
+  classID?: number; 
 }
 
 export default function CalendarTest() {
@@ -20,9 +20,9 @@ export default function CalendarTest() {
     name: "",
     dateStart: "",
     dateEnd: "",
-    classId: 0, // Ensure classId is initialized
   });
   const [events, setEvents] = useState<Lesson[]>([]);
+  const [userClassId, setUserClassId] = useState(null);
 
   // Fetch classId by token
   useEffect(() => {
@@ -31,10 +31,7 @@ export default function CalendarTest() {
         const response = await fetch("/api/getClassIdByToken");
         if (response.ok) {
           const data = await response.json();
-          setNewEvent((prevEvent) => ({
-            ...prevEvent,
-            classId: data.user.classId,
-          }));
+          setUserClassId(data.user.classId);
         } else {
           console.error("Error fetching classId");
         }
@@ -48,22 +45,24 @@ export default function CalendarTest() {
 
   // Fetch lessons
   useEffect(() => {
-    const fetchLessons = async () => {
-      try {
-        const response = await fetch("/api/lessons");
-        if (response.ok) {
-          const data: Lesson[] = await response.json();
-          setEvents(data);
-        } else {
-          console.error("Error fetching lessons");
+    if (userClassId) { 
+      const fetchLessons = async () => {
+        try {
+          const response = await fetch(`/api/lessons?classId=${userClassId}`); // Ajoute userClassId dans la requête
+          if (response.ok) {
+            const data: Lesson[] = await response.json();
+            setEvents(data); 
+          } else {
+            console.error("Error fetching lessons");
+          }
+        } catch (error) {
+          console.error("Error fetching lessons:", error);
         }
-      } catch (error) {
-        console.error("Error fetching lessons:", error);
-      }
-    };
+      };
 
-    fetchLessons();
-  }, []);
+      fetchLessons();
+    }
+  }, [userClassId]);
 
   // Handle date click event
   const handleDateClick = (arg: { dateStr: string }) => {
