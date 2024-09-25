@@ -120,7 +120,7 @@ export default function CalendarTest() {
     }
   };
   return (
-    <div>
+    <div className="flex flex-col space-y-2 items-center justify-center">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         timeZone="Europe/Paris"
