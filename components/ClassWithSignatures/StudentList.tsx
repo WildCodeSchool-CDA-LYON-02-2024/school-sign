@@ -5,6 +5,7 @@ export interface Student {
   id: string;
   firstname: string;
   lastname: string;
+  email: string;
   role: string;
   signature?: string;
 }
@@ -52,11 +53,11 @@ export default function StudentList({
                           src={
                             findSignatureForStudent(student.id) ||
                             "/default-signature.png"
-                          } 
+                          }
                           alt={`Signature of ${student.firstname} ${student.lastname}`}
                           width={600}
                           height={500}
-                          priority 
+                          priority
                         />
                       ) : (
                         <p className="text-red-500 font-light">

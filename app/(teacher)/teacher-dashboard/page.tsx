@@ -66,18 +66,21 @@ export default function TeacherDashboard() {
   // Combine students and signatures to populate the table data
   useEffect(() => {
     if (students.length > 0) {
-      const combinedData = students.map((student) => {
-        const studentSignature = signatures.find(
-          (signature) => signature.userId === student.id,
-        );
-        return {
-          id: student.id.toString(),
-          lastname: student.lastname,
-          firstname: student.firstname,
-          // email: student.email,
-          // signature: studentSignature?.status || "pending"
-        };
-      });
+      console.log();
+      const combinedData = students
+        .filter((student) => student.role === "STUDENT")
+        .map((student) => {
+          const studentSignature = signatures.find(
+            (signature) => signature.userId === student.id,
+          );
+          return {
+            id: student.id.toString(),
+            lastname: student.lastname,
+            firstname: student.firstname,
+            email: student.email,
+            signature: studentSignature?.status || "pending",
+          };
+        });
 
       setData(combinedData);
     }
