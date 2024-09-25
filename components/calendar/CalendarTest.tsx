@@ -22,22 +22,27 @@ export default function CalendarTest() {
   });
   const [events, setEvents] = useState<Lesson[]>([]);
 
-  const fetchLessons = async () => {
-    try {
-      const response = await fetch("/api/lessons");
-      const data: Lesson[] = await response.json();
-      setEvents(data);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des leçons :", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        const response = await fetch("/api/lessons");
+        const data: Lesson[] = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des leçons :", error);
+      }
+    };
     fetchLessons();
   }, []);
 
   const handleDateClick = (arg: { dateStr: string }) => {
-    setNewEvent({ ...newEvent, dateStart: arg.dateStr, dateEnd: arg.dateStr });
+    setNewEvent({
+      ...newEvent,
+      dateStart: new Date(new Date(arg.dateStr).getTime()).toISOString(),
+      dateEnd: new Date(
+        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
+      ).toISOString(), // Date + 1 heure
+    });
     setShowModal(true);
   };
 
@@ -97,8 +102,11 @@ export default function CalendarTest() {
         }))}
       />
       {showModal && (
-        <div className="modal">
-          <form onSubmit={handleModalSubmit}>
+        <div className="modal flex flex-col justify-center items-center">
+          <form
+            onSubmit={handleModalSubmit}
+            className="flex flex-col justify-center items-center"
+          >
             <input
               type="text"
               placeholder="Nom de la leçon"
@@ -110,7 +118,7 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={newEvent.dateStart}
+              value={newEvent.dateStart?.slice(0, 16)}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, dateStart: e.target.value })
               }
@@ -118,7 +126,7 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={newEvent.dateEnd}
+              value={newEvent.dateEnd?.slice(0, 16)}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, dateEnd: e.target.value })
               }
