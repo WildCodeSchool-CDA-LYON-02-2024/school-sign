@@ -9,6 +9,7 @@ interface Lesson {
   name: string;
   dateStart: string;
   dateEnd: string;
+  classId?: number;
 }
 
 export default function CalendarTest() {
@@ -19,41 +20,75 @@ export default function CalendarTest() {
     name: "",
     dateStart: "",
     dateEnd: "",
+    classId: 0, // Ensure classId is initialized
   });
   const [events, setEvents] = useState<Lesson[]>([]);
 
+  // Fetch classId by token
+  useEffect(() => {
+    const fetchClassId = async () => {
+      try {
+        const response = await fetch("/api/getClassIdByToken");
+        if (response.ok) {
+          const data = await response.json();
+          setNewEvent((prevEvent) => ({
+            ...prevEvent,
+            classId: data.user.classId,
+          }));
+        } else {
+          console.error("Error fetching classId");
+        }
+      } catch (error) {
+        console.error("Error fetching classId", error);
+      }
+    };
+
+    fetchClassId();
+  }, []);
+
+  // Fetch lessons
   useEffect(() => {
     const fetchLessons = async () => {
       try {
         const response = await fetch("/api/lessons");
-        const data: Lesson[] = await response.json();
-        setEvents(data);
+        if (response.ok) {
+          const data: Lesson[] = await response.json();
+          setEvents(data);
+        } else {
+          console.error("Error fetching lessons");
+        }
       } catch (error) {
-        console.error("Erreur lors de la récupération des leçons :", error);
+        console.error("Error fetching lessons:", error);
       }
     };
+
     fetchLessons();
   }, []);
 
+  // Handle date click event
   const handleDateClick = (arg: { dateStr: string }) => {
     setNewEvent({
       ...newEvent,
-      dateStart: new Date(
-        new Date(arg.dateStr).getTime() + 60 * 60 * 2000
-      ).toISOString(),
+      dateStart: new Date(arg.dateStr).toISOString(), // Utilisation directe de la date sans manipulation
       dateEnd: new Date(
-        new Date(arg.dateStr).getTime() + 60 * 60 * 3000
-      ).toISOString(),
+        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
+      ).toISOString(), // Par défaut, ajouter 1h à l'événement
     });
     setShowModal(true);
   };
 
+  // Handle modal submission
   const handleModalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await addLesson(newEvent);
-    setShowModal(false);
+    try {
+      await addLesson(newEvent);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error adding lesson:", error);
+    }
   };
 
+  // Add lesson to the server
   const addLesson = async (lesson: Lesson) => {
     try {
       const response = await fetch("/api/lessons", {
@@ -61,15 +96,15 @@ export default function CalendarTest() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(lesson),
+        body: JSON.stringify(lesson), // Ensure lesson includes classId
       });
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la création de la leçon");
+        throw new Error("Error adding lesson");
       }
 
       const createdLesson = await response.json();
-      console.log("Leçon ajoutée avec succès :", createdLesson);
+      console.log("Lesson added successfully:", createdLesson);
 
       if (calendarRef.current) {
         calendarRef.current.getApi().addEvent({
@@ -82,13 +117,14 @@ export default function CalendarTest() {
       setEvents((prevEvents) => [...prevEvents, createdLesson]);
     } catch (error) {
       console.error(error);
+      alert("Failed to add lesson. Please try again."); // User feedback
     }
   };
-
   return (
     <div>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        timeZone="Europe/Paris"
         headerToolbar={{
           left: "prev,next today",
           center: "title",
@@ -105,8 +141,8 @@ export default function CalendarTest() {
         initialView="dayGridMonth"
         events={events.map((event) => ({
           title: event.name,
-          start: new Date(event.dateStart).getTime() - 60 * 60 * 2000,
-          end: new Date(event.dateEnd).getTime() - 60 * 60 * 2000,
+          start: new Date(event.dateStart).getTime() + 60 * 60 * 2000,
+          end: new Date(event.dateEnd).getTime() + 60 * 60 * 2000,
         }))}
       />
       {showModal && (
@@ -117,7 +153,7 @@ export default function CalendarTest() {
           >
             <input
               type="text"
-              placeholder="Nom de la leçon"
+              placeholder="Lesson Name"
               value={newEvent.name}
               onChange={(e) =>
                 setNewEvent({ ...newEvent, name: e.target.value })
@@ -126,23 +162,49 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={newEvent.dateStart?.slice(0, 16)}
+              value={new Date(newEvent.dateStart)
+                .toLocaleString("sv-SE", {
+                  timeZone: "Europe/Paris",
+                  hour12: false,
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+                .slice(0, 16)}
               onChange={(e) =>
-                setNewEvent({ ...newEvent, dateStart: e.target.value })
+                setNewEvent({
+                  ...newEvent,
+                  dateStart: new Date(e.target.value).toISOString(),
+                })
               }
               required
             />
             <input
               type="datetime-local"
-              value={newEvent.dateEnd?.slice(0, 16)}
+              value={new Date(newEvent.dateEnd)
+                .toLocaleString("sv-SE", {
+                  timeZone: "Europe/Paris",
+                  hour12: false,
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+                .slice(0, 16)}
               onChange={(e) =>
-                setNewEvent({ ...newEvent, dateEnd: e.target.value })
+                setNewEvent({
+                  ...newEvent,
+                  dateEnd: new Date(e.target.value).toISOString(),
+                })
               }
               required
             />
-            <button type="submit">Ajouter la leçon</button>
+            <button type="submit">Add Lesson</button>
             <button type="button" onClick={() => setShowModal(false)}>
-              Annuler
+              Cancel
             </button>
           </form>
         </div>
