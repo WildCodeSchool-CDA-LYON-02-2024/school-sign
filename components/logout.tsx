@@ -9,10 +9,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Logout() {
   const router = useRouter();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleLogout = async (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -41,14 +43,21 @@ export default function Logout() {
       <Link
         href="#"
         onClick={handleLogout}
-        className={cn(
-          buttonVariants({ variant: "default", size: "sm" }),
-          "mt-3 bg-red-700 hover:bg-red-600 w-32",
-        )}
+        className={
+          isMobile
+            ? cn(
+              buttonVariants({ variant: "default", size: "sm" }),
+              "bg-red-700 hover:bg-red-600 w-28 px-0",
+            )
+            : cn(
+              buttonVariants({ variant: "default", size: "sm" }),
+              "mt-3 bg-red-700 hover:bg-red-600 w-32",
+            )
+        }
       >
         <ExitIcon className="mr-2 h-4 w-4" />
         Logout
-      </Link>
+      </Link >
     </>
   );
 }
