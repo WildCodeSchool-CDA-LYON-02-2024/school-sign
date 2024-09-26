@@ -4,12 +4,12 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-interface Lesson {
+export interface Lesson {
   id: number;
   name: string;
-  dateStart: string;
-  dateEnd: string;
-  classID?: number;
+  dateStart: Date; // Keep as Date
+  dateEnd: Date;   // Keep as Date
+  classId: number | null;
 }
 
 export default function CalendarTest() {
@@ -18,11 +18,12 @@ export default function CalendarTest() {
   const [newEvent, setNewEvent] = useState<Lesson>({
     id: 0,
     name: "",
-    dateStart: "",
-    dateEnd: "",
+    dateStart: new Date(), // Set default to now
+    dateEnd: new Date(new Date().getTime() + 60 * 60 * 1000), // Default to 1 hour later
+    classId: null,
   });
   const [events, setEvents] = useState<Lesson[]>([]);
-  const [userClassId, setUserClassId] = useState(null);
+  const [userClassId, setUserClassId] = useState<number | null>(null);
 
   // Fetch classId by token
   useEffect(() => {
@@ -48,10 +49,16 @@ export default function CalendarTest() {
     if (userClassId) {
       const fetchLessons = async () => {
         try {
-          const response = await fetch(`/api/lessons?classId=${userClassId}`); // Ajoute userClassId dans la requête
+          const response = await fetch(`/api/lessons?classId=${userClassId}`);
           if (response.ok) {
             const data: Lesson[] = await response.json();
-            setEvents(data);
+            // Convert date strings to Date objects
+            const lessonsWithDateObjects = data.map((lesson) => ({
+              ...lesson,
+              dateStart: new Date(lesson.dateStart), // Convert to Date
+              dateEnd: new Date(lesson.dateEnd),     // Convert to Date
+            }));
+            setEvents(lessonsWithDateObjects);
           } else {
             console.error("Error fetching lessons");
           }
@@ -68,10 +75,8 @@ export default function CalendarTest() {
   const handleDateClick = (arg: { dateStr: string }) => {
     setNewEvent({
       ...newEvent,
-      dateStart: new Date(arg.dateStr).toISOString(), // Utilisation directe de la date sans manipulation
-      dateEnd: new Date(
-        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
-      ).toISOString(), // Par défaut, ajouter 1h à l'événement
+      dateStart: new Date(arg.dateStr), // Set directly as Date
+      dateEnd: new Date(new Date(arg.dateStr).getTime() + 60 * 60 * 1000), // Default to 1 hour later
     });
     setShowModal(true);
   };
@@ -82,6 +87,7 @@ export default function CalendarTest() {
     try {
       await addLesson(newEvent);
       setShowModal(false);
+      resetNewEvent(); // Reset new event after submission
     } catch (error) {
       console.error("Error adding lesson:", error);
     }
@@ -95,7 +101,11 @@ export default function CalendarTest() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(lesson), // Ensure lesson includes classId
+        body: JSON.stringify({
+          ...lesson,
+          dateStart: lesson.dateStart.toISOString(), // Convert Date back to string
+          dateEnd: lesson.dateEnd.toISOString(),     // Convert Date back to string
+        }),
       });
 
       if (!response.ok) {
@@ -113,14 +123,30 @@ export default function CalendarTest() {
         });
       }
 
-      setEvents((prevEvents) => [...prevEvents, createdLesson]);
+      setEvents((prevEvents) => [...prevEvents, {
+        ...createdLesson,
+        dateStart: new Date(createdLesson.dateStart), // Convert to Date
+        dateEnd: new Date(createdLesson.dateEnd),     // Convert to Date
+      }]);
     } catch (error) {
       console.error(error);
-      alert("Failed to add lesson. Please try again."); // User feedback
+      alert("Failed to add lesson. Please try again.");
     }
   };
+
+  // Reset new event state
+  const resetNewEvent = () => {
+    setNewEvent({
+      id: 0,
+      name: "",
+      dateStart: new Date(),
+      dateEnd: new Date(new Date().getTime() + 60 * 60 * 1000),
+      classId: null,
+    });
+  };
+
   return (
-    <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto  mb-5 p-6">
+    <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto mb-5 p-6">
       <FullCalendar
         height={750}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -130,7 +156,6 @@ export default function CalendarTest() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
-        
         eventTimeFormat={{
           hour: "numeric",
           minute: "2-digit",
@@ -142,71 +167,34 @@ export default function CalendarTest() {
         initialView="dayGridMonth"
         events={events.map((event) => ({
           title: event.name,
-          start: new Date(event.dateStart).getTime() + 60 * 60 * 2000,
-          end: new Date(event.dateEnd).getTime() + 60 * 60 * 2000,
+          start: event.dateStart.toISOString(), // Convert to string for FullCalendar
+          end: event.dateEnd.toISOString(),       // Convert to string for FullCalendar
         }))}
       />
       {showModal && (
         <div className="modal flex flex-col justify-center items-center mb-32">
-          <form
-            onSubmit={handleModalSubmit}
-            className="flex flex-col justify-center items-center"
-          >
+          <form onSubmit={handleModalSubmit} className="flex flex-col justify-center items-center">
             <input
               type="text"
               placeholder="Lesson Name"
               value={newEvent.name}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, name: e.target.value })
-              }
+              onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
               required
             />
             <input
               type="datetime-local"
-              value={new Date(newEvent.dateStart)
-                .toLocaleString("sv-SE", {
-                  timeZone: "Europe/Paris",
-                  hour12: false,
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                .slice(0, 16)}
-              onChange={(e) =>
-                setNewEvent({
-                  ...newEvent,
-                  dateStart: new Date(e.target.value).toISOString(),
-                })
-              }
+              value={newEvent.dateStart.toISOString().slice(0, 16)} // Format for input
+              onChange={(e) => setNewEvent({ ...newEvent, dateStart: new Date(e.target.value) })}
               required
             />
             <input
               type="datetime-local"
-              value={new Date(newEvent.dateEnd)
-                .toLocaleString("sv-SE", {
-                  timeZone: "Europe/Paris",
-                  hour12: false,
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                .slice(0, 16)}
-              onChange={(e) =>
-                setNewEvent({
-                  ...newEvent,
-                  dateEnd: new Date(e.target.value).toISOString(),
-                })
-              }
+              value={newEvent.dateEnd.toISOString().slice(0, 16)} // Format for input
+              onChange={(e) => setNewEvent({ ...newEvent, dateEnd: new Date(e.target.value) })}
               required
             />
             <button type="submit">Add Lesson</button>
-            <button type="button" onClick={() => setShowModal(false)}>
-              Cancel
-            </button>
+            <button type="button" onClick={() => { setShowModal(false); resetNewEvent(); }}>Cancel</button>
           </form>
         </div>
       )}
