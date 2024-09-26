@@ -24,8 +24,9 @@ export default async function handler(
 
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { dataUrl } = req.body;
+    const { dataUrl, lesson } = req.body;
     const tokenCookie = req.cookies.session;
+console.log(lesson);
 
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
@@ -61,6 +62,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
         hashedSign: publicFilePath,
         userId: userId,
         date: new Date(),
+        lessonId : lesson
       },
     });
 
