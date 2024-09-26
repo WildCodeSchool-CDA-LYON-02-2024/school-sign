@@ -68,7 +68,7 @@ export default function CalendarTest() {
       dateStart: new Date(arg.dateStr).toISOString(),
       dateEnd: new Date(
         new Date(arg.dateStr).getTime() + 60 * 60 * 1000
-      ).toISOString(), // Par défaut, ajouter 1h à l'événement
+      ).toISOString(), // Add 1 hour by default
     });
     setShowModal(true);
   };
@@ -113,6 +113,22 @@ export default function CalendarTest() {
       alert("Failed to add lesson. Please try again.");
     }
   };
+
+  const formatDateTimeLocal = (dateString: string) => {
+    if (!dateString) return ""; // Prevent formatting invalid dates
+    return new Date(dateString)
+      .toLocaleString("sv-SE", {
+        timeZone: "Europe/Paris",
+        hour12: false,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      .slice(0, 16); // For datetime-local, we need YYYY-MM-DDTHH:mm format
+  };
+
   return (
     <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto  mb-5 p-6">
       <FullCalendar
@@ -124,7 +140,6 @@ export default function CalendarTest() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
-        
         eventTimeFormat={{
           hour: "numeric",
           minute: "2-digit",
@@ -136,8 +151,8 @@ export default function CalendarTest() {
         initialView="dayGridMonth"
         events={events.map((event) => ({
           title: event.name,
-          start: new Date(event.dateStart).getTime() + 60 * 60 * 2000,
-          end: new Date(event.dateEnd).getTime() + 60 * 60 * 2000,
+          start: new Date(event.dateStart).toISOString(),
+          end: new Date(event.dateEnd).toISOString(),
         }))}
       />
       {showModal && (
@@ -157,17 +172,7 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={new Date(newEvent.dateStart)
-                .toLocaleString("sv-SE", {
-                  timeZone: "Europe/Paris",
-                  hour12: false,
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                .slice(0, 16)}
+              value={formatDateTimeLocal(newEvent.dateStart)}
               onChange={(e) =>
                 setNewEvent({
                   ...newEvent,
@@ -178,17 +183,7 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={new Date(newEvent.dateEnd)
-                .toLocaleString("sv-SE", {
-                  timeZone: "Europe/Paris",
-                  hour12: false,
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                .slice(0, 16)}
+              value={formatDateTimeLocal(newEvent.dateEnd)}
               onChange={(e) =>
                 setNewEvent({
                   ...newEvent,
