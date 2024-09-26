@@ -33,6 +33,7 @@ export default function ClassWithSignatures() {
   const { allowSignature, disallowSignature, isSignatureAllowed } =
     useSignatureContext();
   const { toast } = useToast();
+  const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
 
   const { fetchClassId, fetchClassName } = useFetchClassDetails(
     setTeacherName,
@@ -78,6 +79,22 @@ export default function ClassWithSignatures() {
     };
     fetchDetails();
   }, [fetchSchoolDetails]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentDateTime(new Date()), 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const isLessonOngoing = (dateStart: Date, dateEnd: Date): boolean => {
+    return (
+      currentDateTime.toISOString() >= dateStart.toISOString() &&
+      currentDateTime.toISOString() <= dateEnd.toISOString()
+    );
+  };
+  
+
+  console.log(currentDateTime.toISOString()); // Logging current time in ISO format
+  console.log(lessons.map((lesson) => lesson.dateStart)); // Logging lesson start dates
 
   const handleGeneratePDF = async () => {
     const studentSignatures = students.map((student) => {
@@ -129,17 +146,23 @@ export default function ClassWithSignatures() {
     <>
       {classId ? (
         <div className="flex flex-col items-center">
-          {lessons.map((lesson) => (
-            <div key={lesson.id}>
-              <ClassComponent
-                className={className}
-                lessonName={lesson.name}
-                startHour={formatTime(new Date(lesson.dateStart))}
-                endHour={formatTime(new Date(lesson.dateEnd))}
-                classId={classId}
-              />
-            </div>
-          ))}
+          {lessons.map((lesson) => {
+            const startDate = new Date(lesson.dateStart);
+            const endDate = new Date(lesson.dateEnd);
+            const lessonIsOngoing = isLessonOngoing(startDate, endDate);
+
+            return lessonIsOngoing ? (
+              <div key={lesson.id}>
+                <ClassComponent
+                  className={className}
+                  lessonName={lesson.name}
+                  startHour={formatTime(startDate)}
+                  endHour={formatTime(endDate)}
+                  classId={classId}
+                />
+              </div>
+            ) : null;
+          })}
           <SignatureActions
             classId={classId}
             isSignatureAllowed={isSignatureAllowed}
