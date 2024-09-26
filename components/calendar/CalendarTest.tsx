@@ -9,7 +9,7 @@ interface Lesson {
   name: string;
   dateStart: string;
   dateEnd: string;
-  classID?: number; 
+  classID?: number;
 }
 
 export default function CalendarTest() {
@@ -45,13 +45,13 @@ export default function CalendarTest() {
 
   // Fetch lessons
   useEffect(() => {
-    if (userClassId) { 
+    if (userClassId) {
       const fetchLessons = async () => {
         try {
           const response = await fetch(`/api/lessons?classId=${userClassId}`); // Ajoute userClassId dans la requête
           if (response.ok) {
             const data: Lesson[] = await response.json();
-            setEvents(data); 
+            setEvents(data);
           } else {
             console.error("Error fetching lessons");
           }
@@ -120,8 +120,9 @@ export default function CalendarTest() {
     }
   };
   return (
-    <div className="flex flex-col space-y-2 items-center justify-center">
+    <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto  mb-5 p-6">
       <FullCalendar
+        height={750}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         timeZone="Europe/Paris"
         headerToolbar={{
@@ -129,6 +130,7 @@ export default function CalendarTest() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
+        
         eventTimeFormat={{
           hour: "numeric",
           minute: "2-digit",
@@ -145,7 +147,7 @@ export default function CalendarTest() {
         }))}
       />
       {showModal && (
-        <div className="modal flex flex-col justify-center items-center">
+        <div className="modal flex flex-col justify-center items-center mb-32">
           <form
             onSubmit={handleModalSubmit}
             className="flex flex-col justify-center items-center"
