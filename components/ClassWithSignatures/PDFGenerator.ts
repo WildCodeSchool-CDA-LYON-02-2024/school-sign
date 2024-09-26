@@ -20,7 +20,11 @@ interface PDFGeneratorProps {
   lessonName: string | null; // Nom de la leçon
   startDate: Date | null; // Date de début de la leçon
   endDate: Date | null; // Date de fin de la leçon
-  toast: (options: { title: string; className: string; duration: number; }) => void;
+  toast: (options: {
+    title: string;
+    className: string;
+    duration: number;
+  }) => void;
 }
 
 export default async function PDFGenerator({
@@ -86,7 +90,7 @@ export default async function PDFGenerator({
   if (className) {
     page.drawText(`Class: ${className}`, {
       x: 50,
-      y: height - 160,
+      y: height - 180,
       size: fontSize,
       font,
       color: rgb(0, 0, 0),
@@ -96,17 +100,6 @@ export default async function PDFGenerator({
   if (teacherName) {
     page.drawText(`Teacher: ${teacherName}`, {
       x: 50,
-      y: height - 180,
-      size: fontSize,
-      font,
-      color: rgb(0, 0, 0),
-    });
-  }
-
-  // Détails de la leçon
-  if (lessonName) {
-    page.drawText(`Lesson: ${lessonName}`, {
-      x: 50,
       y: height - 200,
       size: fontSize,
       font,
@@ -114,18 +107,38 @@ export default async function PDFGenerator({
     });
   }
 
-  // Dates de la leçon
-  if (startDate && endDate) {
-    page.drawText(`Start Date: ${startDate.toLocaleString()}`, {
-      x: 50,
-      y: height - 220,
+  // Détails de la leçon - positioned to the right
+  if (lessonName) {
+    page.drawText(`Lesson: ${lessonName}`, {
+      x: width - 200, // Adjusted for right alignment
+      y: height - 180,
       size: fontSize,
       font,
       color: rgb(0, 0, 0),
     });
-    page.drawText(`End Date: ${endDate.toLocaleString()}`, {
-      x: 50,
-      y: height - 240,
+  }
+
+  // Dates de la leçon - positioned to the right
+  if (startDate && endDate) {
+    const startHour = startDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const endHour = endDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    page.drawText(`Start Time: ${startHour}`, {
+      x: width - 200, // Adjusted for right alignment
+      y: height - 200,
+      size: fontSize,
+      font,
+      color: rgb(0, 0, 0),
+    });
+    page.drawText(`End Time: ${endHour}`, {
+      x: width - 200, // Adjusted for right alignment
+      y: height - 220,
       size: fontSize,
       font,
       color: rgb(0, 0, 0),
@@ -136,7 +149,7 @@ export default async function PDFGenerator({
   const generatedAt = new Date();
   page.drawText(`Generated At: ${generatedAt.toLocaleString()}`, {
     x: 50,
-    y: height - 260,
+    y: height - 220,
     size: fontSize,
     font,
     color: rgb(0, 0, 0),
@@ -190,7 +203,10 @@ export default async function PDFGenerator({
         try {
           const signatureUrl = studentSignature.hashedSign;
           const response = await fetch(signatureUrl);
-          if (!response.ok) throw new Error(`Failed to fetch signature: ${response.statusText}`);
+          if (!response.ok)
+            throw new Error(
+              `Failed to fetch signature: ${response.statusText}`
+            );
           const signatureImageBytes = await response.arrayBuffer();
           const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
           const signatureDims = signatureImage.scale(0.4);
