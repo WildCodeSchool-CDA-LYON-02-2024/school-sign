@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface Student {
   id: string;
+  class: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -13,6 +14,7 @@ export interface Student {
 export interface Signature {
   userId: string;
   hashedSign: string;
+  status: string;
 }
 
 interface StudentListProps {

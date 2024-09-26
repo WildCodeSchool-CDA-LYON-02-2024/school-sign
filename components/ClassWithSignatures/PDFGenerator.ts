@@ -8,7 +8,7 @@ interface Signature {
 
 interface PDFGeneratorProps {
   students: Student[];
-  signatures: Signature[]; // Added signatures prop
+  signatures: Signature[];
   schoolDetails: {
     name: string;
     address: string;
@@ -17,7 +17,7 @@ interface PDFGeneratorProps {
   } | null;
   className: string | null;
   teacherName: string | null;
-  toast: (options: { title: string; className: string; duration: number }) => void; // Specify toast type
+  toast: (options: { title: string; className: string; duration: number; }) => void; // 
 }
 
 export default async function PDFGenerator({
@@ -127,7 +127,7 @@ export default async function PDFGenerator({
 
   for (const [index, student] of students.entries()) {
     if (student.role === "STUDENT") {
-      
+
       // Display student name
       page.drawText(`${student.firstname} ${student.lastname}`, {
         x: 100,

@@ -13,36 +13,37 @@ import {
   UpdateIcon,
 } from "@radix-ui/react-icons";
 
-export const statuses = [
-  {
-    value: "pending",
-    label: "Pending",
-    icon: LapTimerIcon,
-  },
-  {
-    value: "processing",
-    label: "Processing",
-    icon: UpdateIcon,
-  },
-  {
-    value: "received",
-    label: "Received",
-    icon: CheckCircledIcon,
-  },
-  {
-    value: "failed",
-    label: "Failed",
-    icon: Cross2Icon,
-  },
-];
+// Define status types for better type safety
+export type StatusType = "pending" | "processing" | "received" | "failed";
 
+// Create a mapping of status types to their properties
+export const statusConfig: Record<
+  StatusType,
+  { label: string; icon: React.ComponentType }
+> = {
+  pending: { label: "Pending", icon: LapTimerIcon },
+  processing: { label: "Processing", icon: UpdateIcon },
+  received: { label: "Received", icon: CheckCircledIcon },
+  failed: { label: "Failed", icon: Cross2Icon },
+};
+
+// Generate statuses array from the config
+export const statuses = Object.entries(statusConfig).map(
+  ([value, { label, icon }]) => ({
+    value,
+    label,
+    icon,
+  }),
+);
+
+// Define ClassCol type with more specific types
 export type ClassCol = {
   id: string;
   class: string;
   lastname: string;
   firstname: string;
   email: string;
-  signature: "pending" | "processing" | "received" | "failed";
+  signature: StatusType;
 };
 
 export const columns: ColumnDef<ClassCol>[] = [

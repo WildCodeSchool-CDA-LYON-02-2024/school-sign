@@ -9,7 +9,7 @@ import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 
 // tanstack
 import { DataTable } from "@/components/table/data-table";
-import { columns, ClassCol } from "@/components/table/columns";
+import { ClassCol, columns, StatusType } from "@/components/table/columns";
 import {
   Signature,
   Student,
@@ -63,28 +63,41 @@ export default function TeacherDashboard() {
     fetchSchoolDetails();
   }, [fetchSchoolDetails]);
 
-  // Combine students and signatures to populate the table data
   useEffect(() => {
-    if (students.length > 0) {
-      console.log();
-      const combinedData = students
-        .filter((student) => student.role === "STUDENT")
-        .map((student) => {
-          const studentSignature = signatures.find(
-            (signature) => signature.userId === student.id,
-          );
-          return {
-            id: student.id.toString(),
-            lastname: student.lastname,
-            firstname: student.firstname,
-            email: student.email,
-            signature: studentSignature?.status || "pending",
-          };
-        });
+    if (students.length > 0 && className !== null) {
+      // Filter out students that are not students
+      const filteredStudents = students.filter(
+        (student) => student.role === "STUDENT",
+      );
 
+      // Map over the filtered students and get the signature status
+      const combinedData = filteredStudents.map((student) => {
+        const studentSignature = signatures.find(
+          (signature) => signature.userId === student.id,
+        );
+
+        // Set the signature status to pending if the student has no signature
+        let signatureStatus: StatusType = "pending";
+        if (studentSignature) {
+          signatureStatus =
+            (studentSignature.status as StatusType) || "received";
+        }
+        console.log(className);
+
+        return {
+          id: student.id.toString(),
+          class: className || "",
+          lastname: student.lastname,
+          firstname: student.firstname,
+          email: student.email,
+          signature: signatureStatus,
+        };
+      });
+
+      // Set the data with the combined results
       setData(combinedData);
     }
-  }, [signatures, students]);
+  }, [students, signatures, className]);
 
   return (
     <>
