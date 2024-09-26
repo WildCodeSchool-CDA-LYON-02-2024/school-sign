@@ -19,7 +19,6 @@ export function useFetchLessons(
 
             if (res.ok) {
                 const data = await res.json();
-                console.log("Fetched Lessons Data:", data); // Log the fetched data
                 setLessons(data || []); 
             } else {
                 throw new Error(`Failed to fetch Lessons: ${res.statusText}`);

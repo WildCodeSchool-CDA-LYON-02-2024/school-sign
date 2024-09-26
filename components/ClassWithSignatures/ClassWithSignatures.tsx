@@ -65,8 +65,7 @@ export default function ClassWithSignatures() {
         fetchLessons(),
       ]).catch(err => setError("Failed to fetch necessary data."));
     }
-  }, [classId]);
-
+  }, [classId, fetchStudents, fetchClassName, fetchSignatures, fetchLessons]);
   useEffect(() => {
     const fetchDetails = async () => {
       setLoading(true);
