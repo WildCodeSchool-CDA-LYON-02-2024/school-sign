@@ -8,29 +8,30 @@ export function useFetchLessons(
 ) {
   const fetchLessons = useCallback(async () => {
     if (classId) {
-      try {
-        const res = await fetch(`/api/lessons?classid=${classId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        try {
+            const res = await fetch(`/api/lessons?classid=${classId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
 
-        if (res.ok) {
-          const data = await res.json();
-          setLessons(data || []); 
-        } else {
-          throw new Error(`Failed to fetch Lessons: ${res.statusText}`);
+            if (res.ok) {
+                const data = await res.json();
+                console.log("Fetched Lessons Data:", data); // Log the fetched data
+                setLessons(data || []); 
+            } else {
+                throw new Error(`Failed to fetch Lessons: ${res.statusText}`);
+            }
+        } catch (error) {
+            console.error("Request Error:", error);
+            setError(
+                error instanceof Error ? error.message : "Failed to fetch Lessons"
+            );
         }
-      } catch (error) {
-        console.error("Request Error:", error);
-        setError(
-          error instanceof Error ? error.message : "Failed to fetch Lessons"
-        );
-      }
     }
-  }, [classId, setLessons, setError]);
+}, [classId, setLessons, setError]);
 
   return { fetchLessons };
 }
