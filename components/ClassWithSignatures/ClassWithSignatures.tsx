@@ -24,7 +24,9 @@ export default function ClassWithSignatures() {
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -34,16 +36,10 @@ export default function ClassWithSignatures() {
   const { toast } = useToast();
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
 
-  const { fetchClassId, fetchClassName } = useFetchClassDetails(
-    setTeacherName,
-    setClassId,
-    setClassName,
-    classId
-  );
+  const { fetchClassId, fetchClassName } = useFetchClassDetails(setTeacherName, setClassId, setClassName, classId);
   const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
   const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
-  const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
-  const { fetchLessons } = useFetchLessons(classId, setLessons, setError);
+  const { fetchSignatures } = useFetchSignatures(setSignatures, setError); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,25 +56,12 @@ export default function ClassWithSignatures() {
   }, [fetchClassId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (classId) {
-        setLoading(true);
-        try {
-          await Promise.all([
-            fetchStudents(),
-            fetchClassName(),
-            fetchSignatures(),
-            fetchLessons(),
-          ]);
-        } catch (err) {
-          setError("Failed to fetch class-related data.");
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    fetchData();
-  }, [classId, fetchStudents, fetchClassName, fetchSignatures, fetchLessons]);
+    if (classId) {
+      fetchStudents();
+      fetchClassName();
+      fetchSignatures(); 
+    }
+  }, [classId, fetchStudents, fetchClassName, fetchSignatures]); 
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -107,14 +90,12 @@ export default function ClassWithSignatures() {
   };
 
   const handleGeneratePDF = async () => {
-    const studentSignatures = students.map((student) => {
-      const studentSignature = signatures.find(
-        (sig) => sig.userId?.toString() === student.id
-      );
-      return {
-        userId: student.id,
-        hashedSign: studentSignature ? studentSignature.hashedSign : "",
-      };
+    const studentSignatures = students.map(student => {
+      const studentSignature = signatures.find(sig => sig.userId === student.id);
+      return { 
+        userId: student.id, 
+        hashedSign: studentSignature ? studentSignature.hashedSign : "" 
+      }; 
     });
 
     try {
@@ -131,7 +112,7 @@ export default function ClassWithSignatures() {
         className: "bg-green-400",
         duration: 2000,
       });
-    } catch (error: unknown) {
+    } catch (error: unknown) { // Explicitly typing the error as unknown
       console.error("Error generating PDF:", error);
       const errorMessage =
         error instanceof Error ? error.message : "An unknown error occurred.";
@@ -187,11 +168,7 @@ export default function ClassWithSignatures() {
             disallowSignature={disallowSignature}
             toast={toast}
           />
-          <StudentList
-            students={students}
-            signatures={signatures}
-            error={error}
-          />
+          <StudentList students={students} signatures={signatures} error={error} />
         </div>
       ) : (
         <p>No class is assigned to you.</p>

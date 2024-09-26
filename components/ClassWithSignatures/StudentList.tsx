@@ -2,9 +2,11 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface Student {
-  id: string; // Assuming id is a string, if it's a number, change the type accordingly
+  id: string;
+  class: string;
   firstname: string;
   lastname: string;
+  email: string;
   role: string;
   signature?: string; // Optional property if you want to allow null
 }
@@ -57,7 +59,7 @@ export default function StudentList({
                           alt={`Signature of ${student.firstname} ${student.lastname}`}
                           width={600}
                           height={500}
-                          priority 
+                          priority
                         />
                       ) : (
                         <p className="text-red-500 font-light">
