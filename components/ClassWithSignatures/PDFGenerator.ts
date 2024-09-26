@@ -17,7 +17,11 @@ interface PDFGeneratorProps {
   } | null;
   className: string | null;
   teacherName: string | null;
-  toast: (options: { title: string; className: string; duration: number }) => void; // Specify toast type
+  toast: (options: {
+    title: string;
+    className: string;
+    duration: number;
+  }) => void; // Specify toast type
 }
 
 export default async function PDFGenerator({
@@ -119,7 +123,6 @@ export default async function PDFGenerator({
 
   for (const [index, student] of students.entries()) {
     if (student.role === "STUDENT") {
-      
       // Display student name
       page.drawText(`${student.firstname} ${student.lastname}`, {
         x: 100,
@@ -139,14 +142,17 @@ export default async function PDFGenerator({
 
       // Find the student's signature
       const studentSignature = signatures.find(
-        (sig) => sig.userId === student.id
+        (sig) => sig.userId === student.id,
       );
 
       if (studentSignature?.hashedSign) {
         try {
           const signatureUrl = studentSignature.hashedSign;
           const response = await fetch(signatureUrl);
-          if (!response.ok) throw new Error(`Failed to fetch signature: ${response.statusText}`);
+          if (!response.ok)
+            throw new Error(
+              `Failed to fetch signature: ${response.statusText}`,
+            );
           const signatureImageBytes = await response.arrayBuffer();
           const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
           const signatureDims = signatureImage.scale(0.4);

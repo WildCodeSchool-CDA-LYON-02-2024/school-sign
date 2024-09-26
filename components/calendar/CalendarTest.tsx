@@ -70,7 +70,7 @@ export default function CalendarTest() {
       ...newEvent,
       dateStart: new Date(arg.dateStr).toISOString(), // Utilisation directe de la date sans manipulation
       dateEnd: new Date(
-        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
+        new Date(arg.dateStr).getTime() + 60 * 60 * 1000,
       ).toISOString(), // Par défaut, ajouter 1h à l'événement
     });
     setShowModal(true);
@@ -130,7 +130,6 @@ export default function CalendarTest() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
-        
         eventTimeFormat={{
           hour: "numeric",
           minute: "2-digit",

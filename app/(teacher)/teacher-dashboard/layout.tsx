@@ -12,7 +12,7 @@ export default function TeacherLayout({
   return (
     <div className="md:flex bg-seasame h-screen">
       <ClassProvider>
-        <nav >
+        <nav>
           <TeacherNavBar />
         </nav>
         <main className="basis-5/6 scroll">

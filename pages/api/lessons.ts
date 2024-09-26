@@ -13,7 +13,7 @@ interface Lesson {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
@@ -42,7 +42,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     const payload = await verifyToken(tokenCookie);
     console.log(payload);
-    
+
     // Récupérer classId à partir du payload
     const classId = payload.classId;
     if (classId === undefined) {
@@ -82,7 +82,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     // Validation
     if (!name || !dateStart || !dateEnd || classId === undefined) {
       return res.status(400).json({
-        error: "Fields 'name', 'dateStart', 'dateEnd', and 'classId' are required.",
+        error:
+          "Fields 'name', 'dateStart', 'dateEnd', and 'classId' are required.",
       });
     }
 

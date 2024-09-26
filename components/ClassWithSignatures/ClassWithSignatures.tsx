@@ -6,11 +6,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useSignatureContext } from "@/components/context/SignatureContext";
 import ClassComponent from "./ClassComponent";
 import SignatureActions from "./SignatureActions";
-import StudentList, { Student, Signature } from "./StudentList"; 
+import StudentList, { Student, Signature } from "./StudentList";
 import { useFetchStudents } from "@/hooks/useFetchStudents";
-import { SchoolDetails, useFetchSchoolDetails } from "@/hooks/useFetchSchoolDetails";
+import {
+  SchoolDetails,
+  useFetchSchoolDetails,
+} from "@/hooks/useFetchSchoolDetails";
 import { useFetchClassDetails } from "@/hooks/useFetchClassDetails";
-import { useFetchSignatures } from "@/hooks/useFetchSignatures"; 
+import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 import PDFGenerator from "./PDFGenerator";
 
 export default function ClassWithSignatures() {
@@ -18,17 +21,25 @@ export default function ClassWithSignatures() {
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
-  const [signatures, setSignatures] = useState<Signature[]>([]); 
+  const [signatures, setSignatures] = useState<Signature[]>([]);
 
-  const { allowSignature, disallowSignature, isSignatureAllowed } = useSignatureContext();
+  const { allowSignature, disallowSignature, isSignatureAllowed } =
+    useSignatureContext();
   const { toast } = useToast();
 
-  const { fetchClassId, fetchClassName } = useFetchClassDetails(setTeacherName, setClassId, setClassName, classId);
+  const { fetchClassId, fetchClassName } = useFetchClassDetails(
+    setTeacherName,
+    setClassId,
+    setClassName,
+    classId,
+  );
   const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
   const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
-  const { fetchSignatures } = useFetchSignatures(setSignatures, setError); 
+  const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
 
   useEffect(() => {
     fetchClassId();
@@ -38,21 +49,23 @@ export default function ClassWithSignatures() {
     if (classId) {
       fetchStudents();
       fetchClassName();
-      fetchSignatures(); 
+      fetchSignatures();
     }
-  }, [classId, fetchStudents, fetchClassName, fetchSignatures]); 
+  }, [classId, fetchStudents, fetchClassName, fetchSignatures]);
 
   useEffect(() => {
     fetchSchoolDetails();
   }, [fetchSchoolDetails]);
 
   const handleGeneratePDF = async () => {
-    const studentSignatures = students.map(student => {
-      const studentSignature = signatures.find(sig => sig.userId === student.id);
-      return { 
-        userId: student.id, 
-        hashedSign: studentSignature ? studentSignature.hashedSign : "" 
-      }; 
+    const studentSignatures = students.map((student) => {
+      const studentSignature = signatures.find(
+        (sig) => sig.userId === student.id,
+      );
+      return {
+        userId: student.id,
+        hashedSign: studentSignature ? studentSignature.hashedSign : "",
+      };
     });
 
     try {
@@ -69,9 +82,11 @@ export default function ClassWithSignatures() {
         className: "bg-green-400",
         duration: 2000,
       });
-    } catch (error: unknown) { // Explicitly typing the error as unknown
+    } catch (error: unknown) {
+      // Explicitly typing the error as unknown
       console.error("Error generating PDF:", error);
-      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
       toast({
         title: "Failed to generate PDF.",
         description: errorMessage,
@@ -79,8 +94,7 @@ export default function ClassWithSignatures() {
         duration: 2000,
       });
     }
-};
-
+  };
 
   return (
     <>
@@ -94,7 +108,11 @@ export default function ClassWithSignatures() {
             disallowSignature={disallowSignature}
             toast={toast}
           />
-          <StudentList students={students} signatures={signatures} error={error} />
+          <StudentList
+            students={students}
+            signatures={signatures}
+            error={error}
+          />
         </div>
       ) : (
         <p>No class is assigned to you.</p>

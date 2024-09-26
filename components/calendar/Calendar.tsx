@@ -22,7 +22,7 @@ export default function Calendar() {
     handleCloseModal,
     onEventUpdate,
   } = useCalendarEvents();
-console.log(onEventUpdate);
+  console.log(onEventUpdate);
 
   return (
     <>
@@ -37,7 +37,7 @@ console.log(onEventUpdate);
                 right: "resourceTimelineWeek, dayGridMonth, timeGridWeek",
               }}
               events={allEvents}
-              eventDisplay='auto'
+              eventDisplay="auto"
               nowIndicator={true}
               editable={true}
               droppable={true}

@@ -9,7 +9,7 @@ export default function TeacherSchedule() {
     <>
       <h1 className="text-center text-2xl pb-8">Teacher Schedule</h1>
       {/* <Calendar /> */}
-      <CalendarTest/>
+      <CalendarTest />
     </>
   );
 }

@@ -79,7 +79,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Verify the token and extract the payload
     const payload = await verifyToken(tokenCookie);
-    
+
     const schoolId = payload.schoolId;
     const role = payload.role;
 
