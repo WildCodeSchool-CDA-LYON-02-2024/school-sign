@@ -109,7 +109,7 @@ export default function ClassWithSignatures() {
   const handleGeneratePDF = async () => {
     const studentSignatures = students.map((student) => {
       const studentSignature = signatures.find(
-        (sig) => sig.userId === student.id
+        (sig) => sig.userId?.toString() === student.id
       );
       return {
         userId: student.id,

@@ -2,16 +2,19 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface Student {
-  id: string;
+  id: string; // Assuming id is a string, if it's a number, change the type accordingly
   firstname: string;
   lastname: string;
   role: string;
-  signature?: string;
+  signature?: string; // Optional property if you want to allow null
 }
 
 export interface Signature {
-  userId: string;
-  hashedSign: string;
+  id: number;            // Ensure this property exists
+  hashedSign: string;    // Ensure this property exists
+  lessonId?: number;     // Optional property
+  userId?: number;       // Optional property
+  date?: string;         // Optional property
 }
 
 interface StudentListProps {
@@ -25,8 +28,9 @@ export default function StudentList({
   signatures,
   error,
 }: StudentListProps) {
+  // Ensure the userId is treated as a string
   const findSignatureForStudent = (studentId: string) => {
-    const signature = signatures.find((sig) => sig.userId === studentId);
+    const signature = signatures.find((sig) => sig.userId?.toString() === studentId); // Convert userId to string for comparison
     return signature ? signature.hashedSign : null;
   };
 
@@ -49,10 +53,7 @@ export default function StudentList({
                     <CardContent className="flex flex-col">
                       {studentSignature ? (
                         <Image
-                          src={
-                            findSignatureForStudent(student.id) ||
-                            "/default-signature.png"
-                          } 
+                          src={studentSignature || "/default-signature.png"} 
                           alt={`Signature of ${student.firstname} ${student.lastname}`}
                           width={600}
                           height={500}
