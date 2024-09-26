@@ -14,15 +14,12 @@ export function useFetchLessons(
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Include credentials for cookies/session
+          credentials: "include",
         });
 
         if (res.ok) {
           const data = await res.json();
-          console.log("Fetched lessons:", data); // Log the entire response for debugging
-
-          // Assuming data is an array of lessons, adjust as necessary
-          setLessons(data || []); // Use data directly if it is an array
+          setLessons(data || []); 
         } else {
           throw new Error(`Failed to fetch Lessons: ${res.statusText}`);
         }

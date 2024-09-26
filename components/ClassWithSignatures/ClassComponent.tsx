@@ -1,3 +1,5 @@
+import RealTimeClockWithDate from "../calendar/CurrentTime";
+
 interface ClassHeaderProps {
   className: string | null;
   lessonName: string | null;
@@ -15,6 +17,9 @@ export default function ClassComponent({
 }: ClassHeaderProps) {
   return (
     <div className="flex flex-col items-center mb-2">
+      <div className="absolute right-0 mr-10 ">
+        <RealTimeClockWithDate />
+      </div>
       <h2 className="text-center text-xl font-semibold mb-2">
         {className ? `Class : ${className}` : "Unknown class"}
       </h2>
