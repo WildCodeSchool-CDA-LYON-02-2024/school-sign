@@ -55,6 +55,7 @@ model Classsection {
   schoolId Int
 
   users User[]
+  lessons Lesson[]
 }
 
 model Sign {
@@ -67,6 +68,15 @@ model Sign {
   user User @relation(fields: [userId], references: [id])
   // documents   Document @relation(fields: [docId], references: [id])
 }
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  name String @db.VarChar(100)
+  dateStart   DateTime
+  dateEnd     DateTime
+  class   Classsection? @relation(fields: [classId], references: [id])
+  classId Int?
+ }
 
 // model ClassSchool {
 //   id        Int      @id @default(autoincrement())

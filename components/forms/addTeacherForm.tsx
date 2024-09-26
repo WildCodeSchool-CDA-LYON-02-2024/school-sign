@@ -56,7 +56,7 @@ export default function AddTeacherForm() {
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while adding the teacher",
+          errorData.error || "An error occurred while adding the teacher"
         );
       }
     } catch (err) {
@@ -115,11 +115,11 @@ export default function AddTeacherForm() {
             />
           </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
+          <CardFooter className="flex justify-end">
+            <Button type="submit">Submit</Button>
+          </CardFooter>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button type="submit">Submit</Button>
-      </CardFooter>
     </Card>
   );
 }

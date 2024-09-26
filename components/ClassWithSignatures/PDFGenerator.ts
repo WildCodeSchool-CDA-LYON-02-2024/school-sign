@@ -98,14 +98,6 @@ export default async function PDFGenerator({
   }
 
   // En-têtes de colonne
-  page.drawText("No.", {
-    x: 50,
-    y: height - 240,
-    size: fontSize,
-    font,
-    color: rgb(0, 0, 0),
-  });
-
   page.drawText("Name", {
     x: 100,
     y: height - 240,
