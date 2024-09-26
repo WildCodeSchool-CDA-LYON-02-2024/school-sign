@@ -18,7 +18,6 @@ export function useFetchStudents(
         });
         if (res.ok) {
           const data = await res.json();
-          console.log(data.users);
           
           setStudents(data.users || []);
         } else {

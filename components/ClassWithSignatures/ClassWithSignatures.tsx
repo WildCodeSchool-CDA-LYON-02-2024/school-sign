@@ -17,15 +17,14 @@ import { useFetchClassDetails } from "@/hooks/useFetchClassDetails";
 import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 import PDFGenerator from "./PDFGenerator";
 import { Lesson } from "../calendar/CalendarTest";
+import RealTimeClockWithDate from "../calendar/CurrentTime";
 
 export default function ClassWithSignatures() {
   const [students, setStudents] = useState<Student[]>([]);
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
-    null
-  );
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -49,8 +48,13 @@ export default function ClassWithSignatures() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await fetchClassId();
-      setLoading(false);
+      try {
+        await fetchClassId();
+      } catch (err) {
+        setError("Failed to fetch class information.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, [fetchClassId]);
@@ -59,13 +63,18 @@ export default function ClassWithSignatures() {
     const fetchData = async () => {
       if (classId) {
         setLoading(true);
-        await Promise.all([
-          fetchStudents(),
-          fetchClassName(),
-          fetchSignatures(),
-          fetchLessons(),
-        ]);
-        setLoading(false);
+        try {
+          await Promise.all([
+            fetchStudents(),
+            fetchClassName(),
+            fetchSignatures(),
+            fetchLessons(),
+          ]);
+        } catch (err) {
+          setError("Failed to fetch class-related data.");
+        } finally {
+          setLoading(false);
+        }
       }
     };
     fetchData();
@@ -74,8 +83,13 @@ export default function ClassWithSignatures() {
   useEffect(() => {
     const fetchDetails = async () => {
       setLoading(true);
-      await fetchSchoolDetails();
-      setLoading(false);
+      try {
+        await fetchSchoolDetails();
+      } catch (err) {
+        setError("Failed to fetch school details.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchDetails();
   }, [fetchSchoolDetails]);
@@ -87,14 +101,10 @@ export default function ClassWithSignatures() {
 
   const isLessonOngoing = (dateStart: Date, dateEnd: Date): boolean => {
     return (
-      currentDateTime.toISOString() >= dateStart.toISOString() &&
-      currentDateTime.toISOString() <= dateEnd.toISOString()
+      currentDateTime >= dateStart &&
+      currentDateTime <= dateEnd
     );
   };
-  
-
-  console.log(currentDateTime.toISOString()); // Logging current time in ISO format
-  console.log(lessons.map((lesson) => lesson.dateStart)); // Logging lesson start dates
 
   const handleGeneratePDF = async () => {
     const studentSignatures = students.map((student) => {
@@ -144,25 +154,32 @@ export default function ClassWithSignatures() {
 
   return (
     <>
+      <div className="absolute top-0 right-0 mt-10 mr-10">
+        <RealTimeClockWithDate />
+      </div>
       {classId ? (
         <div className="flex flex-col items-center">
-          {lessons.map((lesson) => {
-            const startDate = new Date(lesson.dateStart);
-            const endDate = new Date(lesson.dateEnd);
-            const lessonIsOngoing = isLessonOngoing(startDate, endDate);
+          {lessons.length > 0 ? (
+            lessons.map((lesson) => {
+              const startDate = new Date(lesson.dateStart);
+              const endDate = new Date(lesson.dateEnd);
+              const lessonIsOngoing = isLessonOngoing(startDate, endDate);
 
-            return lessonIsOngoing ? (
-              <div key={lesson.id}>
-                <ClassComponent
-                  className={className}
-                  lessonName={lesson.name}
-                  startHour={formatTime(startDate)}
-                  endHour={formatTime(endDate)}
-                  classId={classId}
-                />
-              </div>
-            ) : null;
-          })}
+              return lessonIsOngoing ? (
+                <div key={lesson.id}>
+                  <ClassComponent
+                    className={className}
+                    lessonName={lesson.name}
+                    startHour={formatTime(startDate)}
+                    endHour={formatTime(endDate)}
+                    classId={classId}
+                  />
+                </div>
+              ) : null;
+            })
+          ) : (
+            <p className="mb-5">No ongoing lesson.</p>
+          )}
           <SignatureActions
             classId={classId}
             isSignatureAllowed={isSignatureAllowed}

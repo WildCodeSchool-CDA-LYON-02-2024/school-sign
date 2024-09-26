@@ -42,7 +42,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     const classId = payload.classId;
 
-    // Retrieve lessons associated with the user's classId
     const lessons = await prisma.lesson.findMany({
       where: {
         classId: classId,
@@ -70,13 +69,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const classId = payload.classId;
-
     const { name, dateStart, dateEnd }: Lesson = req.body;
 
-    // Log received data for debugging
-    console.log("Received data:", { name, dateStart, dateEnd, classId });
-
-    // Validation
     if (!name || !dateStart || !dateEnd || classId === undefined) {
       return res.status(400).json({
         error: "Fields 'name', 'dateStart', 'dateEnd', and 'classId' are required.",
@@ -96,7 +90,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
         .json({ error: "'dateStart' must be earlier than 'dateEnd'." });
     }
 
-    // Create lesson with classId
     const newLesson = await prisma.lesson.create({
       data: {
         name,
@@ -106,7 +99,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    console.log("Lesson created:", newLesson);
     res.status(201).json(newLesson);
   } catch (error) {
     console.error("Error creating lesson:", error);
