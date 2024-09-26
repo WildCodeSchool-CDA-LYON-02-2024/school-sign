@@ -17,7 +17,10 @@ interface PDFGeneratorProps {
   } | null;
   className: string | null;
   teacherName: string | null;
-  toast: (options: { title: string; className: string; duration: number; }) => void; // 
+  lessonName: string | null; // Nom de la leçon
+  startDate: Date | null; // Date de début de la leçon
+  endDate: Date | null; // Date de fin de la leçon
+  toast: (options: { title: string; className: string; duration: number; }) => void;
 }
 
 export default async function PDFGenerator({
@@ -26,6 +29,9 @@ export default async function PDFGenerator({
   schoolDetails,
   className,
   teacherName,
+  lessonName,
+  startDate,
+  endDate,
   toast,
 }: PDFGeneratorProps) {
   // Notification d'achèvement
@@ -97,10 +103,49 @@ export default async function PDFGenerator({
     });
   }
 
+  // Détails de la leçon
+  if (lessonName) {
+    page.drawText(`Lesson: ${lessonName}`, {
+      x: 50,
+      y: height - 200,
+      size: fontSize,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  }
+
+  // Dates de la leçon
+  if (startDate && endDate) {
+    page.drawText(`Start Date: ${startDate.toLocaleString()}`, {
+      x: 50,
+      y: height - 220,
+      size: fontSize,
+      font,
+      color: rgb(0, 0, 0),
+    });
+    page.drawText(`End Date: ${endDate.toLocaleString()}`, {
+      x: 50,
+      y: height - 240,
+      size: fontSize,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  }
+
+  // Heure de génération du PDF
+  const generatedAt = new Date();
+  page.drawText(`Generated At: ${generatedAt.toLocaleString()}`, {
+    x: 50,
+    y: height - 260,
+    size: fontSize,
+    font,
+    color: rgb(0, 0, 0),
+  });
+
   // En-têtes de colonne
   page.drawText("Name", {
     x: 100,
-    y: height - 240,
+    y: height - 300,
     size: fontSize,
     font,
     color: rgb(0, 0, 0),
@@ -108,18 +153,17 @@ export default async function PDFGenerator({
 
   page.drawText("Signature", {
     x: 400,
-    y: height - 240,
+    y: height - 300,
     size: fontSize,
     font,
     color: rgb(0, 0, 0),
   });
 
   const rowHeight = 50;
-  let yPosition = height - 290;
+  let yPosition = height - 350;
 
   for (const [index, student] of students.entries()) {
     if (student.role === "STUDENT") {
-
       // Display student name
       page.drawText(`${student.firstname} ${student.lastname}`, {
         x: 100,

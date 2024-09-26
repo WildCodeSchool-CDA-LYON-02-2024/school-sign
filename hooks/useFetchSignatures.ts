@@ -17,7 +17,6 @@ export function useFetchSignatures(
 
       if (res.ok) {
         const data = await res.json();
-        console.log("API Response Data:", data);  // Log to check the data structure
         setSignatures(data.signs || []);
       } else {
         throw new Error("Failed to fetch signatures");
