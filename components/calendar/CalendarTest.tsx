@@ -3,6 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Lesson {
   id: number;
@@ -23,6 +24,7 @@ export default function CalendarTest() {
   });
   const [events, setEvents] = useState<Lesson[]>([]);
   const [userClassId, setUserClassId] = useState(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchClassId = async () => {
@@ -96,6 +98,11 @@ export default function CalendarTest() {
       if (!response.ok) {
         throw new Error("Error adding lesson");
       }
+      toast({
+        title: "Course added successfully",
+        className: "bg-green-400",
+        duration: 2000,
+    });
 
       const createdLesson = await response.json();
 
