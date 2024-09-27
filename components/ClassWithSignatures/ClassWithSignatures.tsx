@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import ClassComponent from "./ClassComponent";
-import SignatureActions from "./SignatureActions";
 import StudentList, { Student, Signature } from "./StudentList";
 import { useFetchStudents } from "@/hooks/useFetchStudents";
 import { useFetchLessons } from "@/hooks/useFetchLesson";
@@ -17,6 +16,7 @@ import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 import PDFGenerator from "./PDFGenerator";
 import { Lesson } from "../calendar/CalendarTest";
 import RealTimeClockWithDate from "../calendar/CurrentTime";
+import SignatureActions from "./SignatureActions";
 import { useSignatureContext } from "../context/SignatureContext";
 
 export default function ClassWithSignatures() {
@@ -24,17 +24,14 @@ export default function ClassWithSignatures() {
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
-    null,
-  );
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
-  const { allowSignature, disallowSignature, isSignatureAllowed } =
-    useSignatureContext();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
+  const { allowSignature, disallowSignature, isSignatureAllowed } = useSignatureContext();
 
   // Fetch hooks
   const { fetchClassId, fetchClassName } = useFetchClassDetails(setTeacherName, setClassId, setClassName, classId);
@@ -61,12 +58,14 @@ export default function ClassWithSignatures() {
   // Fetch students, class name, signatures, and lessons when classId is available
   useEffect(() => {
     if (classId) {
-      fetchStudents();
-      fetchClassName();
-      fetchSignatures();
+      Promise.all([
+        fetchStudents(),
+        fetchClassName(),
+        fetchSignatures(),
+        fetchLessons(),
+      ]).catch(err => setError("Failed to fetch necessary data."));
     }
-  }, [classId, fetchStudents, fetchClassName, fetchSignatures]);
-
+  }, [classId, fetchStudents, fetchClassName, fetchSignatures, fetchLessons]);
   useEffect(() => {
     const fetchDetails = async () => {
       setLoading(true);
@@ -154,7 +153,8 @@ export default function ClassWithSignatures() {
             duration: 2000,
         });
     }
-  };
+};
+
 
   const formatTime = (date: Date): string => {
     const hours = date.getHours().toString().padStart(2, "0");
