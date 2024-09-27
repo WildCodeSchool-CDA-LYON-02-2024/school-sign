@@ -4,13 +4,17 @@ import { useSignatureContext } from "../components/context/SignatureContext";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 
-export default function SignatureCanvas() {
+interface SignatureCanvasProps {
+  lessonId: number | null;
+}
+
+export default function SignatureCanvas({ lessonId }: SignatureCanvasProps) {
   const [dataURL, setDataURL] = useState<string | null>(null);
   const [canvasKey, setCanvasKey] = useState<number>(0);
   const [signatureId, setSignatureId] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePadRef = useRef<SignaturePad | null>(null);
-  const { addStudentSignature, clearStudentSignatures } = useSignatureContext();
+  const { addStudentSignature } = useSignatureContext();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,13 +37,15 @@ export default function SignatureCanvas() {
       const dataUrl = signaturePadRef.current.toDataURL();
       setDataURL(dataUrl);
 
+
+      
       try {
         const response = await fetch("/api/signature", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ dataUrl }),
+          body: JSON.stringify({ dataUrl, lesson: lessonId }),
         });
 
         if (response.ok) {
@@ -54,14 +60,24 @@ export default function SignatureCanvas() {
         } else {
           const error = await response.json();
           console.error("Failed to save signature:", error);
+          toast({
+            className: "bg-red-500",
+            description: "Failed to save signature",
+            duration: 2000,
+          });
         }
       } catch (error) {
         console.error("Error saving signature:", error);
+        toast({
+          className: "bg-red-500",
+          description: "Error saving signature",
+          duration: 2000,
+        });
       }
     }
   };
 
-  const clearSignature = async () => {
+  const clearSignature = () => {
     if (signaturePadRef.current) {
       toast({
         description: "Signature cleared",
@@ -90,9 +106,19 @@ export default function SignatureCanvas() {
         } else {
           const error = await response.json();
           console.error("Error deleting signature:", error);
+          toast({
+            className: "bg-red-500",
+            description: "Failed to delete signature",
+            duration: 2000,
+          });
         }
       } catch (error) {
         console.error("Fetch error:", error);
+        toast({
+          className: "bg-red-500",
+          description: "Error deleting signature",
+          duration: 2000,
+        });
       }
     }
     setCanvasKey((prevKey) => prevKey + 1);
