@@ -1,71 +1,108 @@
 "use client";
 
+// react
 import { useEffect, useState } from "react";
-import { useSignatureContext } from "@/components/context/SignatureContext";
-import { DataTable } from "@/components/table/data-table";
-import { columns, Payment } from "@/components/table/columns";
+// hooks
+import { useFetchStudents } from "@/hooks/useFetchStudents";
+import { useFetchClassDetails } from "@/hooks/useFetchClassDetails";
+import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "489e1d42",
-      amount: 125,
-      status: "processing",
-      email: "example@gmail.com",
-    },
-    // ...
-  ];
-}
+// tanstack
+import { DataTable } from "@/components/table/data-table";
+import { ClassCol, columns, StatusType } from "@/components/table/columns";
+import {
+  Signature,
+  Student,
+} from "@/components/ClassWithSignatures/StudentList";
+import { useSignatureContext } from "@/components/context/SignatureContext";
+import {
+  SchoolDetails,
+  useFetchSchoolDetails,
+} from "@/hooks/useFetchSchoolDetails";
+import { useToast } from "@/hooks/use-toast";
 
 export default function TeacherDashboard() {
-  const [data, setData] = useState<Payment[]>([]);
+  const [data, setData] = useState<ClassCol[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
-  const {
-    allowSignature,
-    disallowSignature,
-    isSignatureAllowed,
-    studentSignatures,
-  } = useSignatureContext();
+  const [className, setClassName] = useState<string | null>(null);
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
+    null,
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [signatures, setSignatures] = useState<Signature[]>([]);
+
+  const { allowSignature, disallowSignature, isSignatureAllowed } =
+    useSignatureContext();
+  const { toast } = useToast();
+
+  const { fetchClassId, fetchClassName } = useFetchClassDetails(
+    setTeacherName,
+    setClassId,
+    setClassName,
+    classId,
+  );
+  const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
+  const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
+  const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const fetchedData = await getData();
-      setData(fetchedData);
-    };
-
-    const fetchClassId = async () => {
-      const response = await fetch("/api/getClassIdByToken");
-      if (response.ok) {
-        const data = await response.json();
-        setClassId(data.classId);
-      } else {
-        console.error("Erreur lors de la récupération du classId");
-      }
-    };
-
-    fetchData();
     fetchClassId();
-  }, []);
+  }, [fetchClassId]);
 
-  const handleAllowSignature = () => {
+  useEffect(() => {
     if (classId) {
-      allowSignature(classId);
-    } else {
-      alert("Aucune classe ne vous est affectée");
+      fetchStudents();
+      fetchClassName();
+      fetchSignatures();
     }
-  };
+  }, [classId, fetchStudents, fetchClassName, fetchSignatures]);
+
+  useEffect(() => {
+    fetchSchoolDetails();
+  }, [fetchSchoolDetails]);
+
+  useEffect(() => {
+    if (students.length > 0 && className !== null) {
+      // Filter out students that are not students
+      const filteredStudents = students.filter(
+        (student) => student.role === "STUDENT",
+      );
+
+      // Map over the filtered students and get the signature status
+      const combinedData = filteredStudents.map((student) => {
+        const studentSignature = signatures.find(
+          (signature) => signature.userId === student.id,
+        );
+
+        // Set the signature status to pending if the student has no signature
+        let signatureStatus: StatusType = "pending";
+        if (studentSignature) {
+          signatureStatus =
+            (studentSignature.status as StatusType) || "received";
+        }
+        console.log(className);
+
+        return {
+          id: student.id.toString(),
+          class: className || "",
+          lastname: student.lastname,
+          firstname: student.firstname,
+          email: student.email,
+          signature: signatureStatus,
+        };
+      });
+
+      // Set the data with the combined results
+      setData(combinedData);
+    }
+  }, [students, signatures, className]);
 
   return (
     <>
       <h1 className="text-center text-2xl pb-8">Teacher Dashboard</h1>
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto py-10 flex justify-center">
         <DataTable columns={columns} data={data} />
       </div>
     </>

@@ -3,8 +3,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useToast } from "@/hooks/use-toast";
 
-interface Lesson {
+export interface Lesson {
   id: number;
   name: string;
   dateStart: string;
@@ -23,8 +24,8 @@ export default function CalendarTest() {
   });
   const [events, setEvents] = useState<Lesson[]>([]);
   const [userClassId, setUserClassId] = useState(null);
+  const { toast } = useToast();
 
-  // Fetch classId by token
   useEffect(() => {
     const fetchClassId = async () => {
       try {
@@ -43,12 +44,11 @@ export default function CalendarTest() {
     fetchClassId();
   }, []);
 
-  // Fetch lessons
   useEffect(() => {
     if (userClassId) {
       const fetchLessons = async () => {
         try {
-          const response = await fetch(`/api/lessons?classId=${userClassId}`); // Ajoute userClassId dans la requête
+          const response = await fetch(`/api/lessons?classId=${userClassId}`);
           if (response.ok) {
             const data: Lesson[] = await response.json();
             setEvents(data);
@@ -64,19 +64,22 @@ export default function CalendarTest() {
     }
   }, [userClassId]);
 
-  // Handle date click event
   const handleDateClick = (arg: { dateStr: string }) => {
     setNewEvent({
       ...newEvent,
-      dateStart: new Date(arg.dateStr).toISOString(), // Utilisation directe de la date sans manipulation
+      dateStart: new Date(arg.dateStr).toISOString(),
       dateEnd: new Date(
+<<<<<<< HEAD
         new Date(arg.dateStr).getTime() + 60 * 60 * 1000,
       ).toISOString(), // Par défaut, ajouter 1h à l'événement
+=======
+        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
+      ).toISOString(), // Add 1 hour by default
+>>>>>>> dev
     });
     setShowModal(true);
   };
 
-  // Handle modal submission
   const handleModalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -87,7 +90,6 @@ export default function CalendarTest() {
     }
   };
 
-  // Add lesson to the server
   const addLesson = async (lesson: Lesson) => {
     try {
       const response = await fetch("/api/lessons", {
@@ -95,15 +97,19 @@ export default function CalendarTest() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(lesson), // Ensure lesson includes classId
+        body: JSON.stringify(lesson),
       });
 
       if (!response.ok) {
         throw new Error("Error adding lesson");
       }
+      toast({
+        title: "Course added successfully",
+        className: "bg-green-400",
+        duration: 2000,
+    });
 
       const createdLesson = await response.json();
-      console.log("Lesson added successfully:", createdLesson);
 
       if (calendarRef.current) {
         calendarRef.current.getApi().addEvent({
@@ -116,9 +122,25 @@ export default function CalendarTest() {
       setEvents((prevEvents) => [...prevEvents, createdLesson]);
     } catch (error) {
       console.error(error);
-      alert("Failed to add lesson. Please try again."); // User feedback
+      alert("Failed to add lesson. Please try again.");
     }
   };
+
+  const formatDateTimeLocal = (dateString: string) => {
+    if (!dateString) return ""; // Prevent formatting invalid dates
+    return new Date(dateString)
+      .toLocaleString("sv-SE", {
+        timeZone: "Europe/Paris",
+        hour12: false,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      .slice(0, 16); // For datetime-local, we need YYYY-MM-DDTHH:mm format
+  };
+
   return (
     <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto  mb-5 p-6">
       <FullCalendar
@@ -141,8 +163,8 @@ export default function CalendarTest() {
         initialView="dayGridMonth"
         events={events.map((event) => ({
           title: event.name,
-          start: new Date(event.dateStart).getTime() + 60 * 60 * 2000,
-          end: new Date(event.dateEnd).getTime() + 60 * 60 * 2000,
+          start: new Date(event.dateStart).toISOString(),
+          end: new Date(event.dateEnd).toISOString(),
         }))}
       />
       {showModal && (
@@ -162,17 +184,7 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={new Date(newEvent.dateStart)
-                .toLocaleString("sv-SE", {
-                  timeZone: "Europe/Paris",
-                  hour12: false,
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                .slice(0, 16)}
+              value={formatDateTimeLocal(newEvent.dateStart)}
               onChange={(e) =>
                 setNewEvent({
                   ...newEvent,
@@ -183,17 +195,7 @@ export default function CalendarTest() {
             />
             <input
               type="datetime-local"
-              value={new Date(newEvent.dateEnd)
-                .toLocaleString("sv-SE", {
-                  timeZone: "Europe/Paris",
-                  hour12: false,
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                .slice(0, 16)}
+              value={formatDateTimeLocal(newEvent.dateEnd)}
               onChange={(e) =>
                 setNewEvent({
                   ...newEvent,
