@@ -68,7 +68,7 @@ export default function AddTeacherForm() {
   return (
     <Card className="w-96">
       <CardHeader>
-        <CardTitle>Add a new Teacher</CardTitle>
+        <CardTitle className="text-center">Add a new Teacher</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
@@ -115,9 +115,9 @@ export default function AddTeacherForm() {
             />
           </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          <CardFooter className="flex justify-end">
+          <div className="flex justify-end items-center pt-6">
             <Button type="submit">Submit</Button>
-          </CardFooter>
+          </div>
         </form>
       </CardContent>
     </Card>

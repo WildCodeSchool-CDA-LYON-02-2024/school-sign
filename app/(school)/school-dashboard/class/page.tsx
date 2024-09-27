@@ -12,6 +12,8 @@ import { useClassContext } from "@/components/context/ClassContext";
 // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import AttendanceSheet from "@/components/docs/AttendanceSheet";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);
@@ -37,7 +39,7 @@ export default function ClassList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes"
+            errorData.error || "An error occurred while fetching classes",
           );
         }
       } catch (err) {
@@ -57,42 +59,47 @@ export default function ClassList() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
+      <div className="space-y-6 px-10 pb-16 md:block">
+        <div className="space-y-0.5">
+          <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
+          <p className="text-muted-foreground">Consult School Classes.</p>
+        </div>
+        <Separator />
+        <div className="flex flex-col items-center justify-center gap-6">
+          {error && <p className="text-red-500">{error}</p>}
 
-      <div className="flex items-center justify-center">
-        {error && <p className="text-red-500">{error}</p>}
+          {loading ? (
+            <p>Loading...</p>
+          ) : classData.length > 0 ? (
+            <ul>
+              {classData.map((cls: any) => (
+                <li key={cls.id}>
+                  <Card className="w-40">
+                    <CardHeader>
+                      <CardTitle className="text-center">
+                        <Link
+                          href={`/school-dashboard/class/${cls.name}/student/`}
+                        >
+                          <button onClick={() => handleClassClick(cls.id)}>
+                            {cls.name}
+                          </button>
+                        </Link>
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No classes found.</p>
+          )}
+        </div>
 
-        {loading ? (
-          <p>Loading...</p>
-        ) : classData.length > 0 ? (
-          <ul>
-            {classData.map((cls: any) => (
-              <li key={cls.id}>
-                <Card className="w-40">
-                  <CardHeader>
-                    <CardTitle className="text-center">
-                      <Link
-                        href={`/school-dashboard/class/${cls.name}/student/`}
-                      >
-                        <button onClick={() => handleClassClick(cls.id)}>
-                          {cls.name}
-                        </button>
-                      </Link>
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No classes found.</p>
-        )}
-      </div>
-
-      <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-10">
-        <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school-dashboard/class/addClass">Add a new class</Link>
-        </Button>
+        <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-10">
+          <Button className="bg-purple text-seasame" variant="outline">
+            <Link href="/school-dashboard/class/addClass">Add a new class</Link>
+          </Button>
+        </div>
       </div>
     </>
   );

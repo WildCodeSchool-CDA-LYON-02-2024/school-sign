@@ -60,7 +60,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching teachers"
           );
         }
       } catch (err) {
@@ -102,7 +102,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
           const teacherErrorData = await teacherRes.json();
           setError(
             teacherErrorData.error ||
-              "An error occurred while fetching teachers",
+              "An error occurred while fetching teachers"
           );
         }
 
@@ -113,7 +113,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
           const studentErrorData = await studentRes.json();
           setError(
             studentErrorData.error ||
-              "An error occurred while fetching students",
+              "An error occurred while fetching students"
           );
         }
 
@@ -159,16 +159,16 @@ export default function StudentList({ params }: { params: { name: string } }) {
         setTeachers((prevTeachers) =>
           prevTeachers.some((teacher) => teacher.id === updatedTeacher.id)
             ? prevTeachers.map((teacher) =>
-                teacher.id === updatedTeacher.id ? updatedTeacher : teacher,
+                teacher.id === updatedTeacher.id ? updatedTeacher : teacher
               )
-            : [...prevTeachers, updatedTeacher],
+            : [...prevTeachers, updatedTeacher]
         );
         setSelectedTeacher(null);
         setError(null);
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while updating the teacher.",
+          errorData.error || "An error occurred while updating the teacher."
         );
       }
     } catch (err) {
@@ -187,7 +187,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
         <>
           {/* Display teachers */}
           <div className="flex items-center justify-center flex-col gap-4 p-4 w-full">
-            <h2 className="text-xl font-bold">Teachers</h2>
+            <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
             {teachers.length > 0 ? (
               <ul className="space-y-4">
                 {teachers

@@ -87,9 +87,9 @@ export default function AddClassForm() {
             />
           </div>
           {error && <p className="text-red-500">{error}</p>}
-          <CardFooter className="flex justify-end">
+          <div className="flex justify-end items-center pt-6">
             <Button type="submit">Submit</Button>
-          </CardFooter>
+          </div>
         </form>
       </CardContent>
     </Card>
