@@ -23,7 +23,7 @@ export default function BottomNav({ links }: NavProps) {
         return (
           <MenubarMenu key={index}>
             <Link
-              href={link.href}
+              href={link.href ?? "#"} // fallback to # if href is not defined
               className={cn(
                 buttonVariants({ variant: link.variant, size: "lg" }),
                 "flex flex-col items-center h-full w- py-1 m-1",

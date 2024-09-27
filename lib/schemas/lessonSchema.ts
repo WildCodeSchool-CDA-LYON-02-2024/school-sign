@@ -16,6 +16,6 @@ export const lessonSchema = z.object({
   }),
   dateEnd: z.string().refine((value) => !isNaN(Date.parse(value)), {
     message: "La date de fin doit être une date valide.",
-  }), 
+  }),
   classId: z.number().optional(),
 });

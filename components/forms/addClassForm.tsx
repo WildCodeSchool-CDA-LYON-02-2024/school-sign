@@ -31,7 +31,8 @@ export default function AddClassForm() {
 
     if (!result.success) {
       setError(
-        "Invalid input: " + result.error.errors.map((e) => e.message).join(", ")
+        "Invalid input: " +
+          result.error.errors.map((e) => e.message).join(", "),
       );
       return;
     }

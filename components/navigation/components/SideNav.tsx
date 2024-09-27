@@ -21,7 +21,7 @@ export default function SideNav({ links }: NavProps) {
           return (
             <Link
               key={index}
-              href={link.href}
+              href={link.href ?? "#"} // fallback to # if href is not defined
               className={cn(
                 buttonVariants({ variant: link.variant, size: "sm" }),
                 "w-32",

@@ -13,7 +13,7 @@ interface Lesson {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
@@ -36,8 +36,17 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const payload = await verifyToken(tokenCookie);
+<<<<<<< HEAD
+    console.log(payload);
+
+    // Récupérer classId à partir du payload
+    const classId = payload.classId;
+    if (classId === undefined) {
+      return res.status(401).json({ error: "Class ID not found in token." });
+=======
     if (!payload || !payload.classId) {
       return res.status(401).json({ error: "Invalid token." });
+>>>>>>> dev
     }
 
     const classId = payload.classId;
@@ -73,7 +82,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
     if (!name || !dateStart || !dateEnd || classId === undefined) {
       return res.status(400).json({
-        error: "Fields 'name', 'dateStart', 'dateEnd', and 'classId' are required.",
+        error:
+          "Fields 'name', 'dateStart', 'dateEnd', and 'classId' are required.",
       });
     }
 

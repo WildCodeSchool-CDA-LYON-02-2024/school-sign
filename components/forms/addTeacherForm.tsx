@@ -56,7 +56,7 @@ export default function AddTeacherForm() {
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while adding the teacher"
+          errorData.error || "An error occurred while adding the teacher",
         );
       }
     } catch (err) {

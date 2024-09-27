@@ -9,10 +9,10 @@ export function useFetchClassDetails(
   setTeacherName: (name: string) => void,
   setClassId: (id: number | null) => void,
   setClassName: (name: string | null) => void,
-  classId: number | null 
+  classId: number | null,
 ) {
   const fetchClassName = useCallback(async () => {
-    if (classId === null) return; 
+    if (classId === null) return;
 
     try {
       const res = await fetch("/api/class");
@@ -21,7 +21,9 @@ export function useFetchClassDetails(
       }
 
       const data = await res.json();
-      const currentClass = data.classSections.find((cls: ClassSection) => cls.id === classId);
+      const currentClass = data.classSections.find(
+        (cls: ClassSection) => cls.id === classId,
+      );
       if (currentClass) {
         setClassName(currentClass.name);
       } else {
@@ -33,7 +35,7 @@ export function useFetchClassDetails(
   }, [setClassName, classId]);
 
   useEffect(() => {
-    fetchClassName(); 
+    fetchClassName();
   }, [fetchClassName]);
 
   const fetchClassId = useCallback(async () => {
@@ -48,7 +50,7 @@ export function useFetchClassDetails(
       }
     } catch (error) {
       console.error("Error fetching class ID:", error);
-      setClassId(null); 
+      setClassId(null);
     }
   }, [setTeacherName, setClassId]);
 
