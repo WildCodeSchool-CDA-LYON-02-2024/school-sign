@@ -36,17 +36,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const payload = await verifyToken(tokenCookie);
-<<<<<<< HEAD
-    console.log(payload);
-
-    // Récupérer classId à partir du payload
-    const classId = payload.classId;
-    if (classId === undefined) {
-      return res.status(401).json({ error: "Class ID not found in token." });
-=======
     if (!payload || !payload.classId) {
       return res.status(401).json({ error: "Invalid token." });
->>>>>>> dev
     }
 
     const classId = payload.classId;

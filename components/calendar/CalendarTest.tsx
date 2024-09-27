@@ -69,13 +69,8 @@ export default function CalendarTest() {
       ...newEvent,
       dateStart: new Date(arg.dateStr).toISOString(),
       dateEnd: new Date(
-<<<<<<< HEAD
-        new Date(arg.dateStr).getTime() + 60 * 60 * 1000,
-      ).toISOString(), // Par défaut, ajouter 1h à l'événement
-=======
         new Date(arg.dateStr).getTime() + 60 * 60 * 1000
       ).toISOString(), // Add 1 hour by default
->>>>>>> dev
     });
     setShowModal(true);
   };
