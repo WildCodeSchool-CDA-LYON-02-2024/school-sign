@@ -1,10 +1,30 @@
 "use client";
 
-export default function TeacherSettings() {
+import { Separator } from "@/components/ui/separator";
+import Logout from "@/components/logout";
+import { useIsMobile } from "@/hooks/useIsMobile";
+
+export default function SchoolSettings() {
+  const isMobile = useIsMobile();
+
   return (
     <>
-      <h1 className="text-center text-2xl pb-8">School Settings</h1>
-      <div className="flex items-center justify-center"></div>
+      <div className="space-y-6 px-10 pb-16 md:block">
+        <div className="space-y-0.5">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                School Settings
+              </h1>
+              <p className="text-muted-foreground">
+                Manage your account settings.
+              </p>
+            </div>
+            {isMobile && <Logout />}
+          </div>
+        </div>
+        <Separator />
+      </div>
     </>
   );
 }

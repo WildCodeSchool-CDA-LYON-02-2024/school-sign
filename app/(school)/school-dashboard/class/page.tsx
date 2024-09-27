@@ -37,7 +37,7 @@ export default function ClassList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes",
+            errorData.error || "An error occurred while fetching classes"
           );
         }
       } catch (err) {
@@ -57,7 +57,7 @@ export default function ClassList() {
 
   return (
     <>
-      <h1 className="text-center text-2xl pb-8">School Classes</h1>
+      <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
 
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}

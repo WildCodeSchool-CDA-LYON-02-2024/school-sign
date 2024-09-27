@@ -38,7 +38,7 @@ export default function TeacherList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching teachers"
           );
         }
       } catch (err) {
@@ -54,7 +54,7 @@ export default function TeacherList() {
 
   return (
     <>
-      <h1 className="text-center text-2xl pb-8">School Teachers</h1>
+      <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
 
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}
