@@ -4,15 +4,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import ClassComponent from "./ClassComponent";
-<<<<<<< HEAD
-import SignatureActions from "./SignatureActions";
-import StudentList, { Student, Signature } from "./StudentList";
-import { useFetchStudents } from "@/hooks/useFetchStudents";
-=======
 import StudentList, { Student, Signature } from "./StudentList";
 import { useFetchStudents } from "@/hooks/useFetchStudents";
 import { useFetchLessons } from "@/hooks/useFetchLesson";
->>>>>>> dev
 import {
   SchoolDetails,
   useFetchSchoolDetails,
@@ -30,41 +24,21 @@ export default function ClassWithSignatures() {
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
-    null,
-  );
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
-<<<<<<< HEAD
-
-  const { allowSignature, disallowSignature, isSignatureAllowed } =
-    useSignatureContext();
-=======
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
->>>>>>> dev
   const { toast } = useToast();
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
   const { allowSignature, disallowSignature, isSignatureAllowed } = useSignatureContext();
 
-<<<<<<< HEAD
-  const { fetchClassId, fetchClassName } = useFetchClassDetails(
-    setTeacherName,
-    setClassId,
-    setClassName,
-    classId,
-  );
-  const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
-  const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
-  const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
-=======
   // Fetch hooks
   const { fetchClassId, fetchClassName } = useFetchClassDetails(setTeacherName, setClassId, setClassName, classId);
   const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
   const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
   const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
   const { fetchLessons } = useFetchLessons(classId, setLessons, setError);
->>>>>>> dev
 
   // Fetch initial data
   useEffect(() => {
@@ -84,14 +58,6 @@ export default function ClassWithSignatures() {
   // Fetch students, class name, signatures, and lessons when classId is available
   useEffect(() => {
     if (classId) {
-<<<<<<< HEAD
-      fetchStudents();
-      fetchClassName();
-      fetchSignatures();
-    }
-  }, [classId, fetchStudents, fetchClassName, fetchSignatures]);
-
-=======
       Promise.all([
         fetchStudents(),
         fetchClassName(),
@@ -100,7 +66,6 @@ export default function ClassWithSignatures() {
       ]).catch(err => setError("Failed to fetch necessary data."));
     }
   }, [classId, fetchStudents, fetchClassName, fetchSignatures, fetchLessons]);
->>>>>>> dev
   useEffect(() => {
     const fetchDetails = async () => {
       setLoading(true);
@@ -125,16 +90,6 @@ export default function ClassWithSignatures() {
   };
 
   const handleGeneratePDF = async () => {
-<<<<<<< HEAD
-    const studentSignatures = students.map((student) => {
-      const studentSignature = signatures.find(
-        (sig) => sig.userId === student.id,
-      );
-      return {
-        userId: student.id,
-        hashedSign: studentSignature ? studentSignature.hashedSign : "",
-      };
-=======
     const currentLesson = lessons.find(lesson => 
         isLessonOngoing(new Date(lesson.dateStart), new Date(lesson.dateEnd))
     );
@@ -159,7 +114,6 @@ export default function ClassWithSignatures() {
             userId: student.id,
             hashedSign: studentSignature ? studentSignature.hashedSign : "",
         };
->>>>>>> dev
     });
 
     if (students.length === 0 || !schoolDetails || !className || !teacherName) {
@@ -173,32 +127,6 @@ export default function ClassWithSignatures() {
     }
 
     try {
-<<<<<<< HEAD
-      await PDFGenerator({
-        students,
-        signatures: studentSignatures,
-        schoolDetails,
-        className,
-        teacherName,
-        toast,
-      });
-      toast({
-        title: "PDF generated successfully!",
-        className: "bg-green-400",
-        duration: 2000,
-      });
-    } catch (error: unknown) {
-      // Explicitly typing the error as unknown
-      console.error("Error generating PDF:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "An unknown error occurred.";
-      toast({
-        title: "Failed to generate PDF.",
-        description: errorMessage,
-        className: "bg-red-500",
-        duration: 2000,
-      });
-=======
         await PDFGenerator({
             students,
             signatures: studentSignatures,
@@ -224,9 +152,9 @@ export default function ClassWithSignatures() {
             className: "bg-red-500",
             duration: 2000,
         });
->>>>>>> dev
     }
-  };
+};
+
 
   const formatTime = (date: Date): string => {
     const hours = date.getHours().toString().padStart(2, "0");
@@ -243,21 +171,6 @@ export default function ClassWithSignatures() {
       </div>
       {classId ? (
         <div className="flex flex-col items-center">
-<<<<<<< HEAD
-          <ClassComponent className={className} classId={classId} />
-          <SignatureActions
-            classId={classId}
-            isSignatureAllowed={isSignatureAllowed}
-            allowSignature={allowSignature}
-            disallowSignature={disallowSignature}
-            toast={toast}
-          />
-          <StudentList
-            students={students}
-            signatures={signatures}
-            error={error}
-          />
-=======
           {lessons.length > 0 ? (
             lessons.map(lesson => {
               const startDate = new Date(lesson.dateStart);
@@ -296,7 +209,6 @@ export default function ClassWithSignatures() {
             <p className="mb-5">No ongoing lesson.</p>
           )}
           {error && <p className="text-red-500">{error}</p>}
->>>>>>> dev
         </div>
       ) : (
         <p>No class found.</p>

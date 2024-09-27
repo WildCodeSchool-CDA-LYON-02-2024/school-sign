@@ -59,20 +59,10 @@ export default function StudentList({
                     <CardContent className="flex flex-col">
                       {studentSignature ? (
                         <Image
-<<<<<<< HEAD
-                          src={
-                            findSignatureForStudent(student.id) ||
-                            "/default-signature.png"
-                          }
-                          alt={`Signature of ${student.firstname} ${student.lastname}`}
-                          width={600}
-                          height={500}
-=======
                           src={studentSignature || "/default-signature.png"} 
                           alt={`Signature of ${student.firstname} ${student.lastname}`}
                           width={160}
                           height={100}
->>>>>>> dev
                           priority
                         />
                       ) : (

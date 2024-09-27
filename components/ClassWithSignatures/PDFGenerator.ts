@@ -17,21 +17,14 @@ interface PDFGeneratorProps {
   } | null;
   className: string | null;
   teacherName: string | null;
-<<<<<<< HEAD
-=======
   lessonName: string | null; // Nom de la leçon
   startDate: Date | null; // Date de début de la leçon
   endDate: Date | null; // Date de fin de la leçon
->>>>>>> dev
   toast: (options: {
     title: string;
     className: string;
     duration: number;
-<<<<<<< HEAD
-  }) => void; // Specify toast type
-=======
   }) => void;
->>>>>>> dev
 }
 
 export default async function PDFGenerator({
@@ -212,11 +205,7 @@ export default async function PDFGenerator({
           const response = await fetch(signatureUrl);
           if (!response.ok)
             throw new Error(
-<<<<<<< HEAD
-              `Failed to fetch signature: ${response.statusText}`,
-=======
               `Failed to fetch signature: ${response.statusText}`
->>>>>>> dev
             );
           const signatureImageBytes = await response.arrayBuffer();
           const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
