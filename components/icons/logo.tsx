@@ -3,11 +3,13 @@ import { ComponentPropsWithoutRef } from "react";
 export const LogoIcon = (
   props: ComponentPropsWithoutRef<"svg"> & { size?: number },
 ) => {
+  const { size = 100 } = props;
   return (
     <svg
-      width={props.width}
-      height={props.height}
+      width={size}
+      height={size}
       viewBox="0 0 266 195"
+      preserveAspectRatio="xMidYMid meet"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
