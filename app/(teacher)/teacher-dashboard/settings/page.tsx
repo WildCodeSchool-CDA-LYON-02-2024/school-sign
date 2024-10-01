@@ -9,13 +9,14 @@ export default function TeacherSettings() {
 
   return (
     <>
-      <div className="space-y-6 px-10 pb-16 md:block">
+      <div className="space-y-6 pl-10 pb-16 md:block">
         <div className="space-y-0.5">
           <div className="flex justify-between items-center">
             <div>
-
-              <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-              <p className="text-muted-foreground">Manage your account settings.</p>
+              <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+              <p className="text-muted-foreground">
+                Manage your account settings.
+              </p>
             </div>
             {isMobile && <Logout />}
           </div>

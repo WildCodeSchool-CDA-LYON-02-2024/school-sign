@@ -24,17 +24,25 @@ export default function ClassWithSignatures() {
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
-  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(null);
+  const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
-  const { allowSignature, disallowSignature, isSignatureAllowed } = useSignatureContext();
+  const { allowSignature, disallowSignature, isSignatureAllowed } =
+    useSignatureContext();
 
   // Fetch hooks
-  const { fetchClassId, fetchClassName } = useFetchClassDetails(setTeacherName, setClassId, setClassName, classId);
+  const { fetchClassId, fetchClassName } = useFetchClassDetails(
+    setTeacherName,
+    setClassId,
+    setClassName,
+    classId,
+  );
   const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
   const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
   const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
@@ -63,7 +71,7 @@ export default function ClassWithSignatures() {
         fetchClassName(),
         fetchSignatures(),
         fetchLessons(),
-      ]).catch(err => setError("Failed to fetch necessary data."));
+      ]).catch((err) => setError("Failed to fetch necessary data."));
     }
   }, [classId, fetchStudents, fetchClassName, fetchSignatures, fetchLessons]);
   useEffect(() => {
@@ -90,71 +98,71 @@ export default function ClassWithSignatures() {
   };
 
   const handleGeneratePDF = async () => {
-    const currentLesson = lessons.find(lesson => 
-        isLessonOngoing(new Date(lesson.dateStart), new Date(lesson.dateEnd))
+    const currentLesson = lessons.find((lesson) =>
+      isLessonOngoing(new Date(lesson.dateStart), new Date(lesson.dateEnd)),
     );
 
     if (!currentLesson) {
-        toast({
-            title: "Erreur",
-            description: "Aucune leçon en cours trouvée.",
-            className: "bg-red-500",
-            duration: 2000,
-        });
-        return;
+      toast({
+        title: "Erreur",
+        description: "Aucune leçon en cours trouvée.",
+        className: "bg-red-500",
+        duration: 2000,
+      });
+      return;
     }
 
     const currentLessonId = currentLesson.id;
-    const studentSignatures = students.map(student => {
-        const studentSignature = signatures.find(sig => 
-            sig.userId === student.id && sig.lessonId === currentLessonId
-        );
+    const studentSignatures = students.map((student) => {
+      const studentSignature = signatures.find(
+        (sig) => sig.userId === student.id && sig.lessonId === currentLessonId,
+      );
 
-        return {
-            userId: student.id,
-            hashedSign: studentSignature ? studentSignature.hashedSign : "",
-        };
+      return {
+        userId: student.id,
+        hashedSign: studentSignature ? studentSignature.hashedSign : "",
+      };
     });
 
     if (students.length === 0 || !schoolDetails || !className || !teacherName) {
-        toast({
-            title: "Error",
-            description: "Missing required data to generate PDF.",
-            className: "bg-red-500",
-            duration: 2000,
-        });
-        return;
+      toast({
+        title: "Error",
+        description: "Missing required data to generate PDF.",
+        className: "bg-red-500",
+        duration: 2000,
+      });
+      return;
     }
 
     try {
-        await PDFGenerator({
-            students,
-            signatures: studentSignatures,
-            schoolDetails,
-            className,
-            teacherName,
-            lessonName: currentLesson.name,
-            startDate: new Date(currentLesson.dateStart),
-            endDate: new Date(currentLesson.dateEnd),
-            toast,
-        });
-        toast({
-            title: "PDF generated successfully!",
-            className: "bg-green-400",
-            duration: 2000,
-        });
+      await PDFGenerator({
+        students,
+        signatures: studentSignatures,
+        schoolDetails,
+        className,
+        teacherName,
+        lessonName: currentLesson.name,
+        startDate: new Date(currentLesson.dateStart),
+        endDate: new Date(currentLesson.dateEnd),
+        toast,
+      });
+      toast({
+        title: "PDF generated successfully!",
+        className: "bg-green-400",
+        duration: 2000,
+      });
     } catch (error: unknown) {
-        console.error("Error generating PDF:", error);
-        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
-        toast({
-            title: "Failed to generate PDF.",
-            description: errorMessage,
-            className: "bg-red-500",
-            duration: 2000,
-        });
+      console.error("Error generating PDF:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      toast({
+        title: "Failed to generate PDF.",
+        description: errorMessage,
+        className: "bg-red-500",
+        duration: 2000,
+      });
     }
-};
-
+  };
 
   const formatTime = (date: Date): string => {
     const hours = date.getHours().toString().padStart(2, "0");
@@ -172,7 +180,7 @@ export default function ClassWithSignatures() {
       {classId ? (
         <div className="flex flex-col items-center">
           {lessons.length > 0 ? (
-            lessons.map(lesson => {
+            lessons.map((lesson) => {
               const startDate = new Date(lesson.dateStart);
               const endDate = new Date(lesson.dateEnd);
               const lessonIsOngoing = isLessonOngoing(startDate, endDate);
@@ -199,7 +207,10 @@ export default function ClassWithSignatures() {
                     currentLessonId={lesson.id}
                     error={error}
                   />
-                  <Button onClick={handleGeneratePDF} disabled={students.length === 0}>
+                  <Button
+                    onClick={handleGeneratePDF}
+                    disabled={students.length === 0}
+                  >
                     Generate PDF
                   </Button>
                 </div>

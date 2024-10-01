@@ -205,7 +205,7 @@ export default async function PDFGenerator({
           const response = await fetch(signatureUrl);
           if (!response.ok)
             throw new Error(
-              `Failed to fetch signature: ${response.statusText}`
+              `Failed to fetch signature: ${response.statusText}`,
             );
           const signatureImageBytes = await response.arrayBuffer();
           const signatureImage = await pdfDoc.embedPng(signatureImageBytes);

@@ -5,7 +5,7 @@ import CardComponent from "@/components/card/CardComponent";
 import { CardEl } from "@/components/card/cardTypes";
 import { Separator } from "@/components/ui/separator";
 
-export default function TeacherDocuments() {
+export default function StudentDocuments() {
   const elements: CardEl[] = [
     {
       name: "Schooling contract",

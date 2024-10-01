@@ -13,7 +13,7 @@ import SelectMenu from "@/components/SelectMenu";
 
 // ui
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
 interface Student {
@@ -187,7 +187,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
         <>
           {/* Display teachers */}
           <div className="flex items-center justify-center flex-col gap-4 p-4 w-full">
-            <h2 className="text-xl font-bold">Teachers</h2>
+            <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
             {teachers.length > 0 ? (
               <ul className="space-y-4">
                 {teachers

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useClassContext } from "@/components/context/ClassContext";
 
 // ui
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,7 @@ export default function AddStudentForm() {
         }),
         credentials: "include",
       });
+      console.log(res);
 
       if (res.ok) {
         toast({
@@ -53,15 +54,23 @@ export default function AddStudentForm() {
         });
         router.back();
       } else {
-        toast({
-          className: "bg-red-500",
-          description: "Email already in use",
-          duration: 2000,
-        });
+        // toast({
+        //   className: "bg-red-500",
+        //   description: "Email already in use",
+        //   duration: 2000,
+        // });
         const errorData = await res.json();
-        setError(
-          errorData.error || "An error occurred while adding the student",
-        );
+        console.log(errorData.details);
+
+        if (errorData.error) {
+          setError(errorData.error);
+        } else if (res.status === 409) {
+          setError("The email is already associated with another student.");
+        } else if (res.status === 400) {
+          setError("Invalid input data. Please check the form fields.");
+        } else {
+          setError("An error occurred while adding the student.");
+        }
       }
     } catch (err) {
       console.error("Request Error:", err);
@@ -72,6 +81,9 @@ export default function AddStudentForm() {
   return (
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10">
+        <CardHeader>
+          <CardTitle className="text-center">Add a Student</CardTitle>
+        </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col space-y-2">
@@ -117,9 +129,9 @@ export default function AddStudentForm() {
               />
             </div>
             {error && <p className="text-red-500 mt-2">{error}</p>}
-            <CardFooter>
+            <div className="flex justify-end items-center pt-6">
               <Button type="submit">Submit</Button>
-            </CardFooter>
+            </div>
           </form>
         </CardContent>
       </Card>

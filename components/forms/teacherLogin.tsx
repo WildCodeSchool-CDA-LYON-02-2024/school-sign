@@ -70,49 +70,51 @@ export default function TeacherLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <Card className="w-96 mt-10 justify-center items-center">
-        <CardHeader className="flex items-center justify-center">
-          <CardTitle> Teacher login</CardTitle>
-          <CardDescription>Enter your login details</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+    <Card className="w-96">
+      <CardHeader>
+        <CardTitle className="text-center"> Teacher login</CardTitle>
+        <CardDescription className="text-center">
+          Enter your login details
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <p>
-                New here?
-                <Button variant="link" asChild>
-                  <Link href="/school-register">Click here to register</Link>
-                </Button>
-              </p>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <div className="mt-4 text-center text-sm">
+              New here?
+              <Button variant="link" asChild>
+                <Link href="/school-register" className="underline">
+                  Click here to register
+                </Link>
+              </Button>
             </div>
-            <CardFooter className="flex justify-end">
-              <Button type="submit">Submit</Button>
-            </CardFooter>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          </div>
+          <CardFooter className="flex justify-end">
+            <Button type="submit">Submit</Button>
+          </CardFooter>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

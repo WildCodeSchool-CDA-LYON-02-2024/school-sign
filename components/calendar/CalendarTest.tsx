@@ -69,7 +69,7 @@ export default function CalendarTest() {
       ...newEvent,
       dateStart: new Date(arg.dateStr).toISOString(),
       dateEnd: new Date(
-        new Date(arg.dateStr).getTime() + 60 * 60 * 1000
+        new Date(arg.dateStr).getTime() + 60 * 60 * 1000,
       ).toISOString(), // Add 1 hour by default
     });
     setShowModal(true);
@@ -102,7 +102,7 @@ export default function CalendarTest() {
         title: "Course added successfully",
         className: "bg-green-400",
         duration: 2000,
-    });
+      });
 
       const createdLesson = await response.json();
 
@@ -137,7 +137,8 @@ export default function CalendarTest() {
   };
 
   return (
-    <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto  mb-5 p-6">
+    // <div className="w-full sm:w-2/5 md:w-3/5 lg:w-4/5 h-[70vh] sm:h-[80vh] lg:h-[90vh] mx-auto  mb-5 p-6">
+    <>
       <FullCalendar
         height={750}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -206,6 +207,6 @@ export default function CalendarTest() {
           </form>
         </div>
       )}
-    </div>
+    </>
   );
 }

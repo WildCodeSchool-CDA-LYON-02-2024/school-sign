@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import Logout from "@/components/logout";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
-export default function SchoolSettings() {
+export default function StudentSettings() {
   const isMobile = useIsMobile();
 
   return (
@@ -13,7 +13,7 @@ export default function SchoolSettings() {
         <div className="space-y-0.5">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+              <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
               <p className="text-muted-foreground">
                 Manage your account settings.
               </p>

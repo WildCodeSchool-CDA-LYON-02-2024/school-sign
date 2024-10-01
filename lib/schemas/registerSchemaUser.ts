@@ -17,7 +17,14 @@ export const registerSchemaUser = z.object({
     })
     .max(255, {
       message: "Le mot de passe doit comporter au maximum 255 caractères.",
-    }),
+    })
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      {
+        message:
+          "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial parmi @$!%*?&.",
+      },
+    ),
   classId: z.coerce.number().optional(),
   role: z.enum(["STUDENT", "TEACHER", "SCHOOL"]).optional(),
 });

@@ -42,18 +42,18 @@ export default function SignatureActions({
   return (
     <div className="flex flex-col item-center">
       <div className="flex justify-center">
-      <button
-        onClick={handleAllowSignature}
-        className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-      >
-        Authorise signatures
-      </button>
-      <button
-        onClick={handleDisallowSignature}
-        className="px-4 py-2 bg-red-500 text-white rounded"
-      >
-        Disable signatures
-      </button>
+        <button
+          onClick={handleAllowSignature}
+          className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+        >
+          Authorise signatures
+        </button>
+        <button
+          onClick={handleDisallowSignature}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Disable signatures
+        </button>
       </div>
 
       <p className="mt-4 text-center">

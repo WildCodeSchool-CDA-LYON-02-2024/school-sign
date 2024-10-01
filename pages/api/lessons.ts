@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 
 interface Lesson {
   name: string;
-  dateStart: string;  
-  dateEnd: string; 
+  dateStart: string;
+  dateEnd: string;
   classId: number;
 }
 
@@ -84,7 +84,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
       return res.status(400).json({ error: "Invalid date format." });
     }
-    
+
     if (startDate >= endDate) {
       return res
         .status(400)

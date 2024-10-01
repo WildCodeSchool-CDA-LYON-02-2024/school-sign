@@ -15,7 +15,7 @@ export interface Signature {
   id: number;
   hashedSign: string;
   lessonId?: number;
-  userId?: string; 
+  userId?: string;
   date?: string;
 }
 
@@ -34,15 +34,14 @@ export default function StudentList({
 }: StudentListProps) {
   const findSignatureForStudent = (studentId: string) => {
     const signature = signatures.find(
-      (sig) =>
-        sig.userId === studentId && sig.lessonId === currentLessonId
+      (sig) => sig.userId === studentId && sig.lessonId === currentLessonId,
     );
     return signature ? signature.hashedSign : null;
   };
 
   return (
     <>
-      {students?.length ? ( 
+      {students?.length ? (
         <ul className="flex justify-center gap-6 my-10 flex-wrap">
           {students
             .filter((student) => student.role === "STUDENT")
@@ -59,7 +58,7 @@ export default function StudentList({
                     <CardContent className="flex flex-col">
                       {studentSignature ? (
                         <Image
-                          src={studentSignature || "/default-signature.png"} 
+                          src={studentSignature || "/default-signature.png"}
                           alt={`Signature of ${student.firstname} ${student.lastname}`}
                           width={160}
                           height={100}

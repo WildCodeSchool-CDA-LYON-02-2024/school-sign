@@ -20,6 +20,7 @@ import {
   useFetchSchoolDetails,
 } from "@/hooks/useFetchSchoolDetails";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 export default function TeacherDashboard() {
   const [data, setData] = useState<ClassCol[]>([]);
@@ -100,11 +101,14 @@ export default function TeacherDashboard() {
   }, [students, signatures, className]);
 
   return (
-    <>
-      <h1 className="text-center text-2xl pb-8">Teacher Dashboard</h1>
-      <div className="container mx-auto py-10 flex justify-center">
+    <div className="space-y-6 px-10 pb-16 md:block">
+      <div className="space-y-0.5">
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+      </div>
+      <Separator />
+      <div className="py-10 flex flex-col justify-center">
         <DataTable columns={columns} data={data} />
       </div>
-    </>
+    </div>
   );
 }

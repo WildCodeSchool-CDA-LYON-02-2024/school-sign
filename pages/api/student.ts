@@ -1,7 +1,12 @@
+// next
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Role } from "@prisma/client";
-import bcrypt from "bcrypt";
+
+// prisma & zod
+import { Prisma, PrismaClient, Role } from "@prisma/client";
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
+import { ZodError } from "zod";
+
+import bcrypt from "bcrypt";
 import { verifyToken } from "@/lib/jwt";
 
 const prisma = new PrismaClient();
@@ -30,11 +35,11 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   // const { id } = req.query;
 
   try {
-    // Valider les données d'entrée
+    // Validate input data
     const data = registerSchemaUser.parse(req.body);
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // Obtenir l'ID de l'école et la classe à partir du token
+    // Get school and class ID from the token
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
       return res.status(401).json({ error: "Authorization token required" });
@@ -52,7 +57,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
         .json({ error: "School ID or Class ID missing from token" });
     }
 
-    // Vérifier que la classe est valide
+    // Check if class exists
     const classSection = await prisma.classsection.findUnique({
       where: { id: data.classId },
     });
@@ -61,7 +66,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: "Invalid class ID" });
     }
 
-    // Créer l'utilisateur et l'affecter à une école et à une classe
+    // Create the user and associate with school and class
     const user = await prisma.user.create({
       data: {
         firstname: data.firstname,
@@ -77,7 +82,23 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     res.status(201).json({ user });
   } catch (error) {
     console.error("API Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+
+    // Check for Prisma constraint violations (e.g., duplicate email)
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002" && error.meta?.target?.includes("email")) {
+        return res.status(409).json({ error: "Email already in use" });
+      }
+    }
+
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return res
+        .status(400)
+        .json({ error: "Validation failed", details: error.errors });
+    }
+
+    // Default to internal server error for other unhandled exceptions
+    return res.status(500).json({ error: "Internal Server Error" });
   } finally {
     await prisma.$disconnect();
   }

@@ -1,6 +1,11 @@
-// components
 import SchoolLogin from "@/components/forms/SchoolLogin";
 
 export default function LoginPageSchool() {
-  return <SchoolLogin />;
+  return (
+    <>
+      <div className="flex items-center justify-center h-screen">
+        <SchoolLogin />
+      </div>
+    </>
+  );
 }

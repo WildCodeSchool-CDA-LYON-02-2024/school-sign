@@ -15,7 +15,7 @@ export default function TeacherLayout({
         <nav>
           <TeacherNavBar />
         </nav>
-        <main className="basis-5/6 scroll">
+        <main className="basis-11/12 scroll md:pr-10">
           <div className="h-screen py-8 w-full">{children}</div>
         </main>
         <Toaster />

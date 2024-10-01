@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
-import { useSignatureContext } from "../components/context/SignatureContext";
+import { useSignatureContext } from "@/components/context/SignatureContext";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 
@@ -37,8 +37,6 @@ export default function SignatureCanvas({ lessonId }: SignatureCanvasProps) {
       const dataUrl = signaturePadRef.current.toDataURL();
       setDataURL(dataUrl);
 
-
-      
       try {
         const response = await fetch("/api/signature", {
           method: "POST",
