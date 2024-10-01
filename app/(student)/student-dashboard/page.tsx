@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSignatureContext } from "../../../components/context/SignatureContext";
-import SignatureCanvas from "../../../components/SignatureCanvas";
+import { useSignatureContext } from "@/components/context/SignatureContext";
+import SignatureCanvas from "@/components/SignatureCanvas";
 import { useFetchLessons } from "@/hooks/useFetchLesson";
 import { Lesson } from "@/components/calendar/CalendarTest";
 import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 import { Signature } from "@/components/ClassWithSignatures/StudentList";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import CardComponent from "@/components/card/CardComponent";
 
 export default function StudentDashboard() {
   const { isSignatureAllowed, currentClassId } = useSignatureContext();

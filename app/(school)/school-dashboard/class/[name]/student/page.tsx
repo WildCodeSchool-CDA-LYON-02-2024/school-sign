@@ -13,7 +13,7 @@ import SelectMenu from "@/components/SelectMenu";
 
 // ui
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
 interface Student {

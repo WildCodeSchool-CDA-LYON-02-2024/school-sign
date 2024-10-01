@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
-import { useSignatureContext } from "../components/context/SignatureContext";
+import { useSignatureContext } from "@/components/context/SignatureContext";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 

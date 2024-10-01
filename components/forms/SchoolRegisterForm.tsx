@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 // zod
 import { z } from "zod";
 import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
-import { toast, useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SchoolRegisterForm() {
   const [name, setName] = useState("");

@@ -13,7 +13,6 @@ import { useClassContext } from "@/components/context/ClassContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import AttendanceSheet from "@/components/docs/AttendanceSheet";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);

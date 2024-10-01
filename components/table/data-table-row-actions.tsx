@@ -13,15 +13,10 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-
-// import { labels } from "../data/data"
-// import { taskSchema } from "../data/schema"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -50,15 +45,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            {/*<DropdownMenuRadioGroup value={task.label}>*/}
-            {/*  {labels.map((label) => (*/}
-            {/*    <DropdownMenuRadioItem key={label.value} value={label.value}>*/}
-            {/*      {label.label}*/}
-            {/*    </DropdownMenuRadioItem>*/}
-            {/*  ))}*/}
-            {/*</DropdownMenuRadioGroup>*/}
-          </DropdownMenuSubContent>
+          <DropdownMenuSubContent></DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

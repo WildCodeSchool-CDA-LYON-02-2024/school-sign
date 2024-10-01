@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import Logout from "@/components/logout";
 
 export default function SchoolDashboard() {
   return (

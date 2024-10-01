@@ -3,7 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import { ClassProvider } from "@/components/context/ClassContext";
-import { SignatureProvider } from "../components/context/SignatureContext";
+import { SignatureProvider } from "@/components/context/SignatureContext";
 import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
