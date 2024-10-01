@@ -2,5 +2,11 @@
 import SchoolRegisterForm from "@/components/forms/SchoolRegisterForm";
 
 export default function RegisterPageSchool() {
-  return <SchoolRegisterForm />;
+  return (
+    <>
+      <div className="flex items-center justify-center h-screen">
+        <SchoolRegisterForm />
+      </div>
+    </>
+  );
 }
