@@ -46,18 +46,18 @@ export default function Logout() {
         className={
           isMobile
             ? cn(
-              buttonVariants({ variant: "default", size: "sm" }),
-              "bg-red-700 hover:bg-red-600 w-28 px-0",
-            )
+                buttonVariants({ variant: "default", size: "sm" }),
+                "bg-red-700 hover:bg-red-600 w-28 px-0",
+              )
             : cn(
-              buttonVariants({ variant: "default", size: "sm" }),
-              "mt-3 bg-red-700 hover:bg-red-600 w-32",
-            )
+                buttonVariants({ variant: "default", size: "sm" }),
+                "mt-3 bg-red-700 hover:bg-red-600 w-32",
+              )
         }
       >
         <ExitIcon className="mr-2 h-4 w-4" />
         Logout
-      </Link >
+      </Link>
     </>
   );
 }

@@ -37,8 +37,6 @@ export default function SignatureCanvas({ lessonId }: SignatureCanvasProps) {
       const dataUrl = signaturePadRef.current.toDataURL();
       setDataURL(dataUrl);
 
-
-      
       try {
         const response = await fetch("/api/signature", {
           method: "POST",

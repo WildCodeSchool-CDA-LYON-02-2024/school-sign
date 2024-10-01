@@ -18,7 +18,7 @@ export function useFetchStudents(
         });
         if (res.ok) {
           const data = await res.json();
-          
+
           setStudents(data.users || []);
         } else {
           throw new Error("Failed to fetch students");
