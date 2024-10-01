@@ -22,7 +22,7 @@ export default function StudentDocuments() {
   ];
 
   return (
-    <div className="space-y-6 px-10 lg:px-0 pb-16 md:block">
+    <div className="space-y-6 pl-10 pb-16 md:block">
       <div className="space-y-0.5">
         <h1 className="text-2xl font-bold tracking-tight">Documents</h1>
       </div>

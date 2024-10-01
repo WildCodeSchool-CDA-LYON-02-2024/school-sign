@@ -13,7 +13,7 @@ export default function TeacherSchedule() {
         </div>
         <Separator />
         {/* <Calendar /> */}
-        <div className="w-full pt-6 md:pr-10 lg:pr-24">
+        <div className="w-full pt-6 pr-10 lg:pr-2 lg:pr-24">
           <CalendarTest />
         </div>
       </div>
