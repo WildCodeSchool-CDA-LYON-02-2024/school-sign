@@ -3,7 +3,8 @@
 // components
 import SideNav from "@/components/navigation/components/SideNav";
 import BottomNav from "@/components/navigation/components/BottomNav";
-import { NavLink } from "@/components/navigation/components/navTypes"; // ui
+import { NavLink } from "@/components/navigation/components/navTypes";
+// ui
 import {
   CalendarIcon,
   FileTextIcon,
@@ -43,10 +44,6 @@ export default function StudentNavBar() {
   ];
 
   return (
-    <>
-      <nav>
-        {isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}
-      </nav>
-    </>
+    <>{isMobile ? <BottomNav links={links} /> : <SideNav links={links} />}</>
   );
 }
