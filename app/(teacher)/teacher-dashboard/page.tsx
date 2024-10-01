@@ -20,6 +20,7 @@ import {
   useFetchSchoolDetails,
 } from "@/hooks/useFetchSchoolDetails";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 export default function TeacherDashboard() {
   const [data, setData] = useState<ClassCol[]>([]);
@@ -28,7 +29,7 @@ export default function TeacherDashboard() {
   const [classId, setClassId] = useState<number | null>(null);
   const [className, setClassName] = useState<string | null>(null);
   const [schoolDetails, setSchoolDetails] = useState<SchoolDetails | null>(
-    null
+    null,
   );
   const [error, setError] = useState<string | null>(null);
   const [signatures, setSignatures] = useState<Signature[]>([]);
@@ -41,7 +42,7 @@ export default function TeacherDashboard() {
     setTeacherName,
     setClassId,
     setClassName,
-    classId
+    classId,
   );
   const { fetchStudents } = useFetchStudents(classId, setStudents, setError);
   const { fetchSchoolDetails } = useFetchSchoolDetails(setSchoolDetails);
@@ -67,13 +68,13 @@ export default function TeacherDashboard() {
     if (students.length > 0 && className !== null) {
       // Filter out students that are not students
       const filteredStudents = students.filter(
-        (student) => student.role === "STUDENT"
+        (student) => student.role === "STUDENT",
       );
 
       // Map over the filtered students and get the signature status
       const combinedData = filteredStudents.map((student) => {
         const studentSignature = signatures.find(
-          (signature) => signature.userId === student.id
+          (signature) => signature.userId === student.id,
         );
 
         // Set the signature status to pending if the student has no signature
@@ -100,11 +101,14 @@ export default function TeacherDashboard() {
   }, [students, signatures, className]);
 
   return (
-    <>
-      <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-      <div className="container mx-auto py-10 flex justify-center">
+    <div className="space-y-6 px-10 pb-16 md:block">
+      <div className="space-y-0.5">
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+      </div>
+      <Separator />
+      <div className="py-10 flex flex-col justify-center">
         <DataTable columns={columns} data={data} />
       </div>
-    </>
+    </div>
   );
 }

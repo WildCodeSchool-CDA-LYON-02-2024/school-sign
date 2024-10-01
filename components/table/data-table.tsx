@@ -64,9 +64,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border p-4">
+    <>
       <DataTableToolbar table={table} />
-      <Table>
+      <Table className="rounded-md border p-4">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -109,6 +109,6 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
       <DataTablePagination table={table} />
-    </div>
+    </>
   );
 }

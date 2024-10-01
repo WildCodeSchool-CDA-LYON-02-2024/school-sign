@@ -8,6 +8,8 @@ import { Lesson } from "@/components/calendar/CalendarTest";
 import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 import { Signature } from "@/components/ClassWithSignatures/StudentList";
 import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
+import CardComponent from "@/components/card/CardComponent";
 
 export default function StudentDashboard() {
   const { isSignatureAllowed, currentClassId } = useSignatureContext();
@@ -19,7 +21,7 @@ export default function StudentDashboard() {
   const { fetchLessons } = useFetchLessons(
     studentClassId,
     setLessons,
-    setError
+    setError,
   );
   const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
@@ -86,13 +88,16 @@ export default function StudentDashboard() {
         (signature) =>
           signature.lessonId === currentLessonId &&
           signature.userId ===
-            (studentId !== null ? studentId.toString() : undefined) // Convert studentId to string
+            (studentId !== null ? studentId.toString() : undefined), // Convert studentId to string
       )
     : [];
 
   return (
-    <>
-      <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+    <div className="space-y-6 px-10 lg:px-0 pb-16 md:block">
+      <div className="space-y-0.5">
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+      </div>
+      <Separator />
 
       {/* Render fetched signatures */}
       {filteredSignatures.length > 0 ? (
@@ -116,6 +121,6 @@ export default function StudentDashboard() {
       ) : (
         <p className="text-gray-500">Aucune leçon en cours pour signer.</p>
       )}
-    </>
+    </div>
   );
 }
