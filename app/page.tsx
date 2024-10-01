@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <div>
       <div className="flex items-center justify-center h-screen flex-col gap-4 p-4 md:p-36">
-        <LogoIcon size={100} />
+        <LogoIcon size={200} />
         {profiles.map((profile, index) => (
           <Button
             key={index}
