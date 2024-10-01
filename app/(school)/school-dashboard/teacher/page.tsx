@@ -9,6 +9,7 @@ import Link from "next/link";
 // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface Teacher {
   id: number;
@@ -38,7 +39,7 @@ export default function TeacherList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers"
+            errorData.error || "An error occurred while fetching teachers",
           );
         }
       } catch (err) {
@@ -54,7 +55,14 @@ export default function TeacherList() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
+      <div className="space-y-6 px-10 lg:px-0 pb-16 md:block">
+        <div className="space-y-0.5">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
+          </div>
+        </div>
+        <Separator />
+      </div>
 
       <div className="flex items-center justify-center">
         {error && <p className="text-red-500">{error}</p>}

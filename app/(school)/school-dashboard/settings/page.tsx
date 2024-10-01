@@ -9,13 +9,11 @@ export default function SchoolSettings() {
 
   return (
     <>
-      <div className="space-y-6 px-10 pb-16 md:block">
+      <div className="space-y-6 px-10 lg:px-0 pb-16 md:block">
         <div className="space-y-0.5">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">
-                School Settings
-              </h1>
+              <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
               <p className="text-muted-foreground">
                 Manage your account settings.
               </p>
