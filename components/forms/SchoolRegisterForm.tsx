@@ -183,7 +183,7 @@ export default function SchoolRegisterForm() {
               </div>
             </div>
           </div>
-          <CardFooter className="flex justify-end mt-5 pb-0">
+          <CardFooter className="flex justify-end mt-4 p-0">
             <Button type="submit">Submit</Button>
           </CardFooter>
         </form>

@@ -110,7 +110,7 @@ export default function SchoolLogin() {
               </Button>
             </div>
           </div>
-          <CardFooter className="flex justify-end">
+          <CardFooter className="flex justify-end mt-4 p-0">
             <Button type="submit">Submit</Button>
           </CardFooter>
         </form>
