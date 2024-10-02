@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { method } = req;
 
@@ -16,8 +16,8 @@ export default async function handler(
       return handleGet(req, res);
     case "POST":
       return handlePost(req, res);
-    // case "PUT":
-    //   return handlePut(req, res);
+    case "PUT":
+      return handlePut(req, res);
     // case "DELETE":
     //   return handleDelete(req, res);
     default:
@@ -68,8 +68,10 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-// Handle GET request - Retrieve all student or a single student by ID
+// Handle GET request - Retrieve all class or a single class by ID
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
+
   try {
     // Extract the token from cookies
     const tokenCookie = req.cookies.session;
@@ -82,6 +84,23 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     const schoolId = payload.schoolId;
     const role = payload.role;
+
+    if (id) {
+      const classId = Number(id);
+      if (isNaN(classId)) {
+        return res.status(400).json({ error: "Invalid user ID format" });
+      }
+
+      const classSection = await prisma.classsection.findUnique({
+        where: { id: classId },
+      });
+
+      if (!classSection) {
+        return res.status(404).json({ error: "class not found" });
+      }
+
+      return res.status(200).json({ classSection });
+    }
 
     // Verify that the user has a schoolId
     if (!schoolId) {
@@ -110,5 +129,22 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   } catch (error: any) {
     console.error("API Error:", error); // Log the error for debugging
     res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+// Handle PUT request - Update an existing class
+async function handlePut(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
+
+  try {
+    const parsedBody = classSchema.partial().parse(req.body);
+    const updatedclass = await prisma.classsection.update({
+      where: { id: parseInt(id as string, 10) },
+      data: parsedBody,
+    });
+    return res.status(200).json(updatedclass);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ error: "Invalid data or class not found" });
   }
 }

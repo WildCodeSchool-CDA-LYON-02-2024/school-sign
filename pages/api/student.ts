@@ -22,8 +22,8 @@ export default async function handler(
       return handleGet(req, res);
     case "POST":
       return handlePost(req, res);
-    // case "PUT":
-    //   return handlePut(req, res);
+    case "PUT":
+      return handlePut(req, res);
     // case "DELETE":
     //   return handleDelete(req, res);
     default:
@@ -175,105 +175,19 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-// import type { NextApiRequest, NextApiResponse } from "next";
-// import prisma from "@/lib/prisma";
-// import { z } from "zod";
+// Handle PUT request - Update an existing student
+async function handlePut(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
 
-// const bookSchema = z.object({
-//   title: z.string().min(1),
-//   author: z.string().min(1),
-//   description: z.string().min(1),
-// });
-
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) {
-//   const { method } = req;
-
-//   switch (method) {
-//     case "GET":
-//       return handleGet(req, res);
-//     case "POST":
-//       return handlePost(req, res);
-//     case "PUT":
-//       return handlePut(req, res);
-//     case "DELETE":
-//       return handleDelete(req, res);
-//     default:
-//       return res.status(405).json({ error: "Method not allowed" });
-//   }
-// }
-
-// // Handle GET request - Retrieve all books or a single book by ID
-// async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-//   const { id } = req.query;
-
-//   try {
-//     if (id) {
-//       // Retrieve a single book by ID
-//       const book = await prisma.book.findUnique({
-//         where: { id: parseInt(id as string, 10) },
-//       });
-//       if (book) {
-//         return res.status(200).json(book);
-//       } else {
-//         return res.status(404).json({ error: "Book not found" });
-//       }
-//     } else {
-//       // Retrieve all books
-//       const books = await prisma.book.findMany();
-//       return res.status(200).json(books);
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ error: "Failed to fetch books" });
-//   }
-// }
-
-// // Handle POST request - Create a new book
-// async function handlePost(req: NextApiRequest, res: NextApiResponse) {
-//   try {
-//     const parsedBody = bookSchema.parse(req.body);
-//     const newBook = await prisma.book.create({
-//       data: parsedBody,
-//     });
-//     return res.status(201).json(newBook);
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(400).json({ error: "Invalid data" });
-//   }
-// }
-
-// // Handle PUT request - Update an existing book
-// async function handlePut(req: NextApiRequest, res: NextApiResponse) {
-//   const { id } = req.query;
-//   const { title, author, description } = req.body;
-
-//   try {
-//     const parsedBody = bookSchema.partial().parse(req.body); // Partial allows some fields to be omitted
-//     const updatedBook = await prisma.book.update({
-//       where: { id: parseInt(id as string, 10) },
-//       data: parsedBody,
-//     });
-//     return res.status(200).json(updatedBook);
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(400).json({ error: "Invalid data or book not found" });
-//   }
-// }
-
-// // Handle DELETE request - Delete an existing book
-// async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
-//   const { id } = req.query;
-
-//   try {
-//     await prisma.book.delete({
-//       where: { id: parseInt(id as string, 10) },
-//     });
-//     return res.status(204).end(); // No Content
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(404).json({ error: "Book not found" });
-//   }
-// }
+  try {
+    const parsedBody = registerSchemaUser.partial().parse(req.body);
+    const updatedclass = await prisma.user.update({
+      where: { id: parseInt(id as string, 10) },
+      data: parsedBody,
+    });
+    return res.status(200).json(updatedclass);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ error: "Invalid data or class not found" });
+  }
+}
