@@ -20,7 +20,7 @@ export default function SchoolNavBar() {
     {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
-      variant: "default",
+      variant: "ghost",
       href: "/school-dashboard",
     },
     {

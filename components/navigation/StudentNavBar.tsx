@@ -20,7 +20,7 @@ export default function StudentNavBar() {
     {
       name: "Home",
       icon: (props) => <HomeIcon {...props} />,
-      variant: "default",
+      variant: "ghost",
       href: "/student-dashboard",
     },
     {

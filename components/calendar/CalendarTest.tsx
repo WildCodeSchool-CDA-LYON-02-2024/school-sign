@@ -94,7 +94,6 @@ export default function CalendarTest() {
         },
         body: JSON.stringify(lesson),
       });
-      console.log(response);
 
       if (!response.ok) {
         throw new Error("Error adding lesson");
