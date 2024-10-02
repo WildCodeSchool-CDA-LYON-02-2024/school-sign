@@ -75,12 +75,19 @@ export default function ClassList() {
                 <li key={cls.id}>
                   <Card className="w-40">
                     <CardHeader>
-                      <CardTitle className="text-center">
+                      <CardTitle className="flex gap-2 flex-wrap justify-center">
                         <Link
                           href={`/school-dashboard/class/${cls.name}/student/`}
                         >
                           <button onClick={() => handleClassClick(cls.id)}>
                             {cls.name}
+                          </button>
+                        </Link>
+                        <Link
+                          href={`/school-dashboard/class/${cls.name}/update`}
+                        >
+                          <button onClick={() => handleClassClick(cls.id)}>
+                            modify
                           </button>
                         </Link>
                       </CardTitle>
