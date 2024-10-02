@@ -23,6 +23,7 @@ export default async function handler(
 
 // Handle GET request - Retrieve all teachers or teachers by classId
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
   try {
     const token = req.cookies.session;
     if (!token) {
@@ -34,6 +35,23 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     if (!schoolId) {
       return res.status(400).json({ error: "School ID missing from token" });
+    }
+
+    if (id) {
+      const schoolId = Number(id);
+      if (isNaN(schoolId)) {
+        return res.status(400).json({ error: "Invalid user ID format" });
+      }
+
+      const school = await prisma.school.findUnique({
+        where: { id: schoolId },
+      });
+
+      if (!school) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.status(200).json({ school });
     }
 
     const school = await prisma.school.findUnique({

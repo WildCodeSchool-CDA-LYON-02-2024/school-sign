@@ -80,7 +80,6 @@ export default function UpdateTeacherForm() {
         }),
         credentials: "include",
       });
-      console.log(res);
 
       if (res.ok) {
         toast({
@@ -91,7 +90,6 @@ export default function UpdateTeacherForm() {
         router.back();
       } else {
         const errorData = await res.json();
-        console.log(errorData.details);
 
         if (errorData.error) {
           setError(errorData.error);

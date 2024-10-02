@@ -60,6 +60,41 @@ export default function UpdateSchoolForm() {
     fetchSchoolId();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/school?id=${schoolId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log(data, "SCHOOL DATA");
+
+          setName(data.school?.name || "");
+          setAddress(data.school?.address || "");
+          setZipcode(data.school?.zipcode || "");
+          setCity(data.school?.city || "");
+        } else {
+          const errorData = await res.json();
+          setErrors(
+            errorData.error || "An error occurred while fetching the school"
+          );
+        }
+      } catch (err) {
+        console.error("Request Error:", err);
+      }
+    };
+
+    if (schoolId) {
+      fetchData();
+    }
+  }, [schoolId]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
