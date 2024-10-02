@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { method } = req;
 
@@ -35,14 +35,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const schoolId = payload.schoolId;
     const role = payload.role;
     const classIdQuery = req.query.classid;
+
     let classId: number | undefined = undefined;
 
-    if (typeof classIdQuery === "string") {
-      classId = parseInt(classIdQuery, 10);
-      if (isNaN(classId)) {
-        return res.status(400).json({ error: "Invalid class ID format" });
-      }
-    } else if (Array.isArray(classIdQuery)) {
+    if (Array.isArray(classIdQuery)) {
       classId = parseInt(classIdQuery[0], 10);
     }
 

@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 
 // next
 import Link from "next/link";
-
-// context
-import { useClassContext } from "@/components/context/ClassContext";
+import { useParams } from "next/navigation";
 
 // component
 import SelectMenu from "@/components/SelectMenu";
@@ -16,11 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
-interface Student {
+export interface Student {
   id: number;
   firstname: string;
   lastname: string;
   role: string;
+  schoolId?: number | null;
 }
 
 interface Teacher {
@@ -31,16 +30,82 @@ interface Teacher {
   classId?: string | null;
 }
 
-export default function StudentList({ params }: { params: { name: string } }) {
+export default function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
+  const [classData, setClassData] = useState<Student[]>([]);
+  const [userSchoolId, setUserSchoolId] = useState(null);
   const [allTeachers, setAllTeachers] = useState<Teacher[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loadingStudents, setLoadingStudents] = useState<boolean>(true);
   const [loadingTeachers, setLoadingTeachers] = useState<boolean>(true);
-  const { classId } = useClassContext();
   const { toast } = useToast();
+  const params = useParams<{ name: string }>() || null;
+  const classNameParams = params?.name || null;
+  
+  useEffect(() => {
+    const fetchSchoolId = async () => {
+      try {
+        const response = await fetch("/api/getClassIdByToken");
+        if (response.ok) {
+          const data = await response.json();
+
+          setUserSchoolId(data.user.schoolId);
+        } else {
+          console.error("Erreur lors de la récupération du classId");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du classId", error);
+      }
+    };
+
+    fetchSchoolId();
+  }, []);
+
+  useEffect(() => {
+    const fetchAllTeachers = async () => {
+      try {
+        const res = await fetch("/api/class", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setClassData(data.classSections || []);
+        } else {
+          const errorData = await res.json();
+          setError(
+            errorData.error || "An error occurred while fetching teachers",
+          );
+        }
+      } catch (err) {
+        console.error("Request Error:", err);
+        setError("An unexpected error occurred. Please try again later.");
+      } finally {
+        setLoadingTeachers(false);
+      }
+    };
+
+    fetchAllTeachers();
+  }, []);
+
+  const getClassId = () => {
+    if (classData.length > 0) {
+      const classSection = classData.find((cls) => cls.schoolId === userSchoolId);
+      return classSection ? classSection.id : "Class not found";
+    }
+    return null;
+  };
+
+  const classId = getClassId();
+
+  console.log(classId);
+  
 
   // Fetch all teachers for selection
   useEffect(() => {
@@ -86,7 +151,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
             },
             credentials: "include",
           }),
-          fetch(`/api/student?classid=${classId}`, {
+          fetch(`/api/student?className=${classId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -198,7 +263,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
                         <CardHeader>
                           <CardTitle className="text-center">
                             <Link
-                              href={`/school-dashboard/class/${params.name}/teacher/${teacher.id}`}
+                              href={`/school-dashboard/class/${classNameParams}/teacher/${teacher.id}`}
                             >
                               <button>
                                 {`${teacher.firstname} ${teacher.lastname}`}
@@ -238,22 +303,16 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   .map((student) => (
                     <li key={student.id}>
                       <Card className="w-96">
-                        <CardHeader className="relative">
+                        <CardHeader>
                           <CardTitle className="text-center">
                             <Link
-                              href={`/school-dashboard/class/${params.name}/student/${student.id}`}
+                              href={`/school-dashboard/class/${classNameParams}/student/${student.id}`}
                             >
                               <button>
                                 {`${student.firstname} ${student.lastname}`}
                               </button>
                             </Link>
-                            <Link className="absolute right-0 bottom-0 p-3"
-                              href={`/school-dashboard/class/${params.name}/student/${student.id}/update`}
-                            >
-                              <button>
-                               Update
-                              </button>
-                            </Link>
+
                           </CardTitle>
                         </CardHeader>
                       </Card>
@@ -270,7 +329,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
       {/* Add new student button */}
       <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
         <Link
-          href={`/school-dashboard/class/${params.name}/student/addStudent`}
+          href={`/school-dashboard/class/${classNameParams}/student/addStudent`}
         >
           <Button className="bg-purple text-seasame" variant="outline">
             Add a new student

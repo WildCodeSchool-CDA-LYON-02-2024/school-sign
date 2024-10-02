@@ -11,15 +11,77 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useClassContext } from "../context/ClassContext";
+import { Student } from "@/app/(school)/school-dashboard/class/[name]/student/page";
 
 export default function UpdateClassForm() {
   const [name, setName] = useState("");
   const [className, setClassName] = useState("");
+  const [classData, setClassData] = useState<Student[]>([]);
+  const [userSchoolId, setUserSchoolId] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
-  const { classId } = useClassContext();
+
+  useEffect(() => {
+    const fetchSchoolId = async () => {
+      try {
+        const response = await fetch("/api/getClassIdByToken");
+        if (response.ok) {
+          const data = await response.json();
+
+          setUserSchoolId(data.user.schoolId);
+        } else {
+          console.error("Erreur lors de la récupération du classId");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du classId", error);
+      }
+    };
+
+    fetchSchoolId();
+  }, []);
+
+  useEffect(() => {
+    const fetchAllclasses = async () => {
+      try {
+        const res = await fetch("/api/class", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setClassData(data.classSections || []);
+        } else {
+          const errorData = await res.json();
+          setError(
+            errorData.error || "An error occurred while fetching teachers",
+          );
+        }
+      } catch (err) {
+        console.error("Request Error:", err);
+        setError("An unexpected error occurred. Please try again later.");
+      }
+    };
+
+    fetchAllclasses();
+  }, []);
+
+
+  const getClassId = () => {
+    if (classData.length > 0) {
+      const classSection = classData.find((cls) => cls.schoolId === userSchoolId);
+      return classSection ? classSection.id : "Class not found";
+    }
+    return null;
+  };
+
+  const classId = getClassId();
+
+  console.log(classId);
 
   useEffect(() => {
     const fetchClassData = async () => {

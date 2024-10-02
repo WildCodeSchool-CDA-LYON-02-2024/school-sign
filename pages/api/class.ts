@@ -71,7 +71,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 // Handle GET request - Retrieve all class or a single class by ID
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
-console.log(typeof(id), 'ClassID');
 
   try {
     // Extract the token from cookies
