@@ -238,13 +238,20 @@ export default function StudentList({ params }: { params: { name: string } }) {
                   .map((student) => (
                     <li key={student.id}>
                       <Card className="w-96">
-                        <CardHeader>
+                        <CardHeader className="relative">
                           <CardTitle className="text-center">
                             <Link
                               href={`/school-dashboard/class/${params.name}/student/${student.id}`}
                             >
                               <button>
                                 {`${student.firstname} ${student.lastname}`}
+                              </button>
+                            </Link>
+                            <Link className="absolute right-0 bottom-0 p-3"
+                              href={`/school-dashboard/class/${params.name}/student/${student.id}/update`}
+                            >
+                              <button>
+                               Update
                               </button>
                             </Link>
                           </CardTitle>

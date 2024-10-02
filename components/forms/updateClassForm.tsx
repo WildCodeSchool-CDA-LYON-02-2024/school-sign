@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useClassContext } from "../context/ClassContext";
-import { log } from "node:console";
 
 export default function UpdateClassForm() {
   const [name, setName] = useState("");

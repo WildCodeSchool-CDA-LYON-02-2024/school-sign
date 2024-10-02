@@ -74,7 +74,7 @@ export default function ClassList() {
               {classData.map((cls: any) => (
                 <li key={cls.id}>
                   <Card className="w-40">
-                    <CardHeader>
+                    <CardHeader  className="relative">
                       <CardTitle className="flex gap-2 flex-wrap justify-center">
                         <Link
                           href={`/school-dashboard/class/${cls.name}/student/`}
@@ -83,7 +83,7 @@ export default function ClassList() {
                             {cls.name}
                           </button>
                         </Link>
-                        <Link
+                        <Link className="absolute right-0 bottom-0 p-3"
                           href={`/school-dashboard/class/${cls.name}/update`}
                         >
                           <button onClick={() => handleClassClick(cls.id)}>
