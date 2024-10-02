@@ -4,6 +4,12 @@ import { Separator } from "@/components/ui/separator";
 import Logout from "@/components/logout";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
+// next
+import Link from "next/link";
+
+// ui
+import { Button } from "@/components/ui/button";
+
 export default function SchoolSettings() {
   const isMobile = useIsMobile();
 
@@ -22,6 +28,10 @@ export default function SchoolSettings() {
           </div>
         </div>
         <Separator />
+
+        <Button className="bg-purple text-seasame" variant="outline">
+            <Link href="/school-dashboard/settings/profil">School informations</Link>
+          </Button>
       </div>
     </>
   );

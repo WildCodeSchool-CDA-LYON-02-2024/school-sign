@@ -6,9 +6,6 @@ import { useState, useEffect } from "react";
 // next
 import Link from "next/link";
 
-// context
-import { useClassContext } from "@/components/context/ClassContext";
-
 // ui
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
