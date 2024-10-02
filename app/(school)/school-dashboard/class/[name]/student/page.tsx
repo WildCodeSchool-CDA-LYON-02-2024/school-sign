@@ -137,7 +137,7 @@ export default function StudentList({ params }: { params: { name: string } }) {
     }
 
     try {
-      const res = await fetch(`/api/teacher?id=${selectedTeacher.id}`, {
+      const res = await fetch(`/api/selectTeacher?id=${selectedTeacher.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
