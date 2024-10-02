@@ -94,6 +94,7 @@ export default function CalendarTest() {
         },
         body: JSON.stringify(lesson),
       });
+      console.log(response);
 
       if (!response.ok) {
         throw new Error("Error adding lesson");
@@ -117,7 +118,11 @@ export default function CalendarTest() {
       setEvents((prevEvents) => [...prevEvents, createdLesson]);
     } catch (error) {
       console.error(error);
-      alert("Failed to add lesson. Please try again.");
+      toast({
+        title: "Failed to add lesson. Please try again.",
+        className: "bg-red-500",
+        duration: 2000,
+      });
     }
   };
 

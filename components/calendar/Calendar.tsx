@@ -1,71 +1,74 @@
+import { useRef, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useLessonData } from "@/hooks/useLessonData";
+import { LessonCalendar } from "@/components/calendar/lesson/LessonCalendar";
+import { LessonModal } from "@/components/calendar/lesson/LessonModal";
 import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import { EventDialog } from "./EventDialog";
-import { DeleteDialog } from "./DeleteDialog";
-import { DraggableEvents } from "./DraggableEvents";
-import { useCalendarEvents } from "@/hooks/useCalendarEvents";
+
+export interface Lesson {
+  id: number;
+  name: string;
+  dateStart: string;
+  dateEnd: string;
+  classID?: number;
+}
 
 export default function Calendar() {
-  const {
-    events,
-    allEvents,
-    showModal,
-    showDeleteModal,
-    idToDelete,
-    newEvent,
-    handleDateClick,
-    addEvent,
-    handleDeleteModal,
-    handleDelete,
-    handleCloseModal,
-    onEventUpdate,
-  } = useCalendarEvents();
-  console.log(onEventUpdate);
+  const calendarRef = useRef<FullCalendar>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [newEvent, setNewEvent] = useState<Lesson>({
+    id: 0,
+    name: "",
+    dateStart: "",
+    dateEnd: "",
+  });
+  const { toast } = useToast();
+  const { events, addLesson } = useLessonData(toast);
+
+  const handleDateClick = (arg: { dateStr: string }) => {
+    setNewEvent({
+      ...newEvent,
+      dateStart: new Date(arg.dateStr).toISOString(),
+      dateEnd: new Date(
+        new Date(arg.dateStr).getTime() + 60 * 60 * 1000,
+      ).toISOString(),
+    });
+    setShowModal(true);
+  };
+
+  const handleModalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const createdLesson = await addLesson(newEvent);
+      console.log(createdLesson);
+      if (calendarRef.current) {
+        calendarRef.current.getApi().addEvent({
+          title: createdLesson.name,
+          start: createdLesson.dateStart,
+          end: createdLesson.dateEnd,
+        });
+      }
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error adding lesson:", error);
+    }
+  };
 
   return (
     <>
-      <div className="flex min-h-screen flex-col items-center justify-between p-10">
-        <div className="grid grid-cols-10">
-          <div className="col-span-8">
-            <FullCalendar
-              plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-              headerToolbar={{
-                left: "prev,next today",
-                center: "title",
-                right: "resourceTimelineWeek, dayGridMonth, timeGridWeek",
-              }}
-              events={allEvents}
-              eventDisplay="auto"
-              nowIndicator={true}
-              editable={true}
-              droppable={true}
-              selectable={true}
-              selectMirror={true}
-              dateClick={handleDateClick}
-              drop={(data) => addEvent(data)}
-              eventClick={(data) => handleDeleteModal(data)}
-            />
-          </div>
-          <DraggableEvents events={events} />
-        </div>
-
-        <DeleteDialog
-          open={showDeleteModal}
-          onClose={handleCloseModal}
-          onDelete={handleDelete}
-          eventIdToDelete={idToDelete}
-          eventTitle={allEvents.find((e) => e.id === idToDelete)?.title}
+      <LessonCalendar
+        events={events}
+        handleDateClick={handleDateClick}
+        calendarRef={calendarRef}
+      />
+      {showModal && (
+        <LessonModal
+          newEvent={newEvent}
+          setNewEvent={setNewEvent}
+          handleModalSubmit={handleModalSubmit}
+          setShowModal={setShowModal}
         />
-
-        <EventDialog
-          event={newEvent}
-          open={showModal}
-          onClose={handleCloseModal}
-          onEventUpdate={onEventUpdate}
-        />
-      </div>
+      )}
     </>
   );
 }

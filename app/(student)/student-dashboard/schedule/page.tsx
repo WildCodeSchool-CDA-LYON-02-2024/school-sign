@@ -7,12 +7,12 @@ import { Separator } from "@/components/ui/separator";
 export default function StudentSchedule() {
   return (
     <>
-      <div className="space-y-6 pl-10 pb-16 md:block">
+      <div className="space-y-6 px-10 pb-16 md:block">
         <div className="space-y-0.5">
           <h1 className="text-2xl font-bold tracking-tight">Schedule</h1>
         </div>
         <Separator />
-        <div className="w-full pt-6 md:pr-10 lg:pr-24">
+        <div className="w-full pt-6">
           <CalendarTest />
         </div>
       </div>

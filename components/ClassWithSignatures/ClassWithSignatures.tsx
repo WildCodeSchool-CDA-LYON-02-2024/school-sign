@@ -104,7 +104,7 @@ export default function ClassWithSignatures() {
 
     if (!currentLesson) {
       toast({
-        title: "Erreur",
+        title: "Error",
         description: "Aucune leçon en cours trouvée.",
         className: "bg-red-500",
         duration: 2000,
