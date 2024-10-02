@@ -18,7 +18,6 @@ export default function ClassList() {
   const [classData, setClassData] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const { setClassId } = useClassContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,9 +51,6 @@ export default function ClassList() {
     fetchData();
   }, []);
 
-  const handleClassClick = (id: number) => {
-    setClassId(id);
-  };
 
   return (
     <>
@@ -79,14 +75,14 @@ export default function ClassList() {
                         <Link
                           href={`/school-dashboard/class/${cls.name}/student/`}
                         >
-                          <button onClick={() => handleClassClick(cls.id)}>
+                          <button>
                             {cls.name}
                           </button>
                         </Link>
                         <Link className="absolute right-0 bottom-0 p-3"
                           href={`/school-dashboard/class/${cls.name}/update`}
                         >
-                          <button onClick={() => handleClassClick(cls.id)}>
+                          <button>
                             modify
                           </button>
                         </Link>

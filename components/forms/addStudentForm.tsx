@@ -1,13 +1,11 @@
 "use client";
 
 // react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // next
 import { useRouter } from "next/navigation";
-
-// context
-import { useClassContext } from "@/components/context/ClassContext";
+import { Student } from "@/app/(school)/school-dashboard/class/[name]/student/page";
 
 // ui
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,10 +19,69 @@ export default function AddStudentForm() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [classData, setClassData] = useState<Student[]>([]);
+  const [userSchoolId, setUserSchoolId] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { classId } = useClassContext();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchSchoolId = async () => {
+      try {
+        const response = await fetch("/api/getClassIdByToken");
+        if (response.ok) {
+          const data = await response.json();
+
+          setUserSchoolId(data.user.schoolId);
+        } else {
+          console.error("Erreur lors de la récupération du classId");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du classId", error);
+      }
+    };
+
+    fetchSchoolId();
+  }, []);
+
+  useEffect(() => {
+    const fetchAllTeachers = async () => {
+      try {
+        const res = await fetch("/api/class", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setClassData(data.classSections || []);
+        } else {
+          const errorData = await res.json();
+          setError(
+            errorData.error || "An error occurred while fetching teachers",
+          );
+        }
+      } catch (err) {
+        console.error("Request Error:", err);
+        setError("An unexpected error occurred. Please try again later.");
+      }
+    };
+
+    fetchAllTeachers();
+  }, []);
+
+  const getClassId = () => {
+    if (classData.length > 0) {
+      const classSection = classData.find((cls) => cls.schoolId === userSchoolId);
+      return classSection ? classSection.id : "Class not found";
+    }
+    return null;
+  };
+
+  const classId = getClassId();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
