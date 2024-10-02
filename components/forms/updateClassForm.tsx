@@ -15,7 +15,6 @@ import { Student } from "@/app/(school)/school-dashboard/class/[name]/student/pa
 
 export default function UpdateClassForm() {
   const [name, setName] = useState("");
-  const [className, setClassName] = useState("");
   const [classData, setClassData] = useState<Student[]>([]);
   const [userSchoolId, setUserSchoolId] = useState(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +57,7 @@ export default function UpdateClassForm() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching teachers"
           );
         }
       } catch (err) {
@@ -70,10 +69,11 @@ export default function UpdateClassForm() {
     fetchAllclasses();
   }, []);
 
-
   const getClassId = () => {
     if (classData.length > 0) {
-      const classSection = classData.find((cls) => cls.schoolId === userSchoolId);
+      const classSection = classData.find(
+        (cls) => cls.schoolId === userSchoolId
+      );
       return classSection ? classSection.id : "Class not found";
     }
     return null;
@@ -97,11 +97,11 @@ export default function UpdateClassForm() {
         if (res.ok) {
           const data = await res.json();
 
-          setClassName(data.classSection.name || []);
+          setName(data.classSection.name || []);
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes",
+            errorData.error || "An error occurred while fetching classes"
           );
         }
       } catch (err) {
@@ -116,24 +116,13 @@ export default function UpdateClassForm() {
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const result = classSchema.safeParse({ name });
-
-    if (!result.success) {
-      setError(
-        "Invalid input: " +
-          result.error.errors.map((e) => e.message).join(", "),
-      );
-      return;
-    }
-    setError(null);
-
     try {
       const res = await fetch(`/api/class?id=${classId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(result.data),
+        body: JSON.stringify(name),
         credentials: "include",
       });
 
@@ -169,7 +158,7 @@ export default function UpdateClassForm() {
               id="name"
               name="name"
               type="text"
-              placeholder={className}
+              placeholder="classname"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required

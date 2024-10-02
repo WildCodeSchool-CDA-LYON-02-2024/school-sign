@@ -87,9 +87,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     if (id) {
       const classId = Number(id);
-      
       if (isNaN(classId)) {
-        return res.status(400).json({ error: "Invalid class ID format" });
+        return res.status(400).json({ error: "Invalid user ID format" });
       }
 
       const classSection = await prisma.classsection.findUnique({
@@ -97,7 +96,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       });
 
       if (!classSection) {
-        return res.status(404).json({ error: "Class not found" });
+        return res.status(404).json({ error: "class not found" });
       }
 
       return res.status(200).json({ classSection });
