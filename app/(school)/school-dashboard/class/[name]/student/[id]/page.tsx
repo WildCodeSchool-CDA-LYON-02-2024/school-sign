@@ -54,25 +54,25 @@ export default function StudentDetails() {
   }, [id]);
 
   return (
-    <div className="h-full w-full px-10 pb-16 ">
+    <div className="h-full w-full px-10">
       <div className="space-y-0.5 ">
-        <h1 className="text-2xl font-bold tracking-tight pb-6">Informations</h1>
+        <h1 className="text-2xl font-bold tracking-tight py-8">Informations</h1>
         <Separator />
       </div>
-      <div className="flex flex-col items-center justify-center ">
+      <div className="flex flex-col items-center h-full ">
         {error && <p className="text-red-500">{error}</p>}
 
         {loading ? (
-          <p>Loading...</p>
+          <p className="h-full w-full flex items-center justify-center">Loading...</p>
         ) : (
           <>
             {student ? (
               <Card className=" mt-10 flex flex-col justify-center items-center relative p-10 sm:w-full  md:w-8/12 lg:w-6/12  sm:p-5 md:p-7">
-                <div className="flex sm:flex-col md:flex-row p-6 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                <div className="flex sm:w-full sm:flex-col md:flex-row p-6 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
                   <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
                     {`Firstname :`}
                   </CardContent>
-                  <CardContent className="h-8 w-6/12 p-0 overflow-x-scroll">
+                  <CardContent className="h-8  p-0 overflow-x-scroll">
                     {`${student.firstname}`}
                   </CardContent>
                 </div>
@@ -80,7 +80,7 @@ export default function StudentDetails() {
                   <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
                     {`Lastname :`}
                   </CardContent>
-                  <CardContent className="h-8 w-6/12 p-0 overflow-x-scroll">
+                  <CardContent className="h-8  p-0 overflow-x-scroll">
                     {`${student.lastname}`}
                   </CardContent>
                 </div>
@@ -88,7 +88,7 @@ export default function StudentDetails() {
                   <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
                     {`Email :`}
                   </CardContent>
-                  <CardContent className="w-6/12 p-0 h-8 overflow-x-scroll">
+                  <CardContent className="p-0 h-8 overflow-x-scroll">
                     {`${student.email}`}
                   </CardContent>
                 </div>
@@ -101,7 +101,7 @@ export default function StudentDetails() {
                 </Link>
               </Card>
             ) : (
-              <p>No student found with this ID.</p>
+              <p className="h-full w-full flex items-center justify-center">No student found with this ID.</p>
             )}
           </>
         )}

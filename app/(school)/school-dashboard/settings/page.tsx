@@ -17,7 +17,7 @@ export default function SchoolSettings() {
   return (
     <>
       <div className="h-full w-full px-10 pb-16 ">
-        <div className="space-y-0.5 pb-6">
+        <div className="space-y-0.5 py-8">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Settings</h1>

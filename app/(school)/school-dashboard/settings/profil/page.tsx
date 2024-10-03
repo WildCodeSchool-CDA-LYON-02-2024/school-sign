@@ -74,11 +74,11 @@ export default function SchoolDetails() {
 
   return (
     <div className="h-full w-full px-10 pb-16">
-      <div className="space-y-0.5">
+      <div className="space-y-0.5 py-8">
         <h1 className="text-2xl font-bold tracking-tight">School</h1>
         <p className="text-muted-foreground">Informations.</p>
-      </div>
       <Separator />
+      </div>
       <div className="flex flex-col items-center justify-center  gap-6 mt-10">
         {error && <p className="text-red-500">{error}</p>}
 

@@ -20,7 +20,7 @@ export default function SchoolLayout({
           <SchoolNavBar />
         </nav>
         <main className="w-full scroll md:pr-10">
-          <div className="h-full pt-8 w-full">{children}</div>
+          <div className="h-full w-full">{children}</div>
         </main>
         <Toaster />
       </ClassProvider>

@@ -57,7 +57,7 @@ export default function TeacherList() {
   return (
     <>
       <div className=" w-full px-10 ">
-        <div className="space-y-0.5 pb-6">
+        <div className="space-y-0.5 py-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold tracking-tight pb-6">Teachers</h1>
           </div>
