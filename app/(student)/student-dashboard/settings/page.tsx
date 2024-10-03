@@ -3,6 +3,7 @@
 import { Separator } from "@/components/ui/separator";
 import Logout from "@/components/logout";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import React from "react";
 
 export default function StudentSettings() {
   const isMobile = useIsMobile();
@@ -15,13 +16,13 @@ export default function StudentSettings() {
             <div>
               <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
               <p className="text-muted-foreground">
-                Manage your account settings.
+                Manage your account.
               </p>
             </div>
-            {isMobile && <Logout />}
           </div>
         </div>
         <Separator />
+        {isMobile && <Logout />}
       </div>
     </>
   );

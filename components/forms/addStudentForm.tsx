@@ -139,7 +139,7 @@ export default function AddStudentForm() {
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10">
         <CardHeader>
-          <CardTitle className="text-center">Add a Student</CardTitle>
+          <CardTitle className="text-center">Please add required informations</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>

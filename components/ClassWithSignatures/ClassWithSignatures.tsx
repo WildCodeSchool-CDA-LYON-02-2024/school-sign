@@ -15,9 +15,9 @@ import { useFetchClassDetails } from "@/hooks/useFetchClassDetails";
 import { useFetchSignatures } from "@/hooks/useFetchSignatures";
 import PDFGenerator from "./PDFGenerator";
 import { Lesson } from "../calendar/CalendarTest";
-import RealTimeClockWithDate from "../calendar/CurrentTime";
 import SignatureActions from "./SignatureActions";
 import { useSignatureContext } from "../context/SignatureContext";
+import React from "react";
 
 export default function ClassWithSignatures() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -170,15 +170,12 @@ export default function ClassWithSignatures() {
     return `${hours}:${minutes}`;
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="h-full w-full flex items-center justify-center">Loading...</p>;
 
   return (
     <>
-      <div className="absolute top-0 right-0 mt-10 mr-10">
-        <RealTimeClockWithDate />
-      </div>
       {classId ? (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center pb-20">
           {lessons.length > 0 ? (
             lessons.map((lesson) => {
               const startDate = new Date(lesson.dateStart);
@@ -217,12 +214,12 @@ export default function ClassWithSignatures() {
               ) : null;
             })
           ) : (
-            <p className="mb-5">No ongoing lesson.</p>
+            <p className="h-full w-full flex items-center justify-center">No ongoing lesson.</p>
           )}
           {error && <p className="text-red-500">{error}</p>}
         </div>
       ) : (
-        <p>No class found.</p>
+        <p className="h-full w-full flex items-center justify-center">No class found.</p>
       )}
     </>
   );

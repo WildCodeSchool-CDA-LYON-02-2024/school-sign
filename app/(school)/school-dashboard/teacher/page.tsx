@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 interface Teacher {
   id: number;
@@ -39,7 +40,7 @@ export default function TeacherList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching teachers"
           );
         }
       } catch (err) {
@@ -55,49 +56,50 @@ export default function TeacherList() {
 
   return (
     <>
-      <div className="space-y-6 pl-10 pb-16 md:block">
-        <div className="space-y-0.5">
+      <div className=" w-full px-10 ">
+        <div className="space-y-0.5 py-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
+            <h1 className="text-2xl font-bold tracking-tight pb-6">Teachers</h1>
           </div>
+          <Separator />
         </div>
-        <Separator />
       </div>
 
-      <div className="flex items-center justify-center">
+      <div className="flex justify-center h-full">
         {error && <p className="text-red-500">{error}</p>}
 
         {loading ? (
-          <p>Loading...</p>
+          <p className="h-full w-full flex items-center justify-center">Loading...</p>
         ) : teachers.length > 0 ? (
-          <ul className="space-y-4">
-            {teachers.map((teacher) => (
-              <li key={teacher.id}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      <Link href={`/school-dashboard/teacher/${teacher.id}`}>
-                        <button>
-                          {`${teacher.firstname} ${teacher.lastname}`}
-                        </button>
-                      </Link>
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <ul className="space-y-4">
+              {teachers.map((teacher) => (
+                <li key={teacher.id}>
+                  <Card className="w-72 text-center">
+                    <CardHeader>
+                      <CardTitle>
+                        <Link href={`/school-dashboard/teacher/${teacher.id}`}>
+                          <button>
+                            {`${teacher.firstname} ${teacher.lastname}`}
+                          </button>
+                        </Link>
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                </li>
+              ))}
+            </ul>
+            <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
+              <Button className="bg-purple text-seasame" variant="outline">
+                <Link href="/school-dashboard/teacher/addTeacher">
+                  Add a new Teacher
+                </Link>
+              </Button>
+            </div>
+          </div>
         ) : (
-          <p>No teachers found.</p>
+          <p className="h-full w-full flex items-center justify-center">No teachers found.</p>
         )}
-      </div>
-
-      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
-        <Button className="bg-purple text-seasame" variant="outline">
-          <Link href="/school-dashboard/teacher/addTeacher">
-            Add a new Teacher
-          </Link>
-        </Button>
       </div>
     </>
   );

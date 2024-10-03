@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);
@@ -34,7 +36,7 @@ export default function ClassList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes",
+            errorData.error || "An error occurred while fetching classes"
           );
         }
       } catch (err) {
@@ -48,56 +50,72 @@ export default function ClassList() {
     fetchData();
   }, []);
 
-
   return (
     <>
-      <div className="space-y-6 pl-10 pb-16 md:block">
-        <div className="space-y-0.5">
+      <div className="h-full w-full px-10 pb-16 ">
+        <div className="space-y-0.5 py-8 ">
           <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
           <p className="text-muted-foreground">Consult School Classes.</p>
+          <Separator />
         </div>
-        <Separator />
-        <div className="flex flex-col items-center justify-center gap-6">
+        <div className="flex flex-col items-center h-full">
           {error && <p className="text-red-500">{error}</p>}
 
           {loading ? (
-            <p>Loading...</p>
+            <p className="h-full w-full flex items-center justify-center">
+              Loading...
+            </p>
           ) : classData.length > 0 ? (
-            <ul>
-              {classData.map((cls: any) => (
-                <li key={cls.id}>
-                  <Card className="w-40">
-                    <CardHeader  className="relative">
-                      <CardTitle className="flex gap-2 flex-wrap justify-center">
-                        <Link
-                          href={`/school-dashboard/class/${cls.name}/student/`}
-                        >
-                          <button>
-                            {cls.name}
-                          </button>
-                        </Link>
-                        <Link className="absolute right-0 bottom-0 p-3"
-                          href={`/school-dashboard/class/${cls.name}/update`}
-                        >
-                          <button>
-                            modify
-                          </button>
-                        </Link>
-                      </CardTitle>
-                    </CardHeader>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No classes found.</p>
-          )}
-        </div>
+            <div>
+              <ul>
+                {classData.map((cls: any) => (
+                  <li key={cls.id}>
+                    <Card className="w-72 mt-5">
+                      <CardHeader className="relative">
+                        <CardTitle className="flex gap-2 flex-wrap justify-center">
+                          <Link
+                            href={`/school-dashboard/class/${cls.name}/student/`}
+                          >
+                            <button>{cls.name}</button>
+                          </Link>
 
-        <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-10">
-          <Button className="bg-purple text-seasame" variant="outline">
-            <Link href="/school-dashboard/class/addClass">Add a new class</Link>
-          </Button>
+                          <Link
+                            className="absolute right-0 top-0 p-3"
+                            href={`/school-dashboard/class/${cls.name}/update`}
+                          >
+                            <button>
+                              <ModifyIcon />
+                            </button>
+                          </Link>
+                        </CardTitle>
+                      </CardHeader>
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-10">
+                <Button className="bg-purple text-seasame" variant="outline">
+                  <Link href="/school-dashboard/class/addClass">
+                    Add a new class
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="h-full w-full flex items-center justify-center">
+                No classes found.
+              </p>
+              <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-10">
+                <Button className="bg-purple text-seasame" variant="outline">
+                  <Link href="/school-dashboard/class/addClass">
+                    Add a new class
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

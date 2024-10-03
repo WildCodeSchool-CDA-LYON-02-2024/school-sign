@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { NavProps } from "@/components/navigation/components/navTypes";
 import Logout from "@/components/logout";
+import React from "react";
 
 export default function SideNav({ links }: NavProps) {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ export default function SideNav({ links }: NavProps) {
               key={index}
               href={link.href ?? "#"} // fallback to # if href is not defined
               className={cn(
-                buttonVariants({ variant: link.variant, size: "sm" }),
+                buttonVariants({ variant: link.variant, size: "default" }),
                 "w-32",
                 isActive
                   ? "bg-primary text-white hover:bg-accent-foreground hover:text-white"

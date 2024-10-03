@@ -2,6 +2,7 @@
 
 // react
 import { useState, useEffect } from "react";
+import React from "react";
 
 // next
 import Link from "next/link";
@@ -13,6 +14,8 @@ import SelectMenu from "@/components/SelectMenu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 interface Teacher {
   id: string;
@@ -57,7 +60,7 @@ export default function StudentDetails({
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching the student.",
+            errorData.error || "An error occurred while fetching the student."
           );
         }
       } catch (err) {
@@ -89,7 +92,7 @@ export default function StudentDetails({
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes.",
+            errorData.error || "An error occurred while fetching classes."
           );
         }
       } catch (err) {
@@ -140,7 +143,7 @@ export default function StudentDetails({
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while updating the class.",
+          errorData.error || "An error occurred while updating the class."
         );
       }
     } catch (err) {
@@ -150,57 +153,86 @@ export default function StudentDetails({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      {error && <p className="text-red-500">{error}</p>}
+    <div className="h-full w-full px-10 pb-16 ">
+      <div className="space-y-0.5 py-8 ">
+        <h1 className="text-2xl font-bold tracking-tight">Teacher</h1>
+        <p className="text-muted-foreground">informations.</p>
+        <Separator />
+      </div>
+      <div className="flex flex-col items-center h-full">
+        {error && <p className="text-red-500">{error}</p>}
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {teacher ? (
-            <Card className="relative w-96 mt-10 justify-center items-center">
-              <CardContent className="flex flex-col justify-center items-center">
-                {`${teacher.firstname}`}
-              </CardContent>
-              <CardContent className="flex flex-col justify-center items-center">
-                {`${teacher.lastname}`}
-              </CardContent>
-              <CardContent className="flex flex-col justify-center items-center">
-                {`${teacher.email}`}
-              </CardContent>
-              <Link
-                className="absolute right-0 bottom-0 p-3"
-                href={`/school-dashboard/teacher//${teacher.id}/update`}
-              >
-                <button>Update</button>
-              </Link>
-            </Card>
-          ) : (
-            <p>No teacher found with this ID.</p>
-          )}
-        </>
-      )}
-
-      <div className="flex flex-col items-center justify-center mt-10">
-        {teacher?.classId ? (
-          <p>
-            Assigned Class:{" "}
-            <Link href={`/school-dashboard/class/${className}/student/`}>
-              {getClassName()}
-            </Link>
+        {loading ? (
+          <p className="h-full w-full flex items-center justify-center">
+            Loading...
           </p>
         ) : (
           <>
-            <SelectMenu
-              selected={selectedClass}
-              setSelected={setSelectedClass}
-              options={classData}
-              displayValue={(classSection) => classSection.name}
-              label="Select a Class"
-            />
-            <Button onClick={handleUpdate} className="mt-4">
-              Update
-            </Button>
+            {teacher ? (
+              <div className="w-full h-full flex  flex-col items-center ">
+                <Card className="sm:w-full md:w-5/12 mt-10 flex flex-col justify-center items-center relative p-6">
+                  <div className="flex sm:flex-col md:flex-row p-3 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                    <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
+                      {`Firstname :`}
+                    </CardContent>
+                    <CardContent className="h-8  p-0 overflow-x-scroll">
+                      {`${teacher.firstname}`}
+                    </CardContent>
+                  </div>
+                  <div className="flex sm:flex-col md:flex-row p-3 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                    <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
+                      {`Firstname :`}
+                    </CardContent>
+                    <CardContent className="h-8  p-0 overflow-x-scroll">
+                      {`${teacher.lastname}`}
+                    </CardContent>
+                  </div>
+                  <div className="flex sm:flex-col md:flex-row p-3 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                    <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
+                      {`Email :`}
+                    </CardContent>
+                    <CardContent className="h-8  p-0 overflow-x-scroll">
+                      {`${teacher.email}`}
+                    </CardContent>
+                  </div>
+                  <Link
+                    className="absolute right-0 top-0 p-3"
+                    href={`/school-dashboard/teacher//${teacher.id}/update`}
+                  >
+                    <button><ModifyIcon/></button>
+                  </Link>
+                </Card>
+                <div className="flex flex-col items-center justify-center mt-10">
+                  {teacher?.classId ? (
+                    <p>
+                      Assigned Class:{" "}
+                      <Link
+                        href={`/school-dashboard/class/${className}/student/`}
+                      >
+                        {getClassName()}
+                      </Link>
+                    </p>
+                  ) : (
+                    <>
+                      <SelectMenu
+                        selected={selectedClass}
+                        setSelected={setSelectedClass}
+                        options={classData}
+                        displayValue={(classSection) => classSection.name}
+                        label="Select a Class"
+                      />
+                      <Button onClick={handleUpdate} className="mt-4">
+                        Update
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="h-full w-full flex items-center justify-center">
+                No teacher found with this ID.
+              </p>
+            )}
           </>
         )}
       </div>

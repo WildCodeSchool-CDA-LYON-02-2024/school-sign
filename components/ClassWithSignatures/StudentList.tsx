@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 
 export interface Student {
   id: string;
@@ -34,7 +35,7 @@ export default function StudentList({
 }: StudentListProps) {
   const findSignatureForStudent = (studentId: string) => {
     const signature = signatures.find(
-      (sig) => sig.userId === studentId && sig.lessonId === currentLessonId,
+      (sig) => sig.userId === studentId && sig.lessonId === currentLessonId
     );
     return signature ? signature.hashedSign : null;
   };
@@ -42,20 +43,27 @@ export default function StudentList({
   return (
     <>
       {students?.length ? (
-        <ul className="flex justify-center gap-6 my-10 flex-wrap">
+        <ul className="flex justify-center gap-6 my-10 flex-wrap w-full">
           {students
             .filter((student) => student.role === "STUDENT")
             .map((student) => {
               const studentSignature = findSignatureForStudent(student.id);
               return (
-                <li key={student.id} className="h-48 min-h-16">
-                  <Card>
+                <li
+                  key={student.id}
+                  className="min-h-20 mx-10 sm:w-full md:w-72"
+                >
+                  <Card className="flex flex-col justify-center items-center h-56 ">
                     <CardHeader>
                       <CardTitle className="text-center">
-                        {`${student.firstname} ${student.lastname}`}
+                        {`Firstname : ${student.firstname} `}
+                      </CardTitle>
+                      <CardTitle className="text-center">
+                        {`Lastname : ${student.lastname}`}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-col">
+                    <CardContent className="flex flex-col items-center">
+                      <p>Signature :</p>
                       {studentSignature ? (
                         <Image
                           src={studentSignature || "/default-signature.png"}

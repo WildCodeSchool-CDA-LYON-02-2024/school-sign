@@ -3,17 +3,17 @@
 // components
 import CalendarTest from "@/components/calendar/CalendarTest";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 export default function TeacherSchedule() {
   return (
     <>
-      <div className="space-y-6 pl-10 pb-16 md:block">
-        <div className="space-y-0.5">
-          <h1 className="text-2xl font-bold tracking-tight">Schedule</h1>
-        </div>
+      <div className="h-full w-full sm:px-0 md:px-10 pb-16  ">
+        <div className="space-y-0.5 pb-6 sm:px-10 md:px-0">
+          <h1 className="text-2xl font-bold tracking-tight pb-6">Schedule</h1>
         <Separator />
-        {/* <Calendar /> */}
-        <div className="w-full pt-6 pr-10 lg:pr-2 lg:pr-24">
+        </div>
+        <div className="w-full pt-6 ">
           <CalendarTest />
         </div>
       </div>
