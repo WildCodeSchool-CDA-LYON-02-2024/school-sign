@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 export default function AddStudentPage() {
   return (
     <div className="h-full w-full px-10 pb-16">
-      <h1 className="text-2xl font-bold tracking-tight pb-5 sm:pl-5">
+      <h1 className="text-2xl font-bold tracking-tight pb-6 sm:pl-5">
         Add a Student
       </h1>
 

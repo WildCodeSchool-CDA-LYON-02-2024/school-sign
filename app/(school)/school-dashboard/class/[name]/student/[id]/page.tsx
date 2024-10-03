@@ -55,58 +55,57 @@ export default function StudentDetails() {
 
   return (
     <div className="h-full w-full px-10 pb-16 ">
-    <div className="space-y-0.5 ">
-      <h1 className="text-2xl font-bold tracking-tight pb-5">Student&apos;s information</h1>
+      <div className="space-y-0.5 ">
+        <h1 className="text-2xl font-bold tracking-tight pb-6">Informations</h1>
+        <Separator />
+      </div>
+      <div className="flex flex-col items-center justify-center ">
+        {error && <p className="text-red-500">{error}</p>}
 
-    <Separator />
-    </div>
-    <div className="flex flex-col items-center justify-center ">
-      {error && <p className="text-red-500">{error}</p>}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {student ? (
+              <Card className=" mt-10 flex flex-col justify-center items-center relative p-10 sm:w-full  md:w-8/12 lg:w-6/12  sm:p-5 md:p-7">
+                <div className="flex sm:flex-col md:flex-row p-6 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                  <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
+                    {`Firstname :`}
+                  </CardContent>
+                  <CardContent className="h-8 w-6/12 p-0 overflow-x-scroll">
+                    {`${student.firstname}`}
+                  </CardContent>
+                </div>
+                <div className="flex sm:flex-col md:flex-row p-6 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                  <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
+                    {`Lastname :`}
+                  </CardContent>
+                  <CardContent className="h-8 w-6/12 p-0 overflow-x-scroll">
+                    {`${student.lastname}`}
+                  </CardContent>
+                </div>
+                <div className="flex  sm:flex-col md:flex-row p-6 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
+                  <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
+                    {`Email :`}
+                  </CardContent>
+                  <CardContent className="w-6/12 p-0 h-8 overflow-x-scroll">
+                    {`${student.email}`}
+                  </CardContent>
+                </div>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {student ? (
-            <Card className=" mt-10 flex flex-col justify-center relative p-10 sm:w-full  md:w-10/12 lg:w-6/12  sm:p-5 md:p-7">
-              <div className="flex sm:flex-col md:flex-row p-6  " >
-              <CardContent className=" sm:w-5/12 p-0 md:w-3/12">
-                {`Firstname :`}
-              </CardContent>
-              <CardContent className=" w-6/12 p-0">
-                {`${student.firstname}`}
-              </CardContent>
-              </div>
-              <div className="flex sm:flex-col md:flex-row p-6  ">
-              <CardContent className=" sm:w-5/12 p-0 md:w-3/12 pb-3">
-                {`Firstname :`}
-              </CardContent>
-              <CardContent className=" w-6/12 p-0">
-                {`${student.lastname}`}
-              </CardContent>
-              </div>
-              <div className="flex sm:flex-col md:flex-row p-6  ">
-              <CardContent className=" sm:w-5/12 p-0 md:w-3/12">
-                {`Email :`}
-              </CardContent>
-              <CardContent className="w-6/12 p-0 flex wrap">
-                {`${student.email}`}
-              </CardContent>
-              </div>
-              
-              <Link
-                className="absolute right-0 bottom-0 p-3"
-                href={`/school-dashboard/class/${className}/student/${student.id}/update`}
-              >
-                <button>Update</button>
-              </Link>
-            </Card>
-          ) : (
-            <p>No student found with this ID.</p>
-          )}
-        </>
-      )}
-    </div>
+                <Link
+                  className="absolute right-0 bottom-0 p-3"
+                  href={`/school-dashboard/class/${className}/student/${student.id}/update`}
+                >
+                  <button>Update</button>
+                </Link>
+              </Card>
+            ) : (
+              <p>No student found with this ID.</p>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

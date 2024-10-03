@@ -214,7 +214,7 @@ export default function ClassWithSignatures() {
               ) : null;
             })
           ) : (
-            <p className="mb-5">No ongoing lesson.</p>
+            <p className="h-full w-full flex items-center justify-center">No ongoing lesson.</p>
           )}
           {error && <p className="text-red-500">{error}</p>}
         </div>

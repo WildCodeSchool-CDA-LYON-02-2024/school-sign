@@ -16,7 +16,6 @@ import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 
-
 export interface Student {
   id: number;
   firstname: string;
@@ -249,16 +248,18 @@ export default function StudentList() {
   return (
     <>
       <div className="h-full w-full px-10 pb-16">
-        <div className="space-y-0.5">
+        <div className="space-y-0.5 pb-6">
           <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
           <p className="text-muted-foreground">Consult School Classes.</p>
+          <Separator />
         </div>
-        <Separator />
-        <div className="flex flex-col items-center justify-center  gap-6 mt-10"></div>
+        <div className="flex flex-col items-center justify-center  gap-6"></div>
         {error && <p className="text-red-500">{error}</p>}
 
         {loadingStudents || loadingTeachers ? (
-          <p>Loading...</p>
+          <p className="h-full w-full flex items-center justify-center">
+            Loading...
+          </p>
         ) : (
           <>
             {/* Display teachers */}
@@ -308,44 +309,49 @@ export default function StudentList() {
             <div className="flex items-center justify-center flex-col gap-4 p-8 w-full">
               <h2 className="text-xl font-bold">Students</h2>
               {students.length > 0 ? (
-                <ul className="space-y-4">
-                  {students
-                    .filter((student) => student.role === "STUDENT")
-                    .map((student) => (
-                      <li key={student.id}>
-                        <Card className="w-96">
-                          <CardHeader>
-                            <CardTitle className="text-center">
-                              <Link
-                                href={`/school-dashboard/class/${classNameParams}/student/${student.id}`}
-                              >
-                                <button>
-                                  {`${student.firstname} ${student.lastname}`}
-                                </button>
-                              </Link>
-                            </CardTitle>
-                          </CardHeader>
-                        </Card>
-                      </li>
-                    ))}
-                </ul>
+                <div>
+                  <ul className="space-y-4">
+                    {students
+                      .filter((student) => student.role === "STUDENT")
+                      .map((student) => (
+                        <li key={student.id}>
+                          <Card className="w-96">
+                            <CardHeader>
+                              <CardTitle className="text-center">
+                                <Link
+                                  href={`/school-dashboard/class/${classNameParams}/student/${student.id}`}
+                                >
+                                  <button>
+                                    {`${student.firstname} ${student.lastname}`}
+                                  </button>
+                                </Link>
+                              </CardTitle>
+                            </CardHeader>
+                          </Card>
+                        </li>
+                      ))}
+                  </ul>{" "}
+                  <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
+                    <Link
+                      href={`/school-dashboard/class/${classNameParams}/student/addStudent`}
+                    >
+                      <Button
+                        className="bg-purple text-seasame"
+                        variant="outline"
+                      >
+                        Add a new student
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               ) : (
-                <p>No student found in this class.</p>
+                <p className="h-full w-full flex items-center justify-center">
+                  No student found in this class.
+                </p>
               )}
             </div>
           </>
         )}
-
-        {/* Add new student button */}
-        <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
-          <Link
-            href={`/school-dashboard/class/${classNameParams}/student/addStudent`}
-          >
-            <Button className="bg-purple text-seasame" variant="outline">
-              Add a new student
-            </Button>
-          </Link>
-        </div>
       </div>
     </>
   );
