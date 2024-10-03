@@ -13,7 +13,6 @@ export default function TeacherSchedule() {
           <h1 className="text-2xl font-bold tracking-tight pb-6">Schedule</h1>
         <Separator />
         </div>
-        {/* <Calendar /> */}
         <div className="w-full pt-6 ">
           <CalendarTest />
         </div>
