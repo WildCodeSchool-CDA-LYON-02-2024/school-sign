@@ -18,6 +18,7 @@ import { Lesson } from "../calendar/CalendarTest";
 import RealTimeClockWithDate from "../calendar/CurrentTime";
 import SignatureActions from "./SignatureActions";
 import { useSignatureContext } from "../context/SignatureContext";
+import React from "react";
 
 export default function ClassWithSignatures() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -174,7 +175,7 @@ export default function ClassWithSignatures() {
 
   return (
     <>
-      <div className="absolute top-0 right-0 mt-10 mr-10">
+      <div className="absolute top-0 right-0 sm:mt-10 sm:mr-2 md:mr-10 ">
         <RealTimeClockWithDate />
       </div>
       {classId ? (

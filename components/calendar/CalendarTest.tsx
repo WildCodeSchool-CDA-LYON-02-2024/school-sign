@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useToast } from "@/hooks/use-toast";
+import React from "react";
 
 export interface Lesson {
   id: number;

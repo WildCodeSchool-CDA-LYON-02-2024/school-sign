@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 
 export interface Student {
   id: string;
@@ -42,14 +43,14 @@ export default function StudentList({
   return (
     <>
       {students?.length ? (
-        <ul className="flex justify-center gap-6 my-10 flex-wrap">
+        <ul className="flex justify-center gap-6 my-10 flex-wrap w-full">
           {students
             .filter((student) => student.role === "STUDENT")
             .map((student) => {
               const studentSignature = findSignatureForStudent(student.id);
               return (
-                <li key={student.id} className="h-48 min-h-16">
-                  <Card>
+                <li key={student.id} className="h-52 min-h-20 mx-10 sm:w-full md:w-72">
+                  <Card className="flex flex-col justify-center items-center h-48 ">
                     <CardHeader>
                       <CardTitle className="text-center">
                         {`${student.firstname} ${student.lastname}`}
