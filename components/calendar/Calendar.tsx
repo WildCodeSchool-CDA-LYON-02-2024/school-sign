@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useLessonData } from "@/hooks/useLessonData";
 import { LessonCalendar } from "@/components/calendar/lesson/LessonCalendar";
 import { LessonModal } from "@/components/calendar/lesson/LessonModal";
+import { useLessonData } from "@/hooks/useLessonData";
+import { useToast } from "@/hooks/use-toast";
 import FullCalendar from "@fullcalendar/react";
 
 export interface Lesson {
@@ -43,9 +43,9 @@ export default function Calendar() {
       console.log(createdLesson);
       if (calendarRef.current) {
         calendarRef.current.getApi().addEvent({
-          title: createdLesson.name,
-          start: createdLesson.dateStart,
-          end: createdLesson.dateEnd,
+          name: createdLesson.name,
+          dateStart: createdLesson.dateStart,
+          dateEnd: createdLesson.dateEnd,
         });
       }
       setShowModal(false);
