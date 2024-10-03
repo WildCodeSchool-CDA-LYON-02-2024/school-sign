@@ -9,6 +9,7 @@ import Link from "next/link";
 
 // ui
 import { Button } from "@/components/ui/button";
+import React from "react";
 
 export default function SchoolSettings() {
   const isMobile = useIsMobile();
@@ -24,14 +25,17 @@ export default function SchoolSettings() {
                 Manage your account settings.
               </p>
             </div>
-            {isMobile && <Logout />}
           </div>
         </div>
         <Separator />
-
-        <Button className="bg-purple text-seasame" variant="outline">
-            <Link href="/school-dashboard/settings/profil">School informations</Link>
+        <div className="flex flex-col w-36 gap-5">
+          <Button className="bg-purple text-seasame" variant="outline">
+            <Link href="/school-dashboard/settings/profil">
+              School informations
+            </Link>
           </Button>
+          {isMobile && <Logout />}
+        </div>
       </div>
     </>
   );

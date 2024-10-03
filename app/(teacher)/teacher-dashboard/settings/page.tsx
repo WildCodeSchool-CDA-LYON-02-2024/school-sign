@@ -3,6 +3,7 @@
 import { Separator } from "@/components/ui/separator";
 import Logout from "@/components/logout";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import React from "react";
 
 export default function TeacherSettings() {
   const isMobile = useIsMobile();
@@ -18,10 +19,10 @@ export default function TeacherSettings() {
                 Manage your account settings.
               </p>
             </div>
-            {isMobile && <Logout />}
           </div>
         </div>
         <Separator />
+        {isMobile && <Logout />}
       </div>
     </>
   );
