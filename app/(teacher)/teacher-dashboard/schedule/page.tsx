@@ -2,7 +2,7 @@
 
 // components
 import { Separator } from "@/components/ui/separator";
-import CalendarTest from "@/components/calendar/CalendarTest";
+import Calendar from "@/components/calendar/Calendar";
 
 export default function TeacherSchedule() {
   return (
@@ -14,8 +14,8 @@ export default function TeacherSchedule() {
         <Separator />
         <div className="w-full pt-6">
           {/* <OldCalendar /> */}
-          <CalendarTest />
-          {/*<Calendar />*/}
+          {/*<CalendarTest />*/}
+          <Calendar />
         </div>
       </div>
     </>

@@ -49,7 +49,6 @@ export function EventDialog({
     resolver: zodResolver(calendarFormSchema),
     defaultValues,
   });
-  // console.log(form);
 
   const onSubmit = (data: CalendarFormValues) => {
     const updatedEvent = {

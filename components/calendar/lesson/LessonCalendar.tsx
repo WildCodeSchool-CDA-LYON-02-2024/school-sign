@@ -32,6 +32,7 @@ export function LessonCalendar({
           meridiem: false,
         }}
         locale="en-GB"
+        firstDay={1}
         dateClick={handleDateClick}
         ref={calendarRef}
         initialView="dayGridMonth"
@@ -40,6 +41,9 @@ export function LessonCalendar({
           start: new Date(event.dateStart).toISOString(),
           end: new Date(event.dateEnd).toISOString(),
         }))}
+        editable={true}
+        selectable={true}
+        selectMirror={true}
       />
     </>
   );

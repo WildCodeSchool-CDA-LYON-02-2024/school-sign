@@ -63,11 +63,18 @@ export default function Calendar() {
       />
       {showModal && (
         <LessonModal
+          open={showModal}
           newEvent={newEvent}
           setNewEvent={setNewEvent}
           handleModalSubmit={handleModalSubmit}
           setShowModal={setShowModal}
         />
+        //     <EventDialog
+        //     event={newEvent}
+        //   open={showModal}
+        //   onClose={handleCloseModal}
+        //   onEventUpdate={onEventUpdate}
+        // />
       )}
     </>
   );
