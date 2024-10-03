@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.variable + " bg-seasame"}>
+      <body className={roboto.variable + " bg-seasame h-full"}>
         <ClassProvider>
           <SignatureProvider>{children}</SignatureProvider>
           <Toaster />

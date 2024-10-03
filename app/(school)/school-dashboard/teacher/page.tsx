@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 interface Teacher {
   id: number;
@@ -55,10 +56,10 @@ export default function TeacherList() {
 
   return (
     <>
-      <div className="space-y-6 pl-10 pb-16 md:block">
+      <div className=" w-full px-10 pb-16 ">
         <div className="space-y-0.5">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
+            <h1 className="text-2xl font-bold tracking-tight pb-3.5">Teachers</h1>
           </div>
         </div>
         <Separator />

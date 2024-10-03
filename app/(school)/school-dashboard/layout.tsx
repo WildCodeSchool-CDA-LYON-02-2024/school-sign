@@ -10,13 +10,13 @@ export default function SchoolLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="md:flex bg-seasame h-screen">
+    <div className="sm:flex bg-seasame h-screen ">
       <ClassProvider>
         <nav>
           <SchoolNavBar />
         </nav>
-        <main className="basis-11/12 scroll md:pr-10">
-          <div className="h-screen py-8 w-full">{children}</div>
+        <main className="w-full scroll md:pr-10">
+          <div className="h-full pt-8 w-full">{children}</div>
         </main>
         <Toaster />
       </ClassProvider>

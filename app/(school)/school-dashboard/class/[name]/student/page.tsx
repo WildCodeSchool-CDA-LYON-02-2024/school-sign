@@ -13,6 +13,9 @@ import SelectMenu from "@/components/SelectMenu";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import React from "react";
+import { Separator } from "@/components/ui/separator";
+
 
 export interface Student {
   id: number;
@@ -43,7 +46,7 @@ export default function StudentList() {
   const { toast } = useToast();
   const params = useParams<{ name: string }>() || null;
   const classNameParams = params?.name || null;
-  
+
   useEffect(() => {
     const fetchSchoolId = async () => {
       try {
@@ -80,7 +83,7 @@ export default function StudentList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching teachers"
           );
         }
       } catch (err) {
@@ -96,7 +99,9 @@ export default function StudentList() {
 
   const getClassId = () => {
     if (classData.length > 0) {
-      const classSection = classData.find((cls) => cls.schoolId === userSchoolId);
+      const classSection = classData.find(
+        (cls) => cls.schoolId === userSchoolId
+      );
       return classSection ? classSection.id : "Class not found";
     }
     return null;
@@ -105,7 +110,6 @@ export default function StudentList() {
   const classId = getClassId();
 
   console.log(classId);
-  
 
   // Fetch all teachers for selection
   useEffect(() => {
@@ -125,7 +129,7 @@ export default function StudentList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching teachers"
           );
         }
       } catch (err) {
@@ -167,7 +171,7 @@ export default function StudentList() {
           const teacherErrorData = await teacherRes.json();
           setError(
             teacherErrorData.error ||
-              "An error occurred while fetching teachers",
+              "An error occurred while fetching teachers"
           );
         }
 
@@ -178,7 +182,7 @@ export default function StudentList() {
           const studentErrorData = await studentRes.json();
           setError(
             studentErrorData.error ||
-              "An error occurred while fetching students",
+              "An error occurred while fetching students"
           );
         }
 
@@ -224,16 +228,16 @@ export default function StudentList() {
         setTeachers((prevTeachers) =>
           prevTeachers.some((teacher) => teacher.id === updatedTeacher.id)
             ? prevTeachers.map((teacher) =>
-                teacher.id === updatedTeacher.id ? updatedTeacher : teacher,
+                teacher.id === updatedTeacher.id ? updatedTeacher : teacher
               )
-            : [...prevTeachers, updatedTeacher],
+            : [...prevTeachers, updatedTeacher]
         );
         setSelectedTeacher(null);
         setError(null);
       } else {
         const errorData = await res.json();
         setError(
-          errorData.error || "An error occurred while updating the teacher.",
+          errorData.error || "An error occurred while updating the teacher."
         );
       }
     } catch (err) {
@@ -244,97 +248,104 @@ export default function StudentList() {
 
   return (
     <>
-      {error && <p className="text-red-500">{error}</p>}
+      <div className="h-full w-full px-10 pb-16">
+        <div className="space-y-0.5">
+          <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
+          <p className="text-muted-foreground">Consult School Classes.</p>
+        </div>
+        <Separator />
+        <div className="flex flex-col items-center justify-center  gap-6 mt-10"></div>
+        {error && <p className="text-red-500">{error}</p>}
 
-      {loadingStudents || loadingTeachers ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {/* Display teachers */}
-          <div className="flex items-center justify-center flex-col gap-4 p-4 w-full">
-            <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
-            {teachers.length > 0 ? (
-              <ul className="space-y-4">
-                {teachers
-                  .filter((teacher) => teacher.role === "TEACHER")
-                  .map((teacher) => (
-                    <li key={teacher.id}>
-                      <Card className="w-96">
-                        <CardHeader>
-                          <CardTitle className="text-center">
-                            <Link
-                              href={`/school-dashboard/class/${classNameParams}/teacher/${teacher.id}`}
-                            >
-                              <button>
-                                {`${teacher.firstname} ${teacher.lastname}`}
-                              </button>
-                            </Link>
-                          </CardTitle>
-                        </CardHeader>
-                      </Card>
-                    </li>
-                  ))}
-              </ul>
-            ) : (
-              <div className="flex flex-col items-center justify-center ">
-                <SelectMenu
-                  selected={selectedTeacher}
-                  setSelected={setSelectedTeacher}
-                  options={allTeachers}
-                  displayValue={(teacher) =>
-                    `${teacher.firstname} ${teacher.lastname}`
-                  }
-                  label="Select a Teacher"
-                />
-                <Button onClick={handleUpdate} className="mt-4">
-                  Update
-                </Button>
-              </div>
-            )}
-          </div>
+        {loadingStudents || loadingTeachers ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {/* Display teachers */}
+            <div className="flex items-center justify-center flex-col gap-4 p-4 w-full">
+              <h1 className="text-2xl font-bold tracking-tight">Teachers</h1>
+              {teachers.length > 0 ? (
+                <ul className="space-y-4">
+                  {teachers
+                    .filter((teacher) => teacher.role === "TEACHER")
+                    .map((teacher) => (
+                      <li key={teacher.id}>
+                        <Card className="w-96">
+                          <CardHeader>
+                            <CardTitle className="text-center">
+                              <Link
+                                href={`/school-dashboard/class/${classNameParams}/teacher/${teacher.id}`}
+                              >
+                                <button>
+                                  {`${teacher.firstname} ${teacher.lastname}`}
+                                </button>
+                              </Link>
+                            </CardTitle>
+                          </CardHeader>
+                        </Card>
+                      </li>
+                    ))}
+                </ul>
+              ) : (
+                <div className="flex flex-col items-center justify-center ">
+                  <SelectMenu
+                    selected={selectedTeacher}
+                    setSelected={setSelectedTeacher}
+                    options={allTeachers}
+                    displayValue={(teacher) =>
+                      `${teacher.firstname} ${teacher.lastname}`
+                    }
+                    label="Select a Teacher"
+                  />
+                  <Button onClick={handleUpdate} className="mt-4">
+                    Update
+                  </Button>
+                </div>
+              )}
+            </div>
 
-          {/* Display students */}
-          <div className="flex items-center justify-center flex-col gap-4 p-8 w-full">
-            <h2 className="text-xl font-bold">Students</h2>
-            {students.length > 0 ? (
-              <ul className="space-y-4">
-                {students
-                  .filter((student) => student.role === "STUDENT")
-                  .map((student) => (
-                    <li key={student.id}>
-                      <Card className="w-96">
-                        <CardHeader>
-                          <CardTitle className="text-center">
-                            <Link
-                              href={`/school-dashboard/class/${classNameParams}/student/${student.id}`}
-                            >
-                              <button>
-                                {`${student.firstname} ${student.lastname}`}
-                              </button>
-                            </Link>
+            {/* Display students */}
+            <div className="flex items-center justify-center flex-col gap-4 p-8 w-full">
+              <h2 className="text-xl font-bold">Students</h2>
+              {students.length > 0 ? (
+                <ul className="space-y-4">
+                  {students
+                    .filter((student) => student.role === "STUDENT")
+                    .map((student) => (
+                      <li key={student.id}>
+                        <Card className="w-96">
+                          <CardHeader>
+                            <CardTitle className="text-center">
+                              <Link
+                                href={`/school-dashboard/class/${classNameParams}/student/${student.id}`}
+                              >
+                                <button>
+                                  {`${student.firstname} ${student.lastname}`}
+                                </button>
+                              </Link>
+                            </CardTitle>
+                          </CardHeader>
+                        </Card>
+                      </li>
+                    ))}
+                </ul>
+              ) : (
+                <p>No student found in this class.</p>
+              )}
+            </div>
+          </>
+        )}
 
-                          </CardTitle>
-                        </CardHeader>
-                      </Card>
-                    </li>
-                  ))}
-              </ul>
-            ) : (
-              <p>No student found in this class.</p>
-            )}
-          </div>
-        </>
-      )}
-
-      {/* Add new student button */}
-      <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
-        <Link
-          href={`/school-dashboard/class/${classNameParams}/student/addStudent`}
-        >
-          <Button className="bg-purple text-seasame" variant="outline">
-            Add a new student
-          </Button>
-        </Link>
+        {/* Add new student button */}
+        <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
+          <Link
+            href={`/school-dashboard/class/${classNameParams}/student/addStudent`}
+          >
+            <Button className="bg-purple text-seasame" variant="outline">
+              Add a new student
+            </Button>
+          </Link>
+        </div>
       </div>
     </>
   );

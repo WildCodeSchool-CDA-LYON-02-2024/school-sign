@@ -14,6 +14,7 @@ import {
 } from "@radix-ui/react-icons";
 // hooks
 import { useIsMobile } from "@/hooks/useIsMobile";
+import React from "react";
 
 export default function TeacherNavBar() {
   const isMobile = useIsMobile();

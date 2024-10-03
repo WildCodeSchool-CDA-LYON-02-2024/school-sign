@@ -25,7 +25,7 @@ export default function BottomNav({ links }: NavProps) {
             <Link
               href={link.href ?? "#"} // fallback to # if href is not defined
               className={cn(
-                buttonVariants({ variant: link.variant, size: "lg" }),
+                buttonVariants({ variant: link.variant, size: "default" }),
                 "flex flex-col items-center h-full w- py-1 m-1",
                 isActive
                   ? "bg-primary text-white hover:bg-accent-foreground hover:text-white"

@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);
@@ -51,13 +52,13 @@ export default function ClassList() {
 
   return (
     <>
-      <div className="space-y-6 pl-10 pb-16 md:block">
-        <div className="space-y-0.5">
+      <div className="h-full w-full px-10 pb-16 ">
+        <div className="space-y-0.5 ">
           <h1 className="text-2xl font-bold tracking-tight">Classes</h1>
           <p className="text-muted-foreground">Consult School Classes.</p>
-        </div>
         <Separator />
-        <div className="flex flex-col items-center justify-center gap-6">
+        </div>
+        <div className="flex flex-col items-center my-10 ">
           {error && <p className="text-red-500">{error}</p>}
 
           {loading ? (
@@ -66,7 +67,7 @@ export default function ClassList() {
             <ul>
               {classData.map((cls: any) => (
                 <li key={cls.id}>
-                  <Card className="w-40">
+                  <Card className="w-40 mt-5">
                     <CardHeader  className="relative">
                       <CardTitle className="flex gap-2 flex-wrap justify-center">
                         <Link

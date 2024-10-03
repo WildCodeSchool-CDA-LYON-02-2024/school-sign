@@ -13,6 +13,8 @@ import SelectMenu from "@/components/SelectMenu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 interface Teacher {
   id: string;
@@ -150,7 +152,13 @@ export default function StudentDetails({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="h-full w-full px-10 pb-16 ">
+    <div className="space-y-0.5 ">
+      <h1 className="text-2xl font-bold tracking-tight pb-5">Teacher&apos;s information</h1>
+
+    <Separator />
+    </div>
+    <div className="flex flex-col items-center justify-center">
       {error && <p className="text-red-500">{error}</p>}
 
       {loading ? (
@@ -158,16 +166,31 @@ export default function StudentDetails({
       ) : (
         <>
           {teacher ? (
-            <Card className="relative w-96 mt-10 justify-center items-center">
-              <CardContent className="flex flex-col justify-center items-center">
+            <Card className="mt-10 flex flex-col justify-center relative p-10 sm:w-full  md:w-10/12 lg:w-6/12  sm:p-5 md:p-7r">
+              <div className="flex sm:flex-col md:flex-row p-6  " >
+              <CardContent className=" sm:w-5/12 p-0 md:w-3/12">
+                {`Firstname :`}
+              </CardContent>
+              <CardContent className=" w-6/12 p-0">
                 {`${teacher.firstname}`}
               </CardContent>
-              <CardContent className="flex flex-col justify-center items-center">
+              </div>
+              <div className="flex sm:flex-col md:flex-row p-6  ">
+              <CardContent className=" sm:w-5/12 p-0 md:w-3/12 pb-3">
+                {`Firstname :`}
+              </CardContent>
+              <CardContent className=" w-6/12 p-0">
                 {`${teacher.lastname}`}
               </CardContent>
-              <CardContent className="flex flex-col justify-center items-center">
+              </div>
+              <div className="flex sm:flex-col md:flex-row p-6  ">
+              <CardContent className=" sm:w-5/12 p-0 md:w-3/12">
+                {`Email :`}
+              </CardContent>
+              <CardContent className="w-6/12 p-0 flex wrap">
                 {`${teacher.email}`}
               </CardContent>
+              </div>
               <Link
                 className="absolute right-0 bottom-0 p-3"
                 href={`/school-dashboard/teacher//${teacher.id}/update`}
@@ -204,6 +227,7 @@ export default function StudentDetails({
           </>
         )}
       </div>
-    </div>
+      </div>
+      </div>
   );
 }

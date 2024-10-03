@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { NavProps } from "@/components/navigation/components/navTypes";
 import Logout from "@/components/logout";
+import React from "react";
 
 export default function SideNav({ links }: NavProps) {
   const pathname = usePathname();
