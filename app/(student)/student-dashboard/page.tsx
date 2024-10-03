@@ -20,7 +20,7 @@ export default function StudentDashboard() {
   const { fetchLessons } = useFetchLessons(
     studentClassId,
     setLessons,
-    setError,
+    setError
   );
   const { fetchSignatures } = useFetchSignatures(setSignatures, setError);
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
@@ -87,39 +87,40 @@ export default function StudentDashboard() {
         (signature) =>
           signature.lessonId === currentLessonId &&
           signature.userId ===
-            (studentId !== null ? studentId.toString() : undefined), // Convert studentId to string
+            (studentId !== null ? studentId.toString() : undefined) // Convert studentId to string
       )
     : [];
 
   return (
-    <div className="space-y-6 pl-10 pb-16 md:block">
+    <div className="h-full w-full px-10 pb-16">
       <div className="space-y-0.5">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-bold tracking-tight pb-5">Dashboard</h1>
+        <Separator />
       </div>
-      <Separator />
-
-      {/* Render fetched signatures */}
-      {filteredSignatures.length > 0 ? (
-        <div className="mb-4">
-          {filteredSignatures.map((signature) => (
-            <div key={signature.id}>
-              <div className="flex flex-col items-center">
-                <h4 className="mb-4">Saved Signature</h4>
-                <Image
-                  src={signature.hashedSign}
-                  alt="Signature"
-                  width={600}
-                  height={500}
-                />
+      <div className=" h-full flex flex-col items-center justify-center">
+        {/* Render fetched signatures */}
+        {filteredSignatures.length > 0 ? (
+          <div className="mb-4">
+            {filteredSignatures.map((signature) => (
+              <div key={signature.id}>
+                <div className="flex flex-col items-center">
+                  <h4 className="mb-4">Saved Signature</h4>
+                  <Image
+                    src={signature.hashedSign}
+                    alt="Signature"
+                    width={600}
+                    height={500}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : canSign && ongoingLessons.length > 0 ? (
-        <SignatureCanvas lessonId={ongoingLessons[0].id} />
-      ) : (
-        <p className="text-gray-500">Aucune leçon en cours pour signer.</p>
-      )}
+            ))}
+          </div>
+        ) : canSign && ongoingLessons.length > 0 ? (
+          <SignatureCanvas lessonId={ongoingLessons[0].id} />
+        ) : (
+          <p className="text-gray-500">Aucune leçon en cours pour signer.</p>
+        )}
+      </div>
     </div>
   );
 }

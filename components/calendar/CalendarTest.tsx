@@ -25,6 +25,7 @@ export default function CalendarTest() {
   });
   const [events, setEvents] = useState<Lesson[]>([]);
   const [userClassId, setUserClassId] = useState(null);
+  const [role, setRole] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,6 +34,8 @@ export default function CalendarTest() {
         const response = await fetch("/api/getClassIdByToken");
         if (response.ok) {
           const data = await response.json();
+          console.log(data, 'DATA');
+          setRole(data.user.role)
           setUserClassId(data.user.classId);
         } else {
           console.error("Error fetching classId");
@@ -164,7 +167,7 @@ export default function CalendarTest() {
           end: new Date(event.dateEnd).toISOString(),
         }))}
       />
-      {showModal && (
+      {showModal && role === "TEACHER" && (
         <div className="modal flex flex-col justify-center items-center mb-32">
           <form
             onSubmit={handleModalSubmit}
