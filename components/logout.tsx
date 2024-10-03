@@ -46,11 +46,11 @@ export default function Logout() {
         className={
           isMobile
             ? cn(
-                buttonVariants({ variant: "default", size: "sm" }),
+                buttonVariants({ variant: "default", size: "default" }),
                 "bg-red-700 hover:bg-red-600 w-28 px-0",
               )
             : cn(
-                buttonVariants({ variant: "default", size: "sm" }),
+                buttonVariants({ variant: "default", size: "default" }),
                 "mt-3 bg-red-700 hover:bg-red-600 w-32",
               )
         }

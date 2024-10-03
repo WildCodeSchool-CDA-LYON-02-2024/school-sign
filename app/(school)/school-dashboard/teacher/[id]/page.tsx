@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 interface Teacher {
   id: string;
@@ -153,7 +154,7 @@ export default function StudentDetails({
 
   return (
     <div className="h-full w-full px-10 pb-16 ">
-      <div className="space-y-0.5 ">
+      <div className="space-y-0.5 py-8 ">
         <h1 className="text-2xl font-bold tracking-tight">Teacher</h1>
         <p className="text-muted-foreground">informations.</p>
         <Separator />
@@ -195,10 +196,10 @@ export default function StudentDetails({
                     </CardContent>
                   </div>
                   <Link
-                    className="absolute right-0 bottom-0 p-3"
+                    className="absolute right-0 top-0 p-3"
                     href={`/school-dashboard/teacher//${teacher.id}/update`}
                   >
-                    <button>Update</button>
+                    <button><ModifyIcon/></button>
                   </Link>
                 </Card>
                 <div className="flex flex-col items-center justify-center mt-10">

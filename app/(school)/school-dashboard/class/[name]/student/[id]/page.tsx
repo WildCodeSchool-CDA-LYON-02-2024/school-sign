@@ -11,6 +11,7 @@ import { useParams } from "next/navigation";
 // ui
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 export default function StudentDetails() {
   const [student, setStudent] = useState<any | null>(null);
@@ -94,10 +95,10 @@ export default function StudentDetails() {
                 </div>
 
                 <Link
-                  className="absolute right-0 bottom-0 p-3"
+                  className="absolute right-0 top-0 p-3"
                   href={`/school-dashboard/class/${className}/student/${student.id}/update`}
                 >
-                  <button>Update</button>
+                  <button><ModifyIcon/></button>
                 </Link>
               </Card>
             ) : (

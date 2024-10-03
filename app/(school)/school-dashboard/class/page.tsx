@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);
@@ -79,10 +80,12 @@ export default function ClassList() {
                           </Link>
 
                           <Link
-                            className="absolute right-0 bottom-0 p-3"
+                            className="absolute right-0 top-0 p-3"
                             href={`/school-dashboard/class/${cls.name}/update`}
                           >
-                            <button>modify</button>
+                            <button>
+                              <ModifyIcon />
+                            </button>
                           </Link>
                         </CardTitle>
                       </CardHeader>
