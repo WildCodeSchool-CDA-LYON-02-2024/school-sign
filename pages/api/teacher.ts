@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { method } = req;
 
@@ -26,6 +26,7 @@ export default async function handler(
 
 // Handle GET request - Retrieve all teachers or teachers by classId
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
   try {
     const tokenCookie = req.cookies.session;
     if (!tokenCookie) {
@@ -35,14 +36,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const schoolId = payload.schoolId;
     const role = payload.role;
     const classIdQuery = req.query.classid;
+
     let classId: number | undefined = undefined;
 
-    if (typeof classIdQuery === "string") {
-      classId = parseInt(classIdQuery, 10);
-      if (isNaN(classId)) {
-        return res.status(400).json({ error: "Invalid class ID format" });
-      }
-    } else if (Array.isArray(classIdQuery)) {
+    if (Array.isArray(classIdQuery)) {
       classId = parseInt(classIdQuery[0], 10);
     }
 
@@ -54,6 +51,23 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       return res.status(403).json({
         error: "Access denied. You do not have the required permissions.",
       });
+    }
+
+    if (id) {
+      const userId = Number(id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: "Invalid user ID format" });
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.status(200).json({ user });
     }
 
     if (classId !== undefined) {
@@ -141,28 +155,17 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
 // Handle PUT request - Update an existing teacher
 async function handlePut(req: NextApiRequest, res: NextApiResponse) {
-  const id = parseInt(req.query.id as string, 10);
-  const { classId } = req.body;
+  const { id } = req.query;
 
   try {
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid ID" });
-    }
-
-    if (typeof classId === "undefined") {
-      return res.status(400).json({ error: "classId is required" });
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { id: id },
-      data: {
-        classId: classId,
-      },
+    const parsedBody = registerSchemaUser.partial().parse(req.body);
+    const updatedclass = await prisma.user.update({
+      where: { id: parseInt(id as string, 10) },
+      data: parsedBody,
     });
-
-    return res.status(200).json(updatedUser);
+    return res.status(200).json(updatedclass);
   } catch (error) {
-    console.error("API Error:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error(error);
+    return res.status(400).json({ error: "Invalid data or class not found" });
   }
 }

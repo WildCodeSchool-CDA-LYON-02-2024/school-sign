@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 // next
 import { useRouter } from "next/navigation";
-import { Student } from "@/app/(school)/school-dashboard/class/[name]/student/page";
+import { useParams } from "next/navigation";
 
 // ui
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,40 +14,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-export default function AddStudentForm() {
+export default function UpdateStudentForm() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [classData, setClassData] = useState<Student[]>([]);
-  const [userSchoolId, setUserSchoolId] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
+  const params = useParams<{ id: string }>() || null;
+
+  const id = params?.id || null;
 
   useEffect(() => {
-    const fetchSchoolId = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/getClassIdByToken");
-        if (response.ok) {
-          const data = await response.json();
-
-          setUserSchoolId(data.user.schoolId);
-        } else {
-          console.error("Erreur lors de la récupération du classId");
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération du classId", error);
-      }
-    };
-
-    fetchSchoolId();
-  }, []);
-
-  useEffect(() => {
-    const fetchAllTeachers = async () => {
-      try {
-        const res = await fetch("/api/class", {
+        const res = await fetch(`/api/student?id=${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -57,11 +38,13 @@ export default function AddStudentForm() {
 
         if (res.ok) {
           const data = await res.json();
-          setClassData(data.classSections || []);
+          setFirstname(data.user?.firstname || "");
+          setLastname(data.user?.lastname || "");
+          setEmail(data.user?.email || "");
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching teachers",
+            errorData.error || "An error occurred while fetching the student"
           );
         }
       } catch (err) {
@@ -70,25 +53,22 @@ export default function AddStudentForm() {
       }
     };
 
-    fetchAllTeachers();
-  }, []);
-
-  const getClassId = () => {
-    if (classData.length > 0) {
-      const classSection = classData.find((cls) => cls.schoolId === userSchoolId);
-      return classSection ? classSection.id : "Class not found";
+    if (id) {
+      fetchData();
     }
-    return null;
-  };
+  }, [id]);
 
-  const classId = getClassId();
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!id) {
+      setError("Invalid request. Missing student ID.");
+      return;
+    }
+
     try {
-      const res = await fetch("/api/student", {
-        method: "POST",
+      const res = await fetch(`/api/student?id=${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -96,8 +76,6 @@ export default function AddStudentForm() {
           firstname,
           lastname,
           email,
-          password,
-          classId,
         }),
         credentials: "include",
       });
@@ -106,16 +84,11 @@ export default function AddStudentForm() {
       if (res.ok) {
         toast({
           className: "bg-green-400",
-          description: "Student added",
+          description: "Student updated successfully",
           duration: 2000,
         });
         router.back();
       } else {
-        // toast({
-        //   className: "bg-red-500",
-        //   description: "Email already in use",
-        //   duration: 2000,
-        // });
         const errorData = await res.json();
         console.log(errorData.details);
 
@@ -126,7 +99,7 @@ export default function AddStudentForm() {
         } else if (res.status === 400) {
           setError("Invalid input data. Please check the form fields.");
         } else {
-          setError("An error occurred while adding the student.");
+          setError("An error occurred while updating the student.");
         }
       }
     } catch (err) {
@@ -139,10 +112,10 @@ export default function AddStudentForm() {
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10">
         <CardHeader>
-          <CardTitle className="text-center">Add a Student</CardTitle>
+          <CardTitle className="text-center">Update Student Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleUpdate}>
             <div className="flex flex-col space-y-2">
               <Label htmlFor="firstname">Firstname</Label>
               <Input
@@ -172,16 +145,6 @@ export default function AddStudentForm() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 interface Teacher {
+  id: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -157,7 +158,7 @@ export default function StudentDetails({
       ) : (
         <>
           {teacher ? (
-            <Card className="w-96 mt-10 justify-center items-center">
+            <Card className="relative w-96 mt-10 justify-center items-center">
               <CardContent className="flex flex-col justify-center items-center">
                 {`${teacher.firstname}`}
               </CardContent>
@@ -167,6 +168,12 @@ export default function StudentDetails({
               <CardContent className="flex flex-col justify-center items-center">
                 {`${teacher.email}`}
               </CardContent>
+              <Link
+                className="absolute right-0 bottom-0 p-3"
+                href={`/school-dashboard/teacher//${teacher.id}/update`}
+              >
+                <button>Update</button>
+              </Link>
             </Card>
           ) : (
             <p>No teacher found with this ID.</p>
