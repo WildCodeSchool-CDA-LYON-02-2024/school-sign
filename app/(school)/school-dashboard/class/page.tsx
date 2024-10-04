@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 export default function ClassList() {
   const [classData, setClassData] = useState([]);
@@ -34,7 +36,7 @@ export default function ClassList() {
         } else {
           const errorData = await res.json();
           setError(
-            errorData.error || "An error occurred while fetching classes",
+            errorData.error || "An error occurred while fetching classes"
           );
         }
       } catch (err) {
@@ -61,12 +63,14 @@ export default function ClassList() {
           {error && <p className="text-red-500">{error}</p>}
 
           {loading ? (
-            <p>Loading...</p>
+            <p className="h-full w-full flex items-center justify-center">
+              Loading...
+            </p>
           ) : classData.length > 0 ? (
             <ul>
               {classData.map((cls: any) => (
                 <li key={cls.id}>
-                  <Card className="w-40">
+                  <Card className="w-72 mt-5">
                     <CardHeader  className="relative">
                       <CardTitle className="flex gap-2 flex-wrap justify-center">
                         <Link
@@ -80,7 +84,7 @@ export default function ClassList() {
                           href={`/school-dashboard/class/${cls.name}/update`}
                         >
                           <button>
-                            modify
+                              <ModifyIcon />
                           </button>
                         </Link>
                       </CardTitle>
@@ -90,7 +94,9 @@ export default function ClassList() {
               ))}
             </ul>
           ) : (
-            <p>No classes found.</p>
+              <p className="h-full w-full flex items-center justify-center">
+                  No classes found.
+              </p>
           )}
         </div>
 

@@ -1,7 +1,9 @@
 "use client";
 
 // components
+import CalendarTest from "@/components/calendar/CalendarTest";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 import Calendar from "@/components/calendar/Calendar";
 
 export default function TeacherSchedule() {

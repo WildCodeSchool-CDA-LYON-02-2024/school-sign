@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
+
 export default function AddClassForm() {
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +65,8 @@ export default function AddClassForm() {
   return (
     <Card className="w-96">
       <CardHeader>
-        <CardTitle className="text-center">Add a new Class</CardTitle>
+        <CardTitle className="text-center">Please add required informations</CardTitle>
+
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>

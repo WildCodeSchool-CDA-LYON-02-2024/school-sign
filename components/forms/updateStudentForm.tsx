@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 
 // ui
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader,CardDescription, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -112,7 +112,12 @@ export default function UpdateStudentForm() {
     <div className="flex items-center justify-center">
       <Card className="w-96 mt-10">
         <CardHeader>
-          <CardTitle className="text-center">Update Student Information</CardTitle>
+        <CardTitle className="text-center">
+          Update form
+        </CardTitle>
+        <CardDescription className="text-center">
+        Please fill out the form to update student's informations.
+        </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleUpdate}>

@@ -3,6 +3,7 @@
 // components
 import CalendarTest from "@/components/calendar/CalendarTest";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 export default function StudentSchedule() {
   return (

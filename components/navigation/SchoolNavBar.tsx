@@ -12,6 +12,7 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import React from "react";
 
 export default function SchoolNavBar() {
   const isMobile = useIsMobile();
