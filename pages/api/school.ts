@@ -1,12 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
-import { verifyToken } from "@/lib/jwt"; // Assurez-vous d'avoir une fonction pour vérifier le token
+import { verifyToken } from "@/lib/jwt";
 import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/client";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 

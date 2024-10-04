@@ -1,42 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Lesson } from "@/components/calendar/Calendar";
-import { useFetchClassDetails } from "@/hooks/useFetchClassDetails";
+import { useToast } from "@/hooks/use-toast";
 
-export function useLessonData(toast: any) {
+export function useLessonData() {
   const [events, setEvents] = useState<Lesson[]>([]);
   const [userClassId, setUserClassId] = useState<number | null>(null);
-  const [teacherName, setTeacherName] = useState<string | null>(null);
-  const [className, setClassName] = useState<string | null>(null);
-  const { fetchClassId } = useFetchClassDetails(
-    setTeacherName,
-    setUserClassId,
-    setClassName,
-    userClassId,
-  );
+  const { toast } = useToast();
 
-  useEffect(() => {
-    fetchClassId();
-  }, [fetchClassId]);
-
-  useEffect(() => {
-    if (userClassId) {
-      const fetchLessons = async () => {
-        try {
-          const response = await fetch(`/api/lessons?classId=${userClassId}`);
-          if (response.ok) {
-            const data: Lesson[] = await response.json();
-            setEvents(data);
-          } else {
-            console.error("Error fetching lessons");
-          }
-        } catch (error) {
-          console.error("Error fetching lessons:", error);
-        }
-      };
-
-      fetchLessons();
+  const getLessons = async () => {
+    try {
+      const response = await fetch(`/api/lessons?classId=${userClassId}`);
+      if (response.ok) {
+        const data: Lesson[] = await response.json();
+        setEvents(data);
+      } else {
+        console.error("Error fetching lessons");
+      }
+    } catch (error) {
+      console.error("Error fetching lessons:", error);
     }
-  }, [userClassId]);
+  };
 
   const addLesson = async (lesson: Lesson) => {
     try {
@@ -74,6 +57,7 @@ export function useLessonData(toast: any) {
 
   return {
     events,
+    getLessons,
     addLesson,
   };
 }

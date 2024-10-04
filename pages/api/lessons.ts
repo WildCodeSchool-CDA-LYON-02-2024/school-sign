@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "@/lib/jwt";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/client";
 
 interface Lesson {
   name: string;

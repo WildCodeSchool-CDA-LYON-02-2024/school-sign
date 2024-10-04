@@ -6,7 +6,6 @@ export interface ClassSection {
 }
 
 export function useFetchClassDetails(
-  setTeacherName: (name: string) => void,
   setClassId: (id: number | null) => void,
   setClassName: (name: string | null) => void,
   classId: number | null,
@@ -34,16 +33,11 @@ export function useFetchClassDetails(
     }
   }, [setClassName, classId]);
 
-  useEffect(() => {
-    fetchClassName();
-  }, [fetchClassName]);
-
   const fetchClassId = useCallback(async () => {
     try {
       const response = await fetch("/api/getClassIdByToken");
       if (response.ok) {
         const data = await response.json();
-        setTeacherName(`${data.user.firstname} ${data.user.lastname}`);
         setClassId(data.user.classId);
       } else {
         throw new Error("Failed to fetch class ID");
@@ -52,7 +46,7 @@ export function useFetchClassDetails(
       console.error("Error fetching class ID:", error);
       setClassId(null);
     }
-  }, [setTeacherName, setClassId]);
+  }, [setClassId]);
 
   return { fetchClassId, fetchClassName };
 }

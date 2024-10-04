@@ -2,19 +2,13 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Lesson } from "@/components/calendar/Calendar";
+import { useLessonData } from "@/hooks/useLessonData";
+import { RefObject, useRef } from "react";
 
-interface LessonCalendarProps {
-  events: Lesson[];
-  handleDateClick: (arg: { dateStr: string }) => void;
-  calendarRef: React.RefObject<FullCalendar>;
-}
+export function LessonCalendar({ handleDateClick }: { handleDateClick: any }) {
+  const calendarRef: RefObject<FullCalendar> = useRef<FullCalendar>(null);
+  const { events } = useLessonData();
 
-export function LessonCalendar({
-  events,
-  handleDateClick,
-  calendarRef,
-}: LessonCalendarProps) {
   return (
     <>
       <FullCalendar

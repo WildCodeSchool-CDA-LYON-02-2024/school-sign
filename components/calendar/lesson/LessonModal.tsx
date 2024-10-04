@@ -1,15 +1,10 @@
-import { Lesson } from "@/components/calendar/Calendar";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { lessonSchema } from "@/lib/schemas/lessonSchema";
 import {
   Form,
   FormControl,
@@ -19,25 +14,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "@radix-ui/react-icons";
+import { useCalendarEvents } from "@/hooks/useCalendarEvents";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { lessonSchema } from "@/lib/schemas/lessonSchema";
 
-type LessonFormValues = z.infer<typeof lessonSchema>;
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+
+export type LessonFormValues = z.infer<typeof lessonSchema>;
 
 interface LessonModalProps {
   open: boolean;
-  newEvent: Lesson;
-  setNewEvent: React.Dispatch<React.SetStateAction<Lesson>>;
-  handleModalSubmit: (data: LessonFormValues) => void;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -47,16 +44,12 @@ const defaultValues: Partial<LessonFormValues> = {
   dateEnd: "",
 };
 
-export function LessonModal({
-  open,
-  newEvent,
-  setNewEvent,
-  handleModalSubmit,
-  setShowModal,
-}: LessonModalProps) {
-  const formatDateTimeLocal = (dateString: string) => {
-    if (!dateString) return "";
-    return new Date(dateString)
+export function LessonModal({ open, setShowModal }: LessonModalProps) {
+  const { handleModalSubmit } = useCalendarEvents();
+
+  const formatDateTimeLocal = (dateTime: string) => {
+    if (!dateTime) return "";
+    return new Date(dateTime)
       .toLocaleString("sv-SE", {
         timeZone: "Europe/Paris",
         hour12: false,
@@ -79,12 +72,11 @@ export function LessonModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add A Lesson</DialogTitle>
-          <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleModalSubmit)}
-            className="space-y-8"
+            className="space-y-8 rounded"
           >
             <FormField
               control={form.control}
@@ -114,7 +106,7 @@ export function LessonModal({
                         <Button
                           variant="outline"
                           className={cn(
-                            "w-[240px] justify-start pl-3 text-left font-normal",
+                            "w-[240px] pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground",
                           )}
                         >
@@ -130,12 +122,19 @@ export function LessonModal({
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
+                        selected={
+                          field.value
+                            ? new Date(formatDateTimeLocal(field.value))
+                            : undefined
                         }
-                        initialFocus
+                        onSelect={field.onChange}
+                        // onSelect={(date) =>
+                        //   field.onChange(date ? date.toISOString() : "")
+                        // }
+                        // disabled={(date) =>
+                        //   date > new Date() || date < new Date("1900-01-01")
+                        // }
+                        // classNames={classNames}
                       />
                     </PopoverContent>
                   </Popover>
@@ -158,7 +157,7 @@ export function LessonModal({
                         <Button
                           variant="outline"
                           className={cn(
-                            "w-[240px] justify-start pl-3 text-left font-normal",
+                            "w-[240px] pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground",
                           )}
                         >
@@ -174,12 +173,16 @@ export function LessonModal({
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
+                        selected={
+                          field.value ? new Date(field.value) : undefined
                         }
-                        initialFocus
+                        onSelect={(date) =>
+                          field.onChange(date ? date.toISOString() : "")
+                        }
+                        // disabled={(date) =>
+                        //   date > new Date() || date < new Date("1900-01-01")
+                        // }
+                        // classNames={classNames}
                       />
                     </PopoverContent>
                   </Popover>
@@ -190,7 +193,7 @@ export function LessonModal({
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <DialogFooter className="flex-row-reverse justify-between">
               <Button type="submit" disabled={!form.formState.isValid}>
                 Add Lesson
               </Button>

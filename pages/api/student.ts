@@ -2,14 +2,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 // prisma & zod
-import { Prisma, PrismaClient, Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
 import { ZodError } from "zod";
 
 import bcrypt from "bcrypt";
 import { verifyToken } from "@/lib/jwt";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -85,7 +84,10 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
     // Check for Prisma constraint violations (e.g., duplicate email)
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002" && error.meta?.target?.includes("email")) {
+      if (
+        error.code === "P2002" &&
+        (error.meta?.target as string[])?.includes("email")
+      ) {
         return res.status(409).json({ error: "Email already in use" });
       }
     }

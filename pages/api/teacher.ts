@@ -1,14 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
 import { verifyToken } from "@/lib/jwt";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/client";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 

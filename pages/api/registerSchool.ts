@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
-import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool"; // Assurez-vous que le schéma est adapté aux utilisateurs
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
+import { registerSchemaSchool } from "@/lib/schemas/registerSchemaSchool";
+import { prisma } from "@/lib/client";
 
 export default async function handler(
   req: NextApiRequest,

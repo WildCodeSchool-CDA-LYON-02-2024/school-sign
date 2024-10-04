@@ -1,17 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/client";
 
-const prisma = new PrismaClient();
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { method } = req;
-    switch (method) {
-      case "PUT":
-        return handlePut(req, res);
-      default:
-        return res.status(405).json({ error: "Method not allowed" });
-    }
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const { method } = req;
+  switch (method) {
+    case "PUT":
+      return handlePut(req, res);
+    default:
+      return res.status(405).json({ error: "Method not allowed" });
   }
+}
 
 // Handle PUT request - Update an existing teacher
 async function handlePut(req: NextApiRequest, res: NextApiResponse) {

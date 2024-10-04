@@ -7,8 +7,4 @@ export const calendarFormSchema = z.object({
   date: z.date({
     required_error: "Invalid date.",
   }),
-  // subjectId: z.number().min(1, {
-  //   message: "Subject is mandatory",
-  // }),
-  // schoolId: z.number().optional(),
 });

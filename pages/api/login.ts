@@ -1,12 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { PrismaClient } from "@prisma/client";
-import { createToken } from "@/lib/jwt"; // Assurez-vous que cette fonction accepte un schoolId
 import bcrypt from "bcrypt";
 import { serialize } from "cookie";
+import { createToken } from "@/lib/jwt"; // Assurez-vous que cette fonction accepte un schoolId
 import { loginSchema } from "@/lib/schemas/loginSchema";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/client";
 
 export default async function handler(
   req: NextApiRequest,

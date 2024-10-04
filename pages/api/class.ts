@@ -1,13 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
-import { classSchema } from "@/lib/schemas/classSchema"; // Assurez-vous que ce schéma est bien défini
-import { verifyToken } from "@/lib/jwt"; // Assurez-vous que la fonction verifyToken est importée correctement
-
-const prisma = new PrismaClient();
+import { classSchema } from "@/lib/schemas/classSchema";
+import { verifyToken } from "@/lib/jwt";
+import { prisma } from "@/lib/client";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
 
