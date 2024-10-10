@@ -10,6 +10,7 @@ import Link from "next/link";
 // ui
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ModifyIcon } from "@/components/icons/ModifyIcon";
 
 export default function SchoolDetails() {
   const [school, setSchool] = useState<any | null>(null);
@@ -121,11 +122,11 @@ export default function SchoolDetails() {
                   </CardContent>
                 </div>
                 <Link
-                  className="absolute right-0 bottom-0 p-3"
-                  href={`/school-dashboard/settings/profil/update`}
-                >
-                  <button>Update</button>
-                </Link>
+                    className="absolute right-0 top-0 p-3"
+                    href={`/school-dashboard/settings/profil/update`}
+                  >
+                    <button><ModifyIcon/></button>
+                  </Link>
               </Card>
             ) : (
               <p className="h-full w-full flex items-center justify-center">No student found with this ID.</p>

@@ -79,10 +79,10 @@ export default function TeacherDashboard() {
 
         // Set the signature status to pending if the student has no signature
         let signatureStatus: StatusType = "pending";
-        if (studentSignature) {
-          signatureStatus =
-            (studentSignature.status as StatusType) || "received";
-        }
+        // if (studentSignature) {
+        //   signatureStatus =
+        //     (studentSignature.status as StatusType) || "received";
+        // }
         console.log(className);
 
         return {

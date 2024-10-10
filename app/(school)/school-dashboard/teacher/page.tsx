@@ -65,11 +65,13 @@ export default function TeacherList() {
         </div>
       </div>
 
-      <div className="flex justify-center h-full">
+      <div className="flex justify-center ">
         {error && <p className="text-red-500">{error}</p>}
 
         {loading ? (
-          <p className="h-full w-full flex items-center justify-center">Loading...</p>
+          <p className="h-full w-full flex items-center justify-center">
+            Loading...
+          </p>
         ) : teachers.length > 0 ? (
           <div>
             <ul className="space-y-4">
@@ -98,7 +100,18 @@ export default function TeacherList() {
             </div>
           </div>
         ) : (
-          <p className="h-full w-full flex items-center justify-center">No teachers found.</p>
+          <div>
+            <p className="h-full w-full flex items-center justify-center">
+              No teachers found.
+            </p>
+            <div className="flex items-center justify-center flex-col gap-4 p-4 md:p-10">
+              <Button className="bg-purple text-seasame" variant="outline">
+                <Link href="/school-dashboard/teacher/addTeacher">
+                  Add a new Teacher
+                </Link>
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </>
