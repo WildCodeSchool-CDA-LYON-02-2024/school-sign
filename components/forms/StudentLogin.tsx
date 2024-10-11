@@ -101,16 +101,8 @@ export default function StudentLogin() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <div className="mt-4 text-center text-sm">
-              New here?
-              <Button variant="link" asChild>
-                <Link href="/school-register" className="underline">
-                  Click here to register
-                </Link>
-              </Button>
-            </div>
           </div>
-          <CardFooter className="flex justify-end">
+          <CardFooter className="flex justify-end mt-5">
             <Button type="submit">Submit</Button>
           </CardFooter>
         </form>

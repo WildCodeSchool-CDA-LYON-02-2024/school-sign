@@ -181,7 +181,7 @@ export default function StudentDetails({
                   </div>
                   <div className="flex sm:flex-col md:flex-row p-3 md:w-10/12 sm:items-center  md:text-left  sm:text-center">
                     <CardContent className="h-8 p-0 md:w-6/12 md:pl-14">
-                      {`Firstname :`}
+                      {`Lasttname :`}
                     </CardContent>
                     <CardContent className="h-8  p-0 overflow-x-scroll">
                       {`${teacher.lastname}`}

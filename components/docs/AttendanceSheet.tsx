@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import React from "react";
 
 interface Signature {
   userId: string;
@@ -295,13 +296,13 @@ export default function AttendanceSheet() {
           <SelectValue placeholder="Select a class" />
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
+          {/* <SelectGroup>
             {classes.map((classItem) => (
               <SelectItem key={classItem.id} value={classItem.id}>
                 {classItem.name}
               </SelectItem>
             ))}
-          </SelectGroup>
+          </SelectGroup> */}
         </SelectContent>
       </Select>
       {students

@@ -118,7 +118,7 @@ export default function StudentDashboard() {
         ) : canSign && ongoingLessons.length > 0 ? (
           <SignatureCanvas lessonId={ongoingLessons[0].id} />
         ) : (
-          <p className="text-gray-500">Aucune leçon en cours pour signer.</p>
+          <p className="text-gray-500">No lessons in progress to sign.</p>
         )}
       </div>
     </div>
