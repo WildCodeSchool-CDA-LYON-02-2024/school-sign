@@ -1,18 +1,14 @@
-name: CI Pipeline
+name: CD Pipeline
 
 on:
   push:
     branches:
-      - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
+      - main  # Déclenche le déploiement à chaque push sur main
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -38,5 +34,8 @@ jobs:
       - name: 🔍 Vérification du code avec ESLint
         run: npx eslint . --ext .js,.jsx,.ts,.tsx
 
-      - name: 🧪 Run tests
-        run: npm test
+      - name: 🏗️ Build Next.js app
+        run: npm run build
+
+      - name: 🚀 Déploiement sur Vercel
+        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
