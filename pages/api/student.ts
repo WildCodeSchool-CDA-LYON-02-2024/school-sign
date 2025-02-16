@@ -3,17 +3,17 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 // prisma & zod
 import { Prisma, PrismaClient, Role } from "@prisma/client";
-import { registerSchemaUser } from "@/lib/schemas/registerSchemaUser";
+import { registerSchemaUser } from "../../lib/schemas/registerSchemaUser";
 import { ZodError } from "zod";
 
 import bcrypt from "bcrypt";
-import { verifyToken } from "@/lib/jwt";
+import { verifyToken } from "../../lib/jwt";
 
 const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { method } = req;
 
